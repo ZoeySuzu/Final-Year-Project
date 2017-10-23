@@ -11,6 +11,7 @@ public class UIController : MonoBehaviour {
     public Text state;
     private TextController textDisplay;
     public GameObject textBox;
+    public GameObject indicator;
 
 	// Use this for initialization
 	void Start () {

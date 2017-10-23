@@ -7,6 +7,7 @@ public class Box : Interactable {
 
     public GameObject player;
     private bool inUse;
+    private bool grounded;
     private PlayerController p;
     private float speed;
 
@@ -15,6 +16,7 @@ public class Box : Interactable {
         p = player.GetComponent<PlayerController>();
         speed = p.getSpeed();
         gameUI = GetComponentInParent<UIController>();
+        grounded = false;
     }
 
     public Box()
@@ -23,8 +25,41 @@ public class Box : Interactable {
         this.inUse = false;
     }
 
+    private bool IsGrounded()
+    {
+        float scale = transform.localScale.x / 2;
+        bool a =Physics.Raycast(transform.position+ Vector3.forward * scale + Vector3.right * scale, Vector3.down, scale + 0.1f);
+        bool b =Physics.Raycast(transform.position+ Vector3.forward * scale - Vector3.right * scale, Vector3.down, scale + 0.1f);
+        bool c =Physics.Raycast(transform.position- Vector3.forward * scale + Vector3.right * scale, Vector3.down, scale + 0.1f);
+        bool d =Physics.Raycast(transform.position- Vector3.forward * scale - Vector3.right * scale, Vector3.down, scale+0.1f);
+        if (a || b || c || d)
+        {
+            if (grounded == false)
+            {
+                Ray raydown = new Ray(transform.position, Vector3.down);
+                RaycastHit hit;
+                if (Physics.Raycast(raydown, out hit, 10.00f))
+                {
+                    transform.position += Vector3.down * hit.distance + Vector3.up*scale;
+                }
+                grounded = true;
+            }
+            return true;
+        }
+        else
+        {
+            grounded = false;
+            return false;
+        }
+    }
+
     void Update()
     {
+        if(!IsGrounded())
+        {
+            transform.Translate(Vector3.down*8.0f* Time.deltaTime) ;
+        }
+
 
         if (inUse)
         {
@@ -47,7 +82,40 @@ public class Box : Interactable {
             }
             if (targetDirection != Vector3.zero)
             {
-                transform.Translate(pushDirection * 0.05f);
+               Movement(pushDirection * 0.05f);
+            }
+        }
+    }
+
+    private void Movement(Vector3 targetDirection)
+    {
+        float scale = transform.localScale.x;
+        RaycastHit hit;
+        if (targetDirection.x != 0)
+        {
+            Ray rayright = new Ray(transform.position, Vector3.right * Mathf.Sign(targetDirection.x));
+            if (Physics.Raycast(rayright, out hit, scale / 2 + 0.05f))
+            {
+                transform.position += Vector3.right * hit.distance * Mathf.Sign(targetDirection.x) - Vector3.right * scale / 2 * Mathf.Sign(targetDirection.x);
+            }
+            else
+            {
+                transform.Translate(Vector3.right * targetDirection.x);
+            }
+        }
+        if (targetDirection.z != 0)
+        {
+            Ray rayforward = new Ray(transform.position, Vector3.forward * Mathf.Sign(targetDirection.z));
+            if (Physics.Raycast(rayforward, out hit, scale / 2 + 0.05f))
+            {
+                if (Mathf.Abs(hit.distance) > 0.05)
+                {
+                    transform.position += Vector3.forward * hit.distance * Mathf.Sign(targetDirection.z) - Vector3.forward * scale / 2 * Mathf.Sign(targetDirection.z);
+                }
+            }
+            else
+            {
+                transform.Translate(Vector3.forward * targetDirection.z);
             }
         }
     }
@@ -65,10 +133,8 @@ public class Box : Interactable {
             this.inUse = false;
         }
     }
-
-    private void OnTriggerExit(Collider other)
+    public override void collisionExit()
     {
-        gameUI.setInteractButton("");
         p.setPlayerState("idle");
         this.inUse = false;
     }

@@ -75,32 +75,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="3DPlatformer.Plugins.csproj">
-      <Project>{4CB1C8A4-B8FB-DF20-4393-EB695A567E55}</Project>
-      <Name>3DPlatformer.Plugins</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\Homemade Assets\Scripts\Box.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Homemade Assets\Scripts\IndicatorController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Interactable.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Signpost.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\TextController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\UIController.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
-    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
-    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
-    <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
