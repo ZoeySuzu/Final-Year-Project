@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    public float speed;
+    public float basespeed;
     public float jumpHeight;
     Rigidbody rb;
     UIController ui;
 
+    private float speed;
     private string playerState;
-    private bool startPushing;
+    private Transform playerModel;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    private void Awake()
+    {
+        speed = basespeed;
+    }
+    void Start () {
         rb = GetComponent<Rigidbody>();
         ui = GetComponentInParent<UIController>();
         playerState = "idle";
-        startPushing = false;
+        playerModel = transform.Find("Model_Player");
+       
     }
 	
 	// Update is called once per frame
@@ -54,8 +60,19 @@ public class PlayerController : MonoBehaviour {
             
             if (targetDirection != Vector3.zero)
             {
-                playerState = "walking";
+                if (Input.GetButton("Run"))
+                {
+                    playerState = "running";
+                    speed = basespeed + basespeed/2;
+                }
+                else
+                {
+                    playerState = "walking";
+                    speed = basespeed;
+                }
+                playerModel.forward = targetDirection;
                 Movement(targetDirection);
+                
             }
             else
             {
@@ -101,6 +118,8 @@ public class PlayerController : MonoBehaviour {
         RaycastHit hit;
         return Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit,1f);
      }
+
+    //Movement colision
 
     private void Movement(Vector3 targetDirection)
     {

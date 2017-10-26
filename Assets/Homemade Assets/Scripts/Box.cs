@@ -125,18 +125,18 @@ public class Box : Interactable {
         if (Input.GetButtonDown("Interact"))
         {
             p.setPlayerState("pushing");
-            this.inUse = true;
+            inUse = true;
         }
         if (Input.GetButtonUp("Interact"))
         {
             p.setPlayerState("idle");
-            this.inUse = false;
+            inUse = false;
         }
     }
     public override void collisionExit()
     {
         p.setPlayerState("idle");
-        this.inUse = false;
+        inUse = false;
     }
 
 }
