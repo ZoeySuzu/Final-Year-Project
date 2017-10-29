@@ -16,8 +16,10 @@ public class MovingPlatform : MonoBehaviour {
     private GameObject target;
     private Vector3 offset;
 
-	// Use this for initialization
-	void Start () {
+    private List<GameObject> targets = new List<GameObject>();
+
+    // Use this for initialization
+    void Start () {
         position = 0;
         backwards = false;
 
@@ -60,11 +62,14 @@ public class MovingPlatform : MonoBehaviour {
 
     public void OnTriggerStay(Collider other)
     {
-        target = other.gameObject;
+        if (!targets.Contains(other.gameObject))
+        {
+            targets.Add(other.gameObject);
+        }
     }
     public void OnTriggerExit(Collider other)
     {
-        target = null;
+        targets.Remove(other.gameObject);
     }
 
     // Update is called once per frame
@@ -88,11 +93,18 @@ public class MovingPlatform : MonoBehaviour {
                 backwards = false;
             }
         }
-        if (target != null)
+
+        foreach (GameObject target in targets)
         {
+
+            if(target == null)
+            {
+                break;
+            }
+
             if (backwards)
             {
-                target.transform.Translate(-1*vector * speed * Time.deltaTime);
+                target.transform.Translate(-1 * vector * speed * Time.deltaTime);
             }
             else
             {

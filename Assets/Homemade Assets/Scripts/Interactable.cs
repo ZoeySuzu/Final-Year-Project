@@ -13,19 +13,24 @@ public abstract class Interactable : MonoBehaviour{
 
     private void OnTriggerEnter(Collider other)
     {
-         
-        indicator = gameUI.indicator;
-        indicatorLive = Instantiate(indicator);
-        indicatorLive.transform.parent = gameObject.transform;
-        indicatorLive.transform.position = transform.position ;
-        gameUI.setInteractButton(interaction);
+        if (other.name == "Object_Player")
+        {
+            indicator = gameUI.indicator;
+            indicatorLive = Instantiate(indicator);
+            indicatorLive.transform.parent = gameObject.transform;
+            indicatorLive.transform.position = transform.position;
+            gameUI.setInteractButton(interaction);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        collisionExit();
-        Destroy(indicatorLive);
-        gameUI.setInteractButton("");
+        if (other.name == "Object_Player")
+        {
+            collisionExit();
+            Destroy(indicatorLive);
+            gameUI.setInteractButton("");
+        }
     }
 
     public virtual void collisionExit() {}

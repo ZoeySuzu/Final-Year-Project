@@ -12,6 +12,7 @@ public class Signpost : Interactable {
     void Start()
     {
         gameUI = GetComponentInParent<UIController>();
+        textDisplay = gameUI.textBox.GetComponent<TextController>();
     }
 
     public Signpost()

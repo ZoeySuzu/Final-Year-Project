@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour {
     public Text interaction;
     public Text pausetext;
     public Text state;
+    public Text spellType;
     private TextController textDisplay;
     public GameObject textBox;
     public GameObject indicator;
@@ -19,6 +20,7 @@ public class UIController : MonoBehaviour {
         interaction.text = "";
         pausetext.enabled = false;
         state.text = "";
+        spellType.text = "";
     }
 	
 
@@ -35,6 +37,11 @@ public class UIController : MonoBehaviour {
     public void setPlayerState(string statetxt)
     {
         state.text = "State: " + statetxt;
+    }
+
+    public void setSpellState(string statetxt)
+    {
+        spellType.text = "Spell: " + statetxt;
     }
 
     public void pause()

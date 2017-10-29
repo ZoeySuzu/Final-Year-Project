@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 
     UIController ui;
     public GameObject player;
+    public bool fighting;
 
 	// Use this for initialization
 	void Start () {

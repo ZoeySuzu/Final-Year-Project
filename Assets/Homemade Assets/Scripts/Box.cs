@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Box : Interactable {
 
-    public GameObject player;
     private bool inUse;
     private bool grounded;
     private PlayerController p;
@@ -13,6 +12,7 @@ public class Box : Interactable {
 
     void Start()
     {
+        GameObject player = GameObject.Find("Object_Player");
         p = player.GetComponent<PlayerController>();
         speed = p.getSpeed();
         gameUI = GetComponentInParent<UIController>();
@@ -120,17 +120,21 @@ public class Box : Interactable {
         }
     }
 
+
     public override void OnTriggerStay(Collider other)
     {
-        if (Input.GetButtonDown("Interact"))
+        if (other.name == "Object_Player")
         {
-            p.setPlayerState("pushing");
-            inUse = true;
-        }
-        if (Input.GetButtonUp("Interact"))
-        {
-            p.setPlayerState("idle");
-            inUse = false;
+            if (Input.GetButtonDown("Interact"))
+            {
+                p.setPlayerState("pushing");
+                inUse = true;
+            }
+            if (Input.GetButtonUp("Interact"))
+            {
+                p.setPlayerState("idle");
+                inUse = false;
+            }
         }
     }
     public override void collisionExit()
