@@ -20,7 +20,7 @@ public class FollowCamera : MonoBehaviour
         locked = true;
         offset = target.transform.position - transform.position;
         //defaultPosition = new Vector3(0, 5, -8);
-        enemyLocked = GetComponentInParent<GameController>().fighting;
+        enemyLocked = GetComponentInParent<PlayerController>().fighting;
     }
 
     void LateUpdate()

@@ -55,10 +55,10 @@ public class Box : Interactable {
 
     void Update()
     {
-        if(!IsGrounded())
+        /*if(!IsGrounded())
         {
             transform.Translate(Vector3.down*8.0f* Time.deltaTime) ;
-        }
+        }*/
 
 
         if (inUse)

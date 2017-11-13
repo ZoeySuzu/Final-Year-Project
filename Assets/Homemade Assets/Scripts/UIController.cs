@@ -7,7 +7,7 @@ public class UIController : MonoBehaviour {
 
     public Text action;
     public Text interaction;
-    public Text pausetext;
+    public GameObject pauseScreen;
     public Text state;
     public Text spellType;
     private TextController textDisplay;
@@ -18,7 +18,7 @@ public class UIController : MonoBehaviour {
 	void Start () {
         action.text = "";
         interaction.text = "";
-        pausetext.enabled = false;
+        pauseScreen.SetActive(false);
         state.text = "";
         spellType.text = "";
     }
@@ -46,11 +46,13 @@ public class UIController : MonoBehaviour {
 
     public void pause()
     {
-        pausetext.enabled = true;
+        pauseScreen.SetActive(true);
+        pauseScreen.transform.GetChild(2).GetComponent<Button>().Select();
+        pauseScreen.transform.GetChild(1).GetComponent<Button>().Select();
     }
     public void resume()
     {
-        pausetext.enabled = false;
+        pauseScreen.SetActive(false);
     }
 
     public void displayText(Queue<string> text)

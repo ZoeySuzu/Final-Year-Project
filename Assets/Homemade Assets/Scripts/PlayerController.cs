@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour {
     private float speed;
     private string playerState;
     private Transform playerModel;
+    public bool fighting;
+
+    private bool active;
 
     // Use this for initialization
     private void Awake()
@@ -26,108 +29,111 @@ public class PlayerController : MonoBehaviour {
         playerState = "idle";
         playerModel = transform.Find("Model_Player");
         element = SpellType.Normal;
+        active = true;
     }
 	
 	void Update () {
-
-        //Check for directional input
-        var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-
-        Vector3 targetDirection = new Vector3(x, 0f, z);
-        targetDirection = Camera.main.transform.TransformDirection(targetDirection);
-        targetDirection.y = 0.0f;
-
-        //Pushing something
-        if (playerState.Equals("pushing"))
+        if (active)
         {
-            Vector3 pushDirection;
-            //Get most emphasized direction
-            if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
-            {
-                pushDirection = Vector3.right*Mathf.Sign(targetDirection.x);
-            }
-            else
-            {
-                pushDirection = Vector3.forward * Mathf.Sign(targetDirection.z);
-            }
-            if (targetDirection != Vector3.zero)
-            {
-                Movement(pushDirection*0.05f);
-            } 
-        }
+            //Check for directional input
+            var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
+            var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
 
-        //Not pushing something
-        else 
-        {
-            
-            //Check movement state
-            if (targetDirection != Vector3.zero)
+            Vector3 targetDirection = new Vector3(x, 0f, z);
+            targetDirection = Camera.main.transform.TransformDirection(targetDirection);
+            targetDirection.y = 0.0f;
+
+            //Pushing something
+            if (playerState.Equals("pushing"))
             {
-                if (Input.GetButton("Run"))
+                Vector3 pushDirection;
+                //Get most emphasized direction
+                if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
                 {
-                    playerState = "running";
-                    speed = basespeed + basespeed/2;
+                    pushDirection = Vector3.right * Mathf.Sign(targetDirection.x);
                 }
                 else
                 {
-                    playerState = "walking";
-                    speed = basespeed;
+                    pushDirection = Vector3.forward * Mathf.Sign(targetDirection.z);
                 }
-                playerModel.forward = targetDirection;
-                Movement(targetDirection);
-                
+                if (targetDirection != Vector3.zero)
+                {
+                    Movement(pushDirection * 0.05f);
+                }
             }
+
+            //Not pushing something
             else
             {
-                playerState = "idle";
+
+                //Check movement state
+                if (targetDirection != Vector3.zero)
+                {
+                    if (Input.GetButton("Run"))
+                    {
+                        playerState = "running";
+                        speed = basespeed + basespeed / 2;
+                    }
+                    else
+                    {
+                        playerState = "walking";
+                        speed = basespeed;
+                    }
+                    playerModel.forward = targetDirection;
+                    Movement(targetDirection);
+
+                }
+                else
+                {
+                    playerState = "idle";
+                }
+
+                //Check if on ground
+                if (IsGrounded())
+                {
+                    ui.setActionButton("Jump");
+                }
+                else
+                {
+                    playerState = "jumping";
+                    ui.setActionButton("");
+                }
+                //Check for spellchange input
+                if (Input.GetAxis("D-Y") > 0)
+                {
+                    element = SpellType.Electric;
+                }
+                if (Input.GetAxis("D-X") < 0)
+                {
+                    element = SpellType.Fire;
+                }
+                if (Input.GetAxis("D-Y") < 0)
+                {
+                    element = SpellType.Wind;
+                }
+                if (Input.GetAxis("D-X") > 0)
+                {
+                    element = SpellType.Ice;
+                }
+
+                //Check for jump input
+                if (Input.GetButtonDown("Jump") && IsGrounded())
+                {
+                    rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
+                }
+
+                //Check for spell input
+                if (Input.GetButtonDown("SmallSpell") && IsGrounded())
+                {
+
+                    Spell spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward * 2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
+                    spell.Initialize(element, false);
+                }
             }
 
-            //Check if on ground
-            if (IsGrounded())
-            {
-                ui.setActionButton("Jump");
-            }
-            else
-            {
-                playerState = "jumping";
-                ui.setActionButton("");
-            }
-            //Check for spellchange input
-            if (Input.GetAxis("D-Y") > 0)
-            {
-                element = SpellType.Electric;
-            }
-            if (Input.GetAxis("D-X") < 0)
-            {
-                element = SpellType.Fire;
-            }
-            if (Input.GetAxis("D-Y") < 0)
-            {
-                element = SpellType.Wind;
-            }
-            if (Input.GetAxis("D-X") > 0)
-            {
-                element = SpellType.Ice;
-            }
-
-            //Check for jump input
-            if (Input.GetButtonDown("Jump") && IsGrounded())
-            {
-                rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
-            }
-
-            //Check for spell input
-            if(Input.GetButtonDown("SmallSpell") && IsGrounded())
-            {
-               
-                Spell spell =  Instantiate(projectile, playerModel.transform.position + playerModel.forward * 2 + Vector3.up*0.4f, playerModel.transform.rotation).GetComponent<Spell>();
-                spell.Initialize(element, false);
-            }
+            ui.setPlayerState(playerState);
+            ui.setSpellState(element.ToString());
         }
-
-        ui.setPlayerState(playerState);
-        ui.setSpellState(element.ToString());
     }
 
     public float getSpeed()
@@ -150,6 +156,16 @@ public class PlayerController : MonoBehaviour {
         RaycastHit hit;
         return Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit,1f);
      }
+
+    public void playerActive()
+    {
+        active = true;
+    }
+
+    public void playerInactive()
+    {
+        active = false;
+    }
 
     //Movement colision
 

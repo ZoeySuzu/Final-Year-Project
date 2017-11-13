@@ -7,7 +7,7 @@ public class Signpost : Interactable {
 
     public List<string> signText;
     private Queue<string> textQueue;
-    public TextController textDisplay;
+    private TextController textDisplay;
 
     void Start()
     {
