@@ -12,7 +12,7 @@ public class SpellReactor : MonoBehaviour
 
             if (other.gameObject.GetComponent<Spell>().getSpellType() == SpellType.Fire)
             {
-                Destroy(other.gameObject);
+                //Destroy(other.gameObject);
                 Destroy(gameObject);
             }
         }

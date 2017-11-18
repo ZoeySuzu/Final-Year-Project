@@ -16,7 +16,10 @@ public class PlayerController : MonoBehaviour {
     private Transform playerModel;
     public bool fighting;
 
+    private bool spellCasting;
+    private bool lockRotation;
     private bool active;
+    private Spell spell;
 
     // Use this for initialization
     private void Awake()
@@ -24,12 +27,26 @@ public class PlayerController : MonoBehaviour {
         speed = basespeed;
     }
     void Start () {
+        spellCasting = false;
+        lockRotation = false;
         rb = GetComponent<Rigidbody>();
         ui = GetComponentInParent<UIController>();
         playerState = "idle";
         playerModel = transform.Find("Model_Player");
         element = SpellType.Normal;
         active = true;
+    }
+
+    void FixedUpdate()
+    {
+        if (rb.velocity.y < 0)
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
+        }
+        else if (rb.velocity.y > 0.1f && !Input.GetButton("Jump"))
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
+        }
     }
 	
 	void Update () {
@@ -38,10 +55,10 @@ public class PlayerController : MonoBehaviour {
             //Check for directional input
             var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
             var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-
             Vector3 targetDirection = new Vector3(x, 0f, z);
             targetDirection = Camera.main.transform.TransformDirection(targetDirection);
             targetDirection.y = 0.0f;
+
 
             //Pushing something
             if (playerState.Equals("pushing"))
@@ -65,6 +82,7 @@ public class PlayerController : MonoBehaviour {
             //Not pushing something
             else
             {
+                playerState = "idle";
 
                 //Check movement state
                 if (targetDirection != Vector3.zero)
@@ -79,15 +97,13 @@ public class PlayerController : MonoBehaviour {
                         playerState = "walking";
                         speed = basespeed;
                     }
-                    playerModel.forward = targetDirection;
+                    if (!lockRotation)
+                    {
+                        playerModel.forward = targetDirection;
+                    }
                     Movement(targetDirection);
 
                 }
-                else
-                {
-                    playerState = "idle";
-                }
-
                 //Check if on ground
                 if (IsGrounded())
                 {
@@ -98,6 +114,10 @@ public class PlayerController : MonoBehaviour {
                     playerState = "jumping";
                     ui.setActionButton("");
                 }
+                
+                
+
+
                 //Check for spellchange input
                 if (Input.GetAxis("D-Y") > 0)
                 {
@@ -125,10 +145,24 @@ public class PlayerController : MonoBehaviour {
                 //Check for spell input
                 if (Input.GetButtonDown("SmallSpell") && IsGrounded())
                 {
-
-                    Spell spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward * 2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
+                    if(element == SpellType.Fire)
+                    {
+                        spellCasting = true;
+                    }
+                    spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
+                    spell.transform.parent = transform;
                     spell.Initialize(element, false);
                 }
+                if (spellCasting && (!Input.GetButton("SmallSpell") || !IsGrounded()))
+                {
+                    spell.stopCast();
+                    spellCasting = false;
+                }
+            }
+
+            if (spellCasting)
+            {
+                playerState = "Casting";
             }
 
             ui.setPlayerState(playerState);

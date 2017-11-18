@@ -22,40 +22,47 @@ public class Switch : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (unUsed)
+        if (other.name == "Object_Player")
         {
-            button = gameObject.transform.GetChild(0).gameObject;
-            Debug.Log(button.ToString());
-            material = button.transform.GetComponent<Renderer>().material;
-            material.color = Color.red;
-            if (staysDown)
+            if (unUsed)
             {
-                color = Color.blue;
+                button = gameObject.transform.GetChild(0).gameObject;
+                Debug.Log(button.ToString());
+                material = button.transform.GetComponent<Renderer>().material;
+                material.color = Color.red;
+                if (staysDown)
+                {
+                    color = Color.blue;
+                }
+                else
+                {
+                    color = Color.green;
+                }
+                targetTrigger = reactionTarget.GetComponent<SwitchReactor>();
+                unUsed = false;
             }
-            else
-            {
-                color = Color.green;
-            }
-            targetTrigger = reactionTarget.GetComponent<SwitchReactor>();
-            unUsed = false;
-        }
 
-        if (!pressed) {
-            button.transform.position += Vector3.down* 0.2f;
-            material.color = color;
-            pressed = true;
-            targetTrigger.switchOn();
+            if (!pressed)
+            {
+                button.transform.position += Vector3.down * 0.2f;
+                material.color = color;
+                pressed = true;
+                targetTrigger.switchOn();
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!staysDown)
+        if (other.name == "Object_Player")
         {
-            button.transform.position += Vector3.up * 0.2f;
-            material.color = Color.red;
-            pressed = false;
-            targetTrigger.switchOff();
+            if (!staysDown)
+            {
+                button.transform.position += Vector3.up * 0.2f;
+                material.color = Color.red;
+                pressed = false;
+                targetTrigger.switchOff();
+            }
         }
     }
 

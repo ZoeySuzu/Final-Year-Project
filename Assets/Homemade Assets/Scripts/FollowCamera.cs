@@ -34,9 +34,9 @@ public class FollowCamera : MonoBehaviour
 
         else
         {
-            var cameraX = -Input.GetAxis("Joystick_B X") * 2;
-            var cameraHeight = new Vector3(0, Input.GetAxis("Joystick_B Y") * 0.2f, 0);
-            //var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.2f;
+            var cameraX = Input.GetAxis("Joystick_B X") * 6;
+            var cameraHeight = new Vector3(0, Input.GetAxis("Joystick_B Y") * 0.3f, 0);
+            //var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.4f;
 
             if (locked && (cameraX != 0 || cameraHeight != Vector3.zero))
             {
