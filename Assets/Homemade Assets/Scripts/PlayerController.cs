@@ -145,12 +145,13 @@ public class PlayerController : MonoBehaviour {
                 //Check for spell input
                 if (Input.GetButtonDown("SmallSpell") && IsGrounded())
                 {
-                    if(element == SpellType.Fire)
+                    
+                    spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
+                    if (element == SpellType.Fire)
                     {
                         spellCasting = true;
+                        spell.transform.parent = transform;
                     }
-                    spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
-                    spell.transform.parent = transform;
                     spell.Initialize(element, false);
                 }
                 if (spellCasting && (!Input.GetButton("SmallSpell") || !IsGrounded()))
@@ -178,6 +179,11 @@ public class PlayerController : MonoBehaviour {
     public string getPlayerState()
     {
         return playerState;
+    }
+
+    public void setJumpHeight(float height)
+    {
+        jumpHeight = height;
     }
 
     public void setPlayerState(string state)
@@ -235,5 +241,4 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
-
 }

@@ -13,6 +13,8 @@ public class Spell : MonoBehaviour {
     private ParticleSystem activeParticle;
 
     public ParticleSystem fireParticle;
+    public ParticleSystem iceParticle;
+    public ParticleSystem windParticle;
 
     public void Initialize(SpellType _element, bool _alternative)
     {
@@ -34,12 +36,14 @@ public class Spell : MonoBehaviour {
                 {
                     activeParticle = fireParticle;
                     speed = 0;
-                    material.color = Color.red;
+                    material.color = new Color(225,0,0,100);
                     break;
                 }
             case SpellType.Ice:
                 {
-                    material.color = Color.cyan;
+                    activeParticle = iceParticle;
+                    speed = 5;
+                    material.color = new Color(0,0,225,100);
                     break;
                 }
             case SpellType.Electric:
@@ -49,6 +53,8 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Wind:
                 {
+                    activeParticle = windParticle;
+                    speed = 0;
                     material.color = Color.green;
                     break;
                 }
@@ -73,6 +79,7 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Ice:
                 {
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                     break;
                 }
             case SpellType.Electric:
@@ -88,7 +95,6 @@ public class Spell : MonoBehaviour {
                     break;
                 }
         }
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
 	}
 
     public void stopCast()
@@ -99,7 +105,26 @@ public class Spell : MonoBehaviour {
 
     private void OnCollisionEnter(Collision other)
     {
-        if(element != SpellType.Fire)
+        
+
+        if(element != SpellType.Fire && element != SpellType.Wind)
             stopCast();
+    }
+
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (element == SpellType.Wind && other.gameObject.name == "Object_Player")
+        {
+            Debug.Log("Increase jump");
+            other.gameObject.GetComponent<PlayerController>().setJumpHeight(2.0f);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (element == SpellType.Wind && other.gameObject.name == "Object_Player")
+        {
+            other.gameObject.GetComponent<PlayerController>().setJumpHeight(1.5f);
+        }
     }
 }
