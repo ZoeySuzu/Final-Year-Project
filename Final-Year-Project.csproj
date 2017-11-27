@@ -79,19 +79,23 @@
     <Compile Include="Assets\Homemade Assets\Scripts\DebugController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Homemade Assets\Scripts\Gate.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\IndicatorController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Interactable.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Lader.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Laser.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\LookAt.cs" />
+    <Compile Include="Assets\Homemade Assets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\MovingPlatform.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Homemade Assets\Scripts\QuestionController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Signpost.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Spell.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\SpellReactor.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\SpellType.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\Switch.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\SwitchReactor.cs" />
+    <Compile Include="Assets\Homemade Assets\Scripts\TestDialogue.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\TextController.cs" />
     <Compile Include="Assets\Homemade Assets\Scripts\UIController.cs" />
   </ItemGroup>

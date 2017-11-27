@@ -59,7 +59,7 @@ public class UIController : MonoBehaviour {
     {
         if (textBox.activeSelf == false){
             textBox.SetActive(true);
-            textDisplay.setText(text);
+            textDisplay.setText(text,"Empty");
         }
     }
 }

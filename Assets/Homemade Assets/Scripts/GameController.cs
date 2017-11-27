@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
@@ -24,9 +25,8 @@ public class GameController : MonoBehaviour {
 
     public void quit()
     {
-        Debug.Log("Quiting game via menu");
-        Application.Quit();
-        Debug.Break();
+        Debug.Log("Quit to main menu");
+        SceneManager.LoadSceneAsync("MainMenu",LoadSceneMode.Single);
     }
     public void pause()
     {

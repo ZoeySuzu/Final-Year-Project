@@ -1,4 +1,13 @@
 sceneSetups:
-- path: Assets/Project test 13 09.unity
+- path: Assets/MainMenu.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/TestDev.unity
   isLoaded: 1
   isActive: 1
+- path: Assets/FireLevel.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/CombatTestDev.unity
+  isLoaded: 0
+  isActive: 0

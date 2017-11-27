@@ -11,6 +11,11 @@ public abstract class Interactable : MonoBehaviour{
 
     public abstract void OnTriggerStay(Collider other);
 
+    private void Start()
+    {
+        gameUI = GetComponentInParent<UIController>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Object_Player")

@@ -4,22 +4,60 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TextController : MonoBehaviour {
+    public static TextController Instance { get; set; }
 
     public Queue<string> TextList;
-    public GameObject panel;
+    public GameObject textPanel;
+    public QuestionController question;
     public Text textToDisplay;
-    private bool boxOpen;
+    private bool newDialogue;
+    private bool dialogueLeft;
+    private bool askingQuestion;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
+
+    // Use this for initialization
+    void Start () {
         textToDisplay.text = "";
-        boxOpen = false;
+        newDialogue = false;
         gameObject.SetActive(false);
     }
 
-    void LateUpdate()
+    public void setText(Queue<string> text, string name)
+    { 
+        TextList = text;
+    }
+
+    public void displayText()
     {
-        if (boxOpen && Input.GetButtonDown("Interact"))
+        newDialogue = true;
+        dialogueLeft = true;
+        gameObject.SetActive(true);
+        displayNext();
+    }
+
+    void Update()
+    {
+        if (newDialogue)
+        {
+            newDialogue = false;
+        }
+        else if (askingQuestion)
+        {
+
+        }
+        else if (dialogueLeft && Input.GetButtonDown("Interact"))
         {
             displayNext();
         }
@@ -29,23 +67,32 @@ public class TextController : MonoBehaviour {
     {
         if (TextList.Count < 1)
         {
-            boxOpen = false;
+            dialogueLeft = false;
             gameObject.SetActive(false);
         }
         else
         {
-            textToDisplay.text = TextList.Dequeue();
+            string text = TextList.Dequeue();
+            if (text == "Question")
+            {
+                askingQuestion = true;
+                textToDisplay.text = TextList.Dequeue();
+                question.setAwnsers(TextList.Dequeue(), TextList.Dequeue());
+            }
+            else
+            {
+                textToDisplay.text = text;
+            }
         }
     }
 
-    public void setText(Queue<string> text)
+    public void answer(int answer)
     {
-        gameObject.SetActive(true);
-        boxOpen = true;
-        TextList = text;
+        askingQuestion = false;
     }
+
     public bool getState()
     {
-        return boxOpen;
+        return gameObject.activeSelf;
     }
 }
