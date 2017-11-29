@@ -10,10 +10,6 @@ public class TestDialogue : Interactable {
 
     private Queue<string> textQueue;
 
-    void Start()
-    {
-        gameUI = GetComponentInParent<UIController>();
-    }
 
     public TestDialogue()
     {

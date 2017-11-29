@@ -2,26 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+
 public class PlayerController : MonoBehaviour {
 
+    //Public Variables for debuging
     public float basespeed;
     public float jumpHeight;
-    Rigidbody rb;
-    UIController ui;
     public GameObject projectile;
+    public bool fighting;
 
+    //Pointers to other classes
+    private Rigidbody rb;
+    private UIController ui;
+
+    //Ability related variables
     private SpellType element;
+    private Spell spell;
+    private bool spellCasting;
+
+    //State related variables
     private float speed;
     private string playerState;
     private Transform playerModel;
-    public bool fighting;
-
-    private bool spellCasting;
     private bool lockRotation;
-    private bool active;
-    private Spell spell;
+    
 
-    // Use this for initialization
+    //------------------------------------------------------Initialising Code
     private void Awake()
     {
         speed = basespeed;
@@ -34,9 +41,11 @@ public class PlayerController : MonoBehaviour {
         playerState = "idle";
         playerModel = transform.Find("Model_Player");
         element = SpellType.Normal;
-        active = true;
     }
 
+
+
+    //------------------------------------------------------Update Code
     void FixedUpdate()
     {
         if (rb.velocity.y < 0)
@@ -50,127 +59,127 @@ public class PlayerController : MonoBehaviour {
     }
 	
 	void Update () {
-        if (active)
+        //Check for directional input
+        var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
+        var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        Vector3 targetDirection = new Vector3(x, 0f, z);
+        targetDirection = Camera.main.transform.TransformDirection(targetDirection);
+        targetDirection.y = 0.0f;
+
+
+        //Pushing something
+        if (playerState.Equals("pushing"))
         {
-            //Check for directional input
-            var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-            var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
-            Vector3 targetDirection = new Vector3(x, 0f, z);
-            targetDirection = Camera.main.transform.TransformDirection(targetDirection);
-            targetDirection.y = 0.0f;
-
-
-            //Pushing something
-            if (playerState.Equals("pushing"))
+            Vector3 pushDirection;
+            //Get most emphasized direction
+            if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
             {
-                Vector3 pushDirection;
-                //Get most emphasized direction
-                if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
-                {
-                    pushDirection = Vector3.right * Mathf.Sign(targetDirection.x);
-                }
-                else
-                {
-                    pushDirection = Vector3.forward * Mathf.Sign(targetDirection.z);
-                }
-                if (targetDirection != Vector3.zero)
-                {
-                    Movement(pushDirection * 0.05f);
-                }
+                pushDirection = Vector3.right * Mathf.Sign(targetDirection.x);
             }
-
-            //Not pushing something
             else
             {
-                playerState = "idle";
+                pushDirection = Vector3.forward * Mathf.Sign(targetDirection.z);
+            }
+            if (targetDirection != Vector3.zero)
+            {
+                Movement(pushDirection * 0.05f);
+            }
+        }
 
-                //Check movement state
-                if (targetDirection != Vector3.zero)
-                {
-                    if (Input.GetButton("Run"))
-                    {
-                        playerState = "running";
-                        speed = basespeed + basespeed / 2;
-                    }
-                    else
-                    {
-                        playerState = "walking";
-                        speed = basespeed;
-                    }
-                    if (!lockRotation)
-                    {
-                        playerModel.forward = targetDirection;
-                    }
-                    Movement(targetDirection);
+        //Not pushing something
+        else
+        {
+            playerState = "idle";
 
-                }
-                //Check if on ground
-                if (IsGrounded())
+            //Check movement state
+            if (targetDirection != Vector3.zero)
+            {
+                if (Input.GetButton("Run"))
                 {
-                    ui.setActionButton("Jump");
+                    playerState = "running";
+                    speed = basespeed + basespeed / 2;
                 }
                 else
                 {
-                    playerState = "jumping";
-                    ui.setActionButton("");
+                    playerState = "walking";
+                    speed = basespeed;
                 }
-                
-                
+                if (!lockRotation)
+                {
+                    playerModel.forward = targetDirection;
+                }
+                Movement(targetDirection);
 
-
-                //Check for spellchange input
-                if (Input.GetAxis("D-Y") > 0)
-                {
-                    element = SpellType.Electric;
-                }
-                if (Input.GetAxis("D-X") < 0)
-                {
-                    element = SpellType.Fire;
-                }
-                if (Input.GetAxis("D-Y") < 0)
-                {
-                    element = SpellType.Wind;
-                }
-                if (Input.GetAxis("D-X") > 0)
-                {
-                    element = SpellType.Ice;
-                }
-
-                //Check for jump input
-                if (Input.GetButtonDown("Jump") && IsGrounded())
-                {
-                    rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
-                }
-
-                //Check for spell input
-                if (Input.GetButtonDown("SmallSpell") && IsGrounded())
-                {
-                    
-                    spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
-                    if (element == SpellType.Fire)
-                    {
-                        spellCasting = true;
-                        spell.transform.parent = transform;
-                    }
-                    spell.Initialize(element, false);
-                }
-                if (spellCasting && (!Input.GetButton("SmallSpell") || !IsGrounded()))
-                {
-                    spell.stopCast();
-                    spellCasting = false;
-                }
             }
-
-            if (spellCasting)
+            //Check if on ground
+            if (IsGrounded())
             {
-                playerState = "Casting";
+                ui.setActionButton("Jump");
+            }
+            else
+            {
+                playerState = "jumping";
+                ui.setActionButton("");
+            }
+                
+                
+
+
+            //Check for spellchange input
+            if (Input.GetAxis("D-Y") > 0)
+            {
+                element = SpellType.Electric;
+            }
+            if (Input.GetAxis("D-X") < 0)
+            {
+                element = SpellType.Fire;
+            }
+            if (Input.GetAxis("D-Y") < 0)
+            {
+                element = SpellType.Wind;
+            }
+            if (Input.GetAxis("D-X") > 0)
+            {
+                element = SpellType.Ice;
             }
 
-            ui.setPlayerState(playerState);
-            ui.setSpellState(element.ToString());
-        }
-    }
+            //Check for jump input
+            if (Input.GetButtonDown("Jump") && IsGrounded())
+            {
+                rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
+            }
 
+            //Check for spell input
+            if (Input.GetButtonDown("SmallSpell") && IsGrounded())
+            {
+                    
+                spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
+                if (element == SpellType.Fire)
+                {
+                    spellCasting = true;
+                    spell.transform.parent = transform;
+                }
+                spell.Initialize(element, false);
+            }
+            if (spellCasting && (!Input.GetButton("SmallSpell") || !IsGrounded()))
+            {
+                spell.stopCast();
+                spellCasting = false;
+            }
+        }
+
+        if (spellCasting)
+        {
+            playerState = "Casting";
+        }
+
+        ui.setPlayerState(playerState);
+        ui.setSpellState(element.ToString());
+    }
+ 
+
+
+    //------------------------------------------------------Get Methods
     public float getSpeed()
     {
         return speed;
@@ -181,6 +190,8 @@ public class PlayerController : MonoBehaviour {
         return playerState;
     }
 
+
+    //------------------------------------------------------Set Methods
     public void setJumpHeight(float height)
     {
         jumpHeight = height;
@@ -192,23 +203,14 @@ public class PlayerController : MonoBehaviour {
         Debug.Log("Set player interaction:" + state);
     }
 
+    //------------------------------------------------------State Check methods
+
     private bool IsGrounded(){
         RaycastHit hit;
         return Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit,1f);
      }
 
-    public void playerActive()
-    {
-        active = true;
-    }
-
-    public void playerInactive()
-    {
-        active = false;
-    }
-
-    //Movement colision
-
+    //------------------------------------------------------Movement colision
     private void Movement(Vector3 targetDirection)
     {
         float scale = transform.localScale.x;

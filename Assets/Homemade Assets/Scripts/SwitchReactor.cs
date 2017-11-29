@@ -2,28 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+
 public class SwitchReactor : MonoBehaviour {
 
-    public bool activeOnStart;
+    [SerializeField]
+    private bool activeOnStart;
 
 	// Use this for initialization
 	void Start () {
         gameObject.SetActive(activeOnStart);
 	}
 	
-    public void switchOn()
+    public void switchActive()
     {
         gameObject.SetActive(!gameObject.activeSelf);
     }
 
-    public void switchOff()
+    public void switchEnabled()
     {
-        gameObject.SetActive(!gameObject.activeSelf);
+        enabled = !enabled;
     }
-
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

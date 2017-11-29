@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+
 public class Switch : MonoBehaviour {
 
-    public bool staysDown;
+    [SerializeField]
+    private bool staysDown;
+    [SerializeField]
     public GameObject reactionTarget;
-
     private SwitchReactor targetTrigger;
-    private Color color;
-    private bool pressed = false;
+
     private GameObject button;
     private Material material;
-    private bool unUsed;
+    private Color color;
 
-    private void Start()
-    {
-        unUsed = true;
-    }
+    private bool pressed = false;
+    private bool unUsed = true;
 
 
     private void OnTriggerEnter(Collider other)
@@ -47,7 +47,7 @@ public class Switch : MonoBehaviour {
                 button.transform.position += Vector3.down * 0.2f;
                 material.color = color;
                 pressed = true;
-                targetTrigger.switchOn();
+                targetTrigger.switchActive();
             }
         }
     }
@@ -61,13 +61,8 @@ public class Switch : MonoBehaviour {
                 button.transform.position += Vector3.up * 0.2f;
                 material.color = Color.red;
                 pressed = false;
-                targetTrigger.switchOff();
+                targetTrigger.switchActive();
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update () {
-        
     }
 }

@@ -3,18 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+
 public class Spell : MonoBehaviour {
 
 
     private SpellType element;
-    private float speed = 20;
-    private bool alternative;
+    private float speed;
+    //private bool alternative;
     private Material material;
     private ParticleSystem activeParticle;
 
-    public ParticleSystem fireParticle;
-    public ParticleSystem iceParticle;
-    public ParticleSystem windParticle;
+    [SerializeField]
+    private ParticleSystem defaultParticle, fireParticle, iceParticle, windParticle, electricParticle;
+
 
     public void Initialize(SpellType _element, bool _alternative)
     {
@@ -28,7 +30,7 @@ public class Spell : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        alternative = false;
+        //alternative = false;
         material = transform.GetComponent<Renderer>().material;
         switch (element)
         {
@@ -100,18 +102,15 @@ public class Spell : MonoBehaviour {
     public void stopCast()
     {
         try { Destroy(gameObject); }
-        catch (Exception e) { }
-        }
+        catch (Exception e) { throw new Exception("SpellAllreadyDestroyed"); }
+    }
 
     private void OnCollisionEnter(Collision other)
     {
-        
-
         if(element != SpellType.Fire && element != SpellType.Wind)
             stopCast();
     }
 
-    
     private void OnTriggerEnter(Collider other)
     {
         if (element == SpellType.Wind && other.gameObject.name == "Object_Player")

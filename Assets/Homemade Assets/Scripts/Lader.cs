@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+//Todo Implement climbing:
+
+
 public class Lader : Interactable {
-
-    void Start()
-    {
-        gameUI = GetComponentInParent<UIController>();
-    }
-
+    
     public override void OnTriggerStay(Collider other)
     {
         
@@ -19,9 +18,4 @@ public class Lader : Interactable {
     {
         interaction = "Climb";
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

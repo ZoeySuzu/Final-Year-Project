@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Last clean: 29/11/2017
+
 public class MainMenuController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+
+    //------------------------------------------Menu Methods
 
     public void newGame()
     {
         SceneManager.LoadSceneAsync("TestDev", LoadSceneMode.Single);
-
     }
 
     public void loadLevel()
     {
-
+        //Not implemented yet
     }
 
     public void quitGame()
@@ -27,9 +26,4 @@ public class MainMenuController : MonoBehaviour {
         Application.Quit();
         Debug.Break();
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
 }

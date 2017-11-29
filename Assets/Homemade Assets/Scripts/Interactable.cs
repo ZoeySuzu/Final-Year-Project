@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+
 public abstract class Interactable : MonoBehaviour{
     protected UIController gameUI;
     protected string interaction = "";
 
-    private GameObject indicator;
     private GameObject indicatorLive;
 
     public abstract void OnTriggerStay(Collider other);
@@ -14,14 +15,14 @@ public abstract class Interactable : MonoBehaviour{
     private void Start()
     {
         gameUI = GetComponentInParent<UIController>();
+        Debug.Log(gameUI.name + gameObject.name);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Object_Player")
         {
-            indicator = gameUI.indicator;
-            indicatorLive = Instantiate(indicator);
+            indicatorLive = Instantiate(gameUI.getInteractIcon());
             indicatorLive.transform.parent = gameObject.transform;
             indicatorLive.transform.position = transform.position;
             gameUI.setInteractButton(interaction);

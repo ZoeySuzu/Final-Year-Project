@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class Signpost : Interactable {
 
-    public List<string> signText;
+    [SerializeField]
+    private List<string> signText;
+
     private Queue<string> textQueue;
 
     public Signpost()

@@ -5,14 +5,23 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
 
+    //HUD text
     public Text action;
     public Text interaction;
-    public GameObject pauseScreen;
+
+    //Debuging display text
     public Text state;
     public Text spellType;
+
+    //PauseScreen
+    public GameObject pauseScreen;
+
+    //TextDisplay
     private TextController textDisplay;
     public GameObject textBox;
-    public GameObject indicator;
+
+    [SerializeField]
+    private GameObject indicator;
 
 	// Use this for initialization
 	void Start () {
@@ -23,7 +32,13 @@ public class UIController : MonoBehaviour {
         spellType.text = "";
     }
 	
+    //get methods:
+    public GameObject getInteractIcon()
+    {
+        return indicator;
+    }
 
+    //Set methods:
     public void setInteractButton(string interactiontxt)
     {
         interaction.text = interactiontxt;
@@ -44,6 +59,7 @@ public class UIController : MonoBehaviour {
         spellType.text = "Spell: " + statetxt;
     }
 
+
     public void pause()
     {
         pauseScreen.SetActive(true);
@@ -55,6 +71,7 @@ public class UIController : MonoBehaviour {
         pauseScreen.SetActive(false);
     }
 
+    //DisplayText
     public void displayText(Queue<string> text)
     {
         if (textBox.activeSelf == false){

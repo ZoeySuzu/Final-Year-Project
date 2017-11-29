@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum directions { up, down, left, right, forward, back };
+//Last clean: 29/11/2017
+//to do: Fix distance/time equation
 
 public class MovingPlatform : MonoBehaviour {
 
-    public directions dir;
-    public float distance;
-    public float speed;
+    private enum directions { up, down, left, right, forward, back };
+    [SerializeField]
+    private directions dir;
+    [SerializeField]
+    private float distance;
+    [SerializeField]
+    private float speed;
 
     private float position;
     private Vector3 vector;
     private bool backwards;
+
     private GameObject target;
     private Vector3 offset;
-
     private List<GameObject> targets = new List<GameObject>();
 
     // Use this for initialization
@@ -56,6 +61,7 @@ public class MovingPlatform : MonoBehaviour {
                 }
             
             default:
+                Debug.Log("Direction for moving platform not set");
                 break;
         }
 	}
@@ -74,6 +80,11 @@ public class MovingPlatform : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+
+        if(Time.timeScale <= 0.01f)
+        {
+            return;
+        }
 
         if (!backwards) {
             position += 1;

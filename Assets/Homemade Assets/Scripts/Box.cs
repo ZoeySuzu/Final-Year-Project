@@ -3,26 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+
 public class Box : Interactable {
 
-    private bool inUse;
-    private bool grounded;
+    private bool inUse = false;
+    private bool grounded = false;
     private PlayerController p;
     private float speed;
 
-    void Start()
+    private void Start()
     {
-        GameObject player = GameObject.Find("Object_Player");
-        p = player.GetComponent<PlayerController>();
-        speed = p.getSpeed();
         gameUI = GetComponentInParent<UIController>();
-        grounded = false;
+        p = GameObject.Find("Object_Player").GetComponent<PlayerController>();
+        speed = p.getSpeed();
     }
 
     public Box()
     {
         interaction = "Grab";
-        this.inUse = false;
     }
 
     private bool IsGrounded()
@@ -55,10 +54,10 @@ public class Box : Interactable {
 
     void Update()
     {
-        /*if(!IsGrounded())
+        if(!IsGrounded())
         {
             transform.Translate(Vector3.down*8.0f* Time.deltaTime) ;
-        }*/
+        }
 
 
         if (inUse)

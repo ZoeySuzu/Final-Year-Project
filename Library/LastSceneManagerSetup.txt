@@ -1,13 +1,16 @@
 sceneSetups:
-- path: Assets/MainMenu.unity
-  isLoaded: 0
-  isActive: 0
-- path: Assets/TestDev.unity
+- path: Assets/Scenes/TestDev.unity
   isLoaded: 1
   isActive: 1
-- path: Assets/FireLevel.unity
+- path: Assets/Scenes/MainScreen.unity
   isLoaded: 0
   isActive: 0
-- path: Assets/CombatTestDev.unity
+- path: Assets/Scenes/MainMenu.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/Scenes/FireLevel.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/Scenes/CombatTestDev.unity
   isLoaded: 0
   isActive: 0

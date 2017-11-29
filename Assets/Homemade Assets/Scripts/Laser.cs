@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+//To do: Implement method to change target
+
 public class Laser : MonoBehaviour {
 
+    //Target for laser
+    [SerializeField]
+    private GameObject target;
 
-    public GameObject target;
-
+    //Private variables
     private LineRenderer line;
     private Vector3 vector;
 
-	// Use this for initialization
+
+    //Set up targeting
 	void Start () {
         line = GetComponent<LineRenderer>();
         if (target != null)
@@ -23,7 +29,8 @@ public class Laser : MonoBehaviour {
         }
 	}
 	
-	// Update is called once per frame
+
+    //Check for laser interuption;
 	void Update () {
         RaycastHit hit ;
         if(Physics.Raycast(transform.position,vector, out hit)){

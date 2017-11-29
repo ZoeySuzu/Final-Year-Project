@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Last clean: 29/11/2017
+//To do: Implement opening and closing
+
 public class Gate : MonoBehaviour {
 
-    public Gate targetDestination;
+    [SerializeField]
+    private Gate targetDestination;
 
     private void OnTriggerEnter(Collider other)
     {
