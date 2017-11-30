@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Last clean: 29/11/2017
+
 public class UIController : MonoBehaviour {
 
     //HUD text
@@ -69,14 +71,5 @@ public class UIController : MonoBehaviour {
     public void resume()
     {
         pauseScreen.SetActive(false);
-    }
-
-    //DisplayText
-    public void displayText(Queue<string> text)
-    {
-        if (textBox.activeSelf == false){
-            textBox.SetActive(true);
-            textDisplay.setText(text,"Empty");
-        }
     }
 }

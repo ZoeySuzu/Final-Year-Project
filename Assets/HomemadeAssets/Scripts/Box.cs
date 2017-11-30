@@ -138,8 +138,11 @@ public class Box : Interactable {
     }
     public override void collisionExit()
     {
-        p.setPlayerState("idle");
-        inUse = false;
+        if (inUse)
+        {
+            p.setPlayerState("idle");
+            inUse = false;
+        }
     }
 
 }
