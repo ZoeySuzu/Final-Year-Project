@@ -56,7 +56,7 @@ public class Box : Interactable {
     {
         if(!IsGrounded())
         {
-            transform.Translate(Vector3.down*8.0f* Time.deltaTime) ;
+            transform.Translate(Vector3.down*14.0f* Time.deltaTime) ;
         }
 
 
