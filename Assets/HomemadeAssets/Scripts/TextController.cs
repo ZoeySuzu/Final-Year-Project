@@ -13,11 +13,11 @@ public class TextController : MonoBehaviour {
     private Text textToDisplay;
     private Queue<string> textList;
     private bool newDialogue;
-    private bool dialogueLeft;
     private bool askingQuestion;
 
     private string[] pointer;
     private string talkingName;
+    private TestDialogue actor;
 
     private void Awake()
     {
@@ -51,13 +51,15 @@ public class TextController : MonoBehaviour {
         questionPanel.transform.GetChild(0).GetComponent<Button>().Select();
     }
 
-    public void sendDialogueRequest(string _dialogueID, string _name)
+    public void sendDialogueRequest(string _dialogueID, TestDialogue _actor)
     {
+        actor = _actor;
         string line;
         textList = new Queue<string>();
+        talkingName = actor.getName();
         try
         {
-            string path = ".\\Assets\\HomemadeAssets\\Dialogue\\" + _name + ".zs";
+            string path = ".\\Assets\\HomemadeAssets\\Dialogue\\" + talkingName + ".zs";
             StreamReader sr = new StreamReader(path);
 
             line = sr.ReadLine();
@@ -79,7 +81,7 @@ public class TextController : MonoBehaviour {
                 line = sr.ReadLine();
             }
             sr.Close();
-            displayText(textList,_name);
+            displayText(textList,talkingName);
         }
         catch(IOException e)
         {
@@ -89,13 +91,11 @@ public class TextController : MonoBehaviour {
 
     }
 
-    public void displayText(Queue<string> text, string _name)
+    public void displayText(Queue<string> _textList, string _name)
     {
+        textList = _textList;
         talkingName = _name;
-        if (textList.Count > 1)
-        {
-            dialogueLeft = true;
-        }
+
         GameController.Instance.pauseEntities();
         newDialogue = true;
         gameObject.SetActive(true);
@@ -112,7 +112,7 @@ public class TextController : MonoBehaviour {
         {
 
         }
-        else if (dialogueLeft && Input.GetButtonDown("Interact"))
+        else if (Input.GetButtonDown("Interact"))
         {
             displayNext();
         }
@@ -120,18 +120,18 @@ public class TextController : MonoBehaviour {
 
     public void displayNext()
     {
-        if (textList.Count < 1)
+        if (textList.Count == 0)
         {
-            dialogueLeft = false;
             GameController.Instance.pauseEntities();
             gameObject.SetActive(false);
         }
         else
         {
             string text = textList.Dequeue();
-            if (text.StartsWith("Question"))
+            //Check for question with n answers
+            if (text.StartsWith("@?"))
             {
-                int n = text[text.Length - 1] -'0';
+                int n = text[3]-'0';
                 Debug.Log(n);
                 askingQuestion = true;
                 textToDisplay.text = textList.Dequeue();
@@ -144,13 +144,28 @@ public class TextController : MonoBehaviour {
                 pointer = new string[4];
                 for(int i = 0; i < n; i++)
                 {
-                    pointer[i] = textList.Dequeue().Substring(1);
+                    pointer[i] = textList.Dequeue().Substring(2);
                 }
                 setAnswers(answers);
             }
-            else if (text.StartsWith(">"))
+            //Check for pointer links
+            else if (text.StartsWith("@>"))
             {
-                sendDialogueRequest(text.Substring(1), talkingName);
+                sendDialogueRequest(text.Substring(2), actor);
+            }
+            //
+            else if (text.StartsWith("@#"))
+            {
+                text = text.Substring(3);
+                if (text.StartsWith("setDialogue"))
+                {
+                    actor.setDialogue(text.Substring(12));
+                }
+                if (text.StartsWith("setFriendPoints"))
+                {
+                    actor.setFriendPoints(int.Parse(text.Substring(16)));
+                }
+                displayNext();
             }
             else
             {
@@ -164,7 +179,7 @@ public class TextController : MonoBehaviour {
         askingQuestion = false;
         questionPanel.SetActive(false);
         Debug.Log(pointer[answer]);
-        sendDialogueRequest(pointer[answer], talkingName);
+        sendDialogueRequest(pointer[answer], actor);
     }
 
     public bool getState()

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class TestDialogue : Interactable {
 
+    [SerializeField]
     private int fp;
 
     [SerializeField]
-    private string name;
+    private string name = "Default";
     [SerializeField]
     private string dialogueID; 
 
@@ -19,16 +20,26 @@ public class TestDialogue : Interactable {
         interaction = "Talk";
     }
 
-    public void talk()
+    public string getName()
     {
-            
+        return name;
+    }
+
+    public void setDialogue(string _dialogueID)
+    {
+        dialogueID = _dialogueID;
+    }
+
+    public void setFriendPoints(int _value)
+    {
+        fp += _value;
     }
 
     public override void OnTriggerStay(Collider other)
     {
         if (Input.GetButtonDown("Interact") && !TextController.Instance.gameObject.activeSelf)
         {
-            TextController.Instance.sendDialogueRequest(dialogueID, name);
+            TextController.Instance.sendDialogueRequest(dialogueID, this);
         }
     }
 }
