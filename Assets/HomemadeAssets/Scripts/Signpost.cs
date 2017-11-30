@@ -24,8 +24,7 @@ public class Signpost : Interactable {
             {
                 textQueue.Enqueue(element);
             }
-            TextController.Instance.setText(textQueue,"Sign");
-            TextController.Instance.displayText();
+            TextController.Instance.displayText(textQueue, "Sign");
         }
     }
 }
