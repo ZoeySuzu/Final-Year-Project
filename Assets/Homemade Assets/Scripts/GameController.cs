@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 //Last clean: 29/11/2017
 
 public class GameController : MonoBehaviour {
-    public static GameController Instance { get; set; }
 
     //-----------------------------------Main game controllers:
     private UIController ui;
@@ -17,18 +16,6 @@ public class GameController : MonoBehaviour {
         ui = GetComponentInChildren<UIController>();
         pc = GetComponentInChildren<PlayerController>();
 	}
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
 
 
     //-----------------------------------Listen for pause:
@@ -52,25 +39,32 @@ public class GameController : MonoBehaviour {
     //-----------------------------------Pause Game:
     public void pause()
     {
+        print("Start pressed");
         if (Time.timeScale == 1)
         {
-            Debug.Log("pause");
+            Debug.Log("pasue");
             pc.enabled = false;
             Time.timeScale = 0;
-            ui.pause();
+            showPaused();
         }
         else
         {
+
             Debug.Log("unpause");
             pc.enabled = true;
             Time.timeScale = 1;
-            ui.resume();
+            hidePaused();
         }
+    } 
+
+    private void showPaused()
+    {
+        ui.pause();
     }
 
-    public void pauseEntities()
+    private void hidePaused()
     {
-        pc.enabled = !pc.enabled;
+        ui.resume();
     }
 
 }
