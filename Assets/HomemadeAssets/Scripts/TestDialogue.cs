@@ -35,6 +35,19 @@ public class TestDialogue : Interactable {
         fp += _value;
     }
 
+    public bool checkFriendPoints(bool _higher, int _value)
+    {
+        if (_higher)
+        {
+            if (fp >= _value) return true;
+        }
+        else
+        {
+            if (fp < _value) return true;
+        }
+        return false;
+    }
+
     public override void OnTriggerStay(Collider other)
     {
         if (Input.GetButtonDown("Interact") && !TextController.Instance.gameObject.activeSelf)

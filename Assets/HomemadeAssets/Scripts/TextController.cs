@@ -10,6 +10,7 @@ public class TextController : MonoBehaviour {
     [SerializeField]
     private GameObject questionPanel;
 
+    private string dialogueID;
     private Text textToDisplay;
     private Queue<string> textList;
     private bool newDialogue;
@@ -53,6 +54,7 @@ public class TextController : MonoBehaviour {
 
     public void sendDialogueRequest(string _dialogueID, TestDialogue _actor)
     {
+        dialogueID = _dialogueID;
         actor = _actor;
         string line;
         textList = new Queue<string>();
@@ -63,7 +65,6 @@ public class TextController : MonoBehaviour {
             StreamReader sr = new StreamReader(path);
 
             line = sr.ReadLine();
-            Debug.Log(line);
             Debug.Log(_dialogueID);
             while (line != null && !line.Equals(_dialogueID)) {
                 line = sr.ReadLine();
@@ -131,8 +132,7 @@ public class TextController : MonoBehaviour {
             //Check for question with n answers
             if (text.StartsWith("@?"))
             {
-                int n = text[3]-'0';
-                Debug.Log(n);
+                int n = text[3] - '0';
                 askingQuestion = true;
                 textToDisplay.text = textList.Dequeue();
 
@@ -142,9 +142,9 @@ public class TextController : MonoBehaviour {
                     answers.Enqueue(textList.Dequeue());
                 }
                 pointer = new string[4];
-                for(int i = 0; i < n; i++)
+                for (int i = 0; i < n; i++)
                 {
-                    pointer[i] = textList.Dequeue().Substring(2);
+                    pointer[i] = dialogueID + "A" + (i+1);
                 }
                 setAnswers(answers);
             }
@@ -153,7 +153,33 @@ public class TextController : MonoBehaviour {
             {
                 sendDialogueRequest(text.Substring(2), actor);
             }
-            //
+            //check for friend point condition
+            else if (text.StartsWith("@%"))
+            {
+                bool higher = true;
+                if (text[2] == '>')
+                {
+                    higher = true;
+                }
+                else if (text[2] == '<')
+                {
+                    higher = false;
+                }
+                else
+                {
+                    Debug.Log("wrong comparison");
+                }
+                bool check = actor.checkFriendPoints(higher, int.Parse(text.Substring(3)));
+                if (!check)
+                {
+                    while (text != null && !text.Equals("else"))
+                    {
+                        text = textList.Dequeue();
+                    }
+                }
+                displayNext();
+            }
+            //check for methods
             else if (text.StartsWith("@#"))
             {
                 text = text.Substring(3);
@@ -167,6 +193,10 @@ public class TextController : MonoBehaviour {
                 }
                 displayNext();
             }
+            else if (text.StartsWith("else"))
+            {
+                return;
+            }
             else
             {
                 textToDisplay.text = text;
@@ -178,7 +208,6 @@ public class TextController : MonoBehaviour {
     {
         askingQuestion = false;
         questionPanel.SetActive(false);
-        Debug.Log(pointer[answer]);
         sendDialogueRequest(pointer[answer], actor);
     }
 

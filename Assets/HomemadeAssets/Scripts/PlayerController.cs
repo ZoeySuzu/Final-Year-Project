@@ -59,6 +59,12 @@ public class PlayerController : MonoBehaviour {
     }
 	
 	void Update () {
+        //check out of bounds
+        if(transform.position.y < -20)
+        {
+            transform.position = new Vector3(0, 0, 0);
+        }
+
         //Check for directional input
         var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
         var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;

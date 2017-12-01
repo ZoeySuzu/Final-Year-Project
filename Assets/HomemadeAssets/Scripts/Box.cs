@@ -26,7 +26,7 @@ public class Box : Interactable {
 
     private bool IsGrounded()
     {
-        float scale = transform.localScale.x / 2;
+        float scale = transform.localScale.x;
         bool a =Physics.Raycast(transform.position+ Vector3.forward * scale + Vector3.right * scale, Vector3.down, scale + 0.1f);
         bool b =Physics.Raycast(transform.position+ Vector3.forward * scale - Vector3.right * scale, Vector3.down, scale + 0.1f);
         bool c =Physics.Raycast(transform.position- Vector3.forward * scale + Vector3.right * scale, Vector3.down, scale + 0.1f);

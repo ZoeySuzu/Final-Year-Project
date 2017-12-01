@@ -44,7 +44,7 @@ public class Switch : MonoBehaviour {
 
             if (!pressed)
             {
-                button.transform.position += Vector3.down * 0.2f;
+                button.transform.position += Vector3.down * 0.05f;
                 material.color = color;
                 pressed = true;
                 targetTrigger.switchActive();
@@ -58,7 +58,7 @@ public class Switch : MonoBehaviour {
         {
             if (!staysDown)
             {
-                button.transform.position += Vector3.up * 0.2f;
+                button.transform.position += Vector3.up * 0.05f;
                 material.color = Color.red;
                 pressed = false;
                 targetTrigger.switchActive();
