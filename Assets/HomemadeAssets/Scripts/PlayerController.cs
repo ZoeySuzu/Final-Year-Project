@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public static PlayerController Instance { get; set; }
+
     //Public Variables for debuging
     public float basespeed;
     public float jumpHeight;
@@ -15,6 +17,8 @@ public class PlayerController : MonoBehaviour {
     //Pointers to other classes
     private Rigidbody rb;
     private UIController ui;
+
+    private GameObject hand;
 
     //Ability related variables
     private SpellType element;
@@ -31,6 +35,14 @@ public class PlayerController : MonoBehaviour {
     //------------------------------------------------------Initialising Code
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
         speed = basespeed;
     }
     void Start () {
@@ -41,6 +53,7 @@ public class PlayerController : MonoBehaviour {
         playerState = "idle";
         playerModel = transform.Find("Model_Player");
         element = SpellType.Normal;
+        hand = transform.GetChild(0).FindChild("holder").gameObject;
     }
 
 
@@ -194,6 +207,11 @@ public class PlayerController : MonoBehaviour {
     public string getPlayerState()
     {
         return playerState;
+    }
+
+    public GameObject getHand()
+    {
+        return hand;
     }
 
 

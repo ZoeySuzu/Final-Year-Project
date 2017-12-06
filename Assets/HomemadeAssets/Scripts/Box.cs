@@ -126,11 +126,13 @@ public class Box : Interactable {
         {
             if (Input.GetButtonDown("Interact"))
             {
+                toggleIndicator();
                 p.setPlayerState("pushing");
                 inUse = true;
             }
             if (Input.GetButtonUp("Interact"))
             {
+                toggleIndicator();
                 p.setPlayerState("idle");
                 inUse = false;
             }

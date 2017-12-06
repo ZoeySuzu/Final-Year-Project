@@ -29,6 +29,11 @@ public abstract class Interactable : MonoBehaviour{
         }
     }
 
+    public void toggleIndicator()
+    {
+        indicatorLive.SetActive(!indicatorLive.activeSelf);
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.name == "Object_Player")

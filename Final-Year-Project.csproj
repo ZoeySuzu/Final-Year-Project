@@ -102,6 +102,7 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\TestDialogue.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TextController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\UIController.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
