@@ -15,6 +15,7 @@ public class Gate : MonoBehaviour {
         if(other.name == "Object_Player")
         {
             other.transform.position = targetDestination.transform.position + targetDestination.transform.forward * 2;
+            PlayerController.Instance.setSpawn(targetDestination.transform.position + targetDestination.transform.forward * 2);
         }
     }
 }

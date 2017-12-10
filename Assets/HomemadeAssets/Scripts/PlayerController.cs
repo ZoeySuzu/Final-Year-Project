@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour {
     public float jumpHeight;
     public GameObject projectile;
     public bool fighting;
+    public int pad;
+    public bool dPadUpdate;
 
     //Pointers to other classes
     private Rigidbody rb;
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour {
     private string playerState;
     private Transform playerModel;
     private bool lockRotation;
+    private Vector3 spawn;
 
     //------------------------------------------------------Initialising Code
     private void Awake()
@@ -45,6 +48,8 @@ public class PlayerController : MonoBehaviour {
         speed = basespeed;
     }
     void Start () {
+        pad = 0;
+        spawn = transform.position;
         spellCasting = false;
         lockRotation = false;
         rb = GetComponent<Rigidbody>();
@@ -74,7 +79,7 @@ public class PlayerController : MonoBehaviour {
         //check out of bounds
         if(transform.position.y < -20)
         {
-            transform.position = new Vector3(0, 0, 0);
+            transform.position = spawn;
         }
 
         //Check for directional input
@@ -85,9 +90,20 @@ public class PlayerController : MonoBehaviour {
         targetDirection.y = 0.0f;
 
 
-        //Pushing something
-        if (playerState.Equals("pushing"))
+        if (playerState.Equals("climbing"))
         {
+            rb.velocity = Vector3.zero;
+            if (z != 0)
+            {
+                transform.Translate(Vector3.up * z*0.4f);
+            }
+        }
+
+
+        //Pushing something
+        else if (playerState.Equals("pushing"))
+        {
+            ui.setActionButton("");
             ui.setInteractButton("Let go");
             Vector3 pushDirection;
             //Get most emphasized direction
@@ -140,39 +156,50 @@ public class PlayerController : MonoBehaviour {
                 playerState = "jumping";
                 ui.setActionButton("");
             }
-                
-                
 
+            if(pad == 0) {
+                dPadUpdate = true;
+                if(Input.GetAxisRaw("D-Y") < 0) { pad = -1; }
+                else if (Input.GetAxisRaw("D-Y") > 0) { pad = 1; }
+                else if (Input.GetAxisRaw("D-X") < 0) { pad = -2; }
+                else if (Input.GetAxisRaw("D-X") > 0) { pad = 2; }
+            }
+            else if(Input.GetAxisRaw("D-Y") == 0 && Input.GetAxisRaw("D-X") == 0)
+            {
+                pad = 0;
+            }
+               
 
-            //Check for spellchange input
-            if (Input.GetButtonDown("D-D"))
+                //Check for spellchange input
+            if (Input.GetButtonDown("D-D") || (pad == -1 && dPadUpdate))
             {
                 if (element == SpellType.Electric)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Electric;
             }
-            else if (Input.GetButtonDown("D-L"))
+            else if (Input.GetButtonDown("D-L") || (pad == -2 && dPadUpdate))
             {
                 if (element == SpellType.Fire)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Fire;
             }
-            else if (Input.GetButtonDown("D-U"))
+            else if (Input.GetButtonDown("D-U") || (pad == 1 && dPadUpdate))
             {
                 if (element == SpellType.Wind)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Wind;
             }
-            else if(Input.GetButtonDown("D-R"))
+            else if(Input.GetButtonDown("D-R") || (pad == 2 && dPadUpdate))
             {
                 if (element == SpellType.Ice)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Ice;
             }
+            dPadUpdate = false;
 
             //Check for jump input
             if (Input.GetButtonDown("Jump") && IsGrounded())
@@ -259,6 +286,10 @@ public class PlayerController : MonoBehaviour {
         return hand;
     }
 
+    public Transform getModel()
+    {
+        return playerModel;
+    }
 
     //------------------------------------------------------Set Methods
     public void setJumpHeight(float height)
@@ -270,6 +301,11 @@ public class PlayerController : MonoBehaviour {
     {
         playerState = state;
         Debug.Log("Set player interaction:" + state);
+    }
+
+    public void setSpawn(Vector3 spawnPoint)
+    {
+        spawn = spawnPoint;
     }
 
     //------------------------------------------------------State Check methods
