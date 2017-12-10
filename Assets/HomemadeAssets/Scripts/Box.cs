@@ -6,7 +6,7 @@ using UnityEngine;
 //Last clean: 29/11/2017
 
 public class Box : Interactable {
-
+    private bool startPushing = false;
     private bool inUse = false;
     private bool grounded = false;
     private PlayerController p;
@@ -27,17 +27,19 @@ public class Box : Interactable {
     private bool IsGrounded()
     {
         float scale = transform.localScale.x;
+        scale -= 0.01f;
         bool a =Physics.Raycast(transform.position+ Vector3.forward * scale + Vector3.right * scale, Vector3.down, scale + 0.1f);
         bool b =Physics.Raycast(transform.position+ Vector3.forward * scale - Vector3.right * scale, Vector3.down, scale + 0.1f);
         bool c =Physics.Raycast(transform.position- Vector3.forward * scale + Vector3.right * scale, Vector3.down, scale + 0.1f);
         bool d =Physics.Raycast(transform.position- Vector3.forward * scale - Vector3.right * scale, Vector3.down, scale+0.1f);
+        scale += 0.01f;
         if (a || b || c || d)
         {
             if (grounded == false)
             {
                 Ray raydown = new Ray(transform.position, Vector3.down);
                 RaycastHit hit;
-                if (Physics.Raycast(raydown, out hit, 10.00f))
+                if (Physics.Raycast(raydown, out hit, scale + 1.00f))
                 {
                     transform.position += Vector3.down * hit.distance + Vector3.up*scale;
                 }
@@ -93,9 +95,9 @@ public class Box : Interactable {
         if (targetDirection.x != 0)
         {
             Ray rayright = new Ray(transform.position, Vector3.right * Mathf.Sign(targetDirection.x));
-            if (Physics.Raycast(rayright, out hit, scale / 2 + 0.05f))
+            if (Physics.Raycast(rayright, out hit, scale + 0.05f))
             {
-                transform.position += Vector3.right * hit.distance * Mathf.Sign(targetDirection.x) - Vector3.right * scale / 2 * Mathf.Sign(targetDirection.x);
+                transform.position += Vector3.right * hit.distance * Mathf.Sign(targetDirection.x) - Vector3.right * scale * Mathf.Sign(targetDirection.x);
             }
             else
             {
@@ -105,11 +107,11 @@ public class Box : Interactable {
         if (targetDirection.z != 0)
         {
             Ray rayforward = new Ray(transform.position, Vector3.forward * Mathf.Sign(targetDirection.z));
-            if (Physics.Raycast(rayforward, out hit, scale / 2 + 0.05f))
+            if (Physics.Raycast(rayforward, out hit, scale + 0.05f))
             {
                 if (Mathf.Abs(hit.distance) > 0.05)
                 {
-                    transform.position += Vector3.forward * hit.distance * Mathf.Sign(targetDirection.z) - Vector3.forward * scale / 2 * Mathf.Sign(targetDirection.z);
+                    transform.position += Vector3.forward * hit.distance * Mathf.Sign(targetDirection.z) - Vector3.forward * scale * Mathf.Sign(targetDirection.z);
                 }
             }
             else
@@ -122,19 +124,28 @@ public class Box : Interactable {
 
     public override void OnTriggerStay(Collider other)
     {
+        
         if (other.name == "Object_Player")
         {
-            if (Input.GetButtonDown("Interact"))
+            if (Input.GetButtonDown("Interact") && !inUse)
             {
                 toggleIndicator();
                 p.setPlayerState("pushing");
                 inUse = true;
+                startPushing = true;
             }
             if (Input.GetButtonUp("Interact"))
             {
-                toggleIndicator();
-                p.setPlayerState("idle");
-                inUse = false;
+                if (startPushing)
+                {
+                    startPushing = false;
+                }
+                else
+                {
+                    toggleIndicator();
+                    p.setPlayerState("idle");
+                    inUse = false;
+                }
             }
         }
     }

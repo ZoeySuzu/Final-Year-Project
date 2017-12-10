@@ -9,60 +9,66 @@ public class Switch : MonoBehaviour {
     [SerializeField]
     private bool staysDown;
     [SerializeField]
-    public GameObject reactionTarget;
-    private SwitchReactor targetTrigger;
+    public GameObject targetObject;
+    [SerializeField]
+    private bool targetActive;
 
     private GameObject button;
     private Material material;
     private Color color;
 
+    private int counter;
     private bool pressed = false;
-    private bool unUsed = true;
 
+    private void Start()
+    {
+        counter =  0;
+        button = gameObject.transform.GetChild(0).gameObject;
+        material = button.transform.GetComponent<Renderer>().material;
+        material.color = Color.red;
+        if (staysDown)
+        {
+            color = Color.blue;
+        }
+        else
+        {
+            color = Color.green;
+        }
+        targetObject.SetActive(targetActive);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Object_Player")
+        if (other.tag != "Spell")
         {
-            if (unUsed)
-            {
-                button = gameObject.transform.GetChild(0).gameObject;
-                Debug.Log(button.ToString());
-                material = button.transform.GetComponent<Renderer>().material;
-                material.color = Color.red;
-                if (staysDown)
-                {
-                    color = Color.blue;
-                }
-                else
-                {
-                    color = Color.green;
-                }
-                targetTrigger = reactionTarget.GetComponent<SwitchReactor>();
-                unUsed = false;
-            }
-
             if (!pressed)
             {
                 button.transform.position += Vector3.down * 0.05f;
                 material.color = color;
                 pressed = true;
-                targetTrigger.switchActive();
+                switchActive();
             }
+            counter++;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.name == "Object_Player")
+        if (other.tag != "Spell")
         {
-            if (!staysDown)
+            counter--;
+            if (!staysDown & counter == 0)
             {
                 button.transform.position += Vector3.up * 0.05f;
                 material.color = Color.red;
                 pressed = false;
-                targetTrigger.switchActive();
+                switchActive();
             }
         }
+    }
+
+    public void switchActive()
+    {
+        targetObject.SetActive(!targetObject.activeSelf);
     }
 }

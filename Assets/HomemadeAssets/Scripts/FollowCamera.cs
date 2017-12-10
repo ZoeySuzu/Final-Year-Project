@@ -15,12 +15,14 @@ public class FollowCamera : MonoBehaviour
     public float maxDistance;
     private bool enemyFocused;
     private Vector3 center;
+    private Vector3 init;
 
-    Vector3 offset;
+    private Vector3 offset;
 
     void Start()
     {
-        offset = target.transform.position - transform.position;
+        init = target.transform.position - transform.position;
+        offset = init;
         enemyFocused = GetComponentInParent<PlayerController>().fighting;
     }
 
@@ -42,9 +44,7 @@ public class FollowCamera : MonoBehaviour
             if ( Input.GetAxis("CameraLock") == 1)
             {
                 Debug.Log("Camera Focused");
-                transform.position = target.transform.position + target.transform.forward * -8 + target.transform.up * 5;
-                offset = target.transform.position - transform.position;
-                transform.LookAt(target.transform);
+                offset = (transform.parent.rotation * init);
             }
 
             Quaternion rotation = Quaternion.Euler(0, cameraX, 0);

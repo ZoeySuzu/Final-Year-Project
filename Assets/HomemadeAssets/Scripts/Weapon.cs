@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Weapon : Interactable {
 
-    private bool free;
+    private bool free, pickUpFrame;
     private Transform defaultOwner;
     private Rigidbody rb;
 
@@ -22,21 +22,29 @@ public class Weapon : Interactable {
                 gameUI.setInteractButton("Drop");
                 toggleIndicator();
                 free = false;
-            }
-            else
-            {
-                rb.isKinematic = false;
-                transform.parent = defaultOwner;
-                gameUI.setInteractButton(interaction);
-                toggleIndicator();
-                free = true;
+                pickUpFrame = true;
             }
         }
     }
 
+    public void Update()
+    {
+        if (!free && Input.GetButtonDown("Interact")&& !pickUpFrame)
+        {
+            rb.isKinematic = false;
+            transform.parent = defaultOwner;
+            gameUI.setInteractButton(interaction);
+            toggleIndicator();
+            free = true;
+        }
+        pickUpFrame = false;
+    }
+
     public void Awake()
     {
+        pickUpFrame = false;
         rb = GetComponent<Rigidbody>();
+        Physics.IgnoreCollision(rb.GetComponent<Collider>(), PlayerController.Instance.GetComponent<Collider>(), true);
         defaultOwner = transform.parent.transform;
     }
 
@@ -45,5 +53,8 @@ public class Weapon : Interactable {
         interaction = "Pick up";
         free = true;
     }
+
+
+
 
 }

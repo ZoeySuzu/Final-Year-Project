@@ -7,8 +7,10 @@ public class Signpost : Interactable {
 
     [SerializeField]
     private List<string> signText;
-
     private Queue<string> textQueue;
+
+    [SerializeField]
+    private bool isDark;
 
     public Signpost()
     {
@@ -17,14 +19,23 @@ public class Signpost : Interactable {
 
     public override void OnTriggerStay(Collider other)
     {
-        if (Input.GetButtonDown("Interact") && !TextController.Instance.getState())
+
+        if (Input.GetButtonDown("Interact") && !TextController.Instance.getState() && other.name == "Object_Player")
         {
             textQueue = new Queue<string>();
-            foreach (string element in signText)
+            if (isDark && !GetComponentInChildren<LightTrigger>().getIsLit())
             {
-                textQueue.Enqueue(element);
+                textQueue.Enqueue("It's too dark to read this sign...");
+                TextController.Instance.displayText(textQueue, "Player");
             }
-            TextController.Instance.displayText(textQueue, "Sign");
+            else
+            {
+                foreach (string element in signText)
+                {
+                    textQueue.Enqueue(element);
+                }
+                TextController.Instance.displayText(textQueue, "Sign");
+            }
         }
     }
 }

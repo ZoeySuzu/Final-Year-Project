@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour {
     private string playerState;
     private Transform playerModel;
     private bool lockRotation;
-    
 
     //------------------------------------------------------Initialising Code
     private void Awake()
@@ -89,6 +88,7 @@ public class PlayerController : MonoBehaviour {
         //Pushing something
         if (playerState.Equals("pushing"))
         {
+            ui.setInteractButton("Let go");
             Vector3 pushDirection;
             //Get most emphasized direction
             if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
@@ -145,21 +145,33 @@ public class PlayerController : MonoBehaviour {
 
 
             //Check for spellchange input
-            if (Input.GetAxis("D-Y") > 0)
+            if (Input.GetButtonDown("D-D"))
             {
-                element = SpellType.Electric;
+                if (element == SpellType.Electric)
+                    element = SpellType.Normal;
+                else
+                    element = SpellType.Electric;
             }
-            if (Input.GetAxis("D-X") < 0)
+            else if (Input.GetButtonDown("D-L"))
             {
-                element = SpellType.Fire;
+                if (element == SpellType.Fire)
+                    element = SpellType.Normal;
+                else
+                    element = SpellType.Fire;
             }
-            if (Input.GetAxis("D-Y") < 0)
+            else if (Input.GetButtonDown("D-U"))
             {
-                element = SpellType.Wind;
+                if (element == SpellType.Wind)
+                    element = SpellType.Normal;
+                else
+                    element = SpellType.Wind;
             }
-            if (Input.GetAxis("D-X") > 0)
+            else if(Input.GetButtonDown("D-R"))
             {
-                element = SpellType.Ice;
+                if (element == SpellType.Ice)
+                    element = SpellType.Normal;
+                else
+                    element = SpellType.Ice;
             }
 
             //Check for jump input
@@ -168,19 +180,33 @@ public class PlayerController : MonoBehaviour {
                 rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
             }
 
+            //check for attack imput
+            if (Input.GetButtonDown("Attack"))
+            {
+                if(!IsGrounded() && element == SpellType.Wind)
+                {
+                    airPulse();
+                }
+                else if(element == SpellType.Electric)
+                {
+                    blink();
+                }
+            }
+
+
             //Check for spell input
-            if (Input.GetButtonDown("SmallSpell") && IsGrounded())
+            if (Input.GetButtonDown("Cast") && IsGrounded())
             {
                     
                 spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
-                if (element == SpellType.Fire)
+                if (element == SpellType.Fire || element == SpellType.Wind)
                 {
                     spellCasting = true;
                     spell.transform.parent = transform;
                 }
                 spell.Initialize(element, false);
             }
-            if (spellCasting && (!Input.GetButton("SmallSpell") || !IsGrounded()))
+            if (spellCasting && (!Input.GetButton("Cast") || !IsGrounded()))
             {
                 spell.stopCast();
                 spellCasting = false;
@@ -189,13 +215,32 @@ public class PlayerController : MonoBehaviour {
 
         if (spellCasting)
         {
-            playerState = "Casting";
+            playerState = "casting";
         }
 
         ui.setPlayerState(playerState);
         ui.setSpellState(element.ToString());
     }
+
+    //------------------------------------------------------Attack Methods
  
+
+    private void blink()
+    {
+        transform.position = transform.position += playerModel.transform.forward * 8;
+    }
+
+    private void airPulse()
+    {
+        Vector3 velocity = rb.velocity;
+        rb.velocity = new Vector3(velocity.x, 15, velocity.z);
+        rb.AddForce(playerModel.transform.forward*-100);
+    }
+
+    private void attack()
+    {
+
+    }
 
 
     //------------------------------------------------------Get Methods

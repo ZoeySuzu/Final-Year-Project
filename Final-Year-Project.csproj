@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.5f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -83,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Assets\ExternalAssets\FPSdisplay.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Box.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\CatchFire.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\GameController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Gate.cs" />
@@ -90,6 +93,8 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\Interactable.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Lader.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Laser.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\Lever.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\LightTrigger.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\MovingPlatform.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\PlayerController.cs" />
@@ -98,7 +103,6 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\SpellReactor.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\SpellType.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Switch.cs" />
-    <Compile Include="Assets\HomemadeAssets\Scripts\SwitchReactor.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TestDialogue.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TextController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\UIController.cs" />

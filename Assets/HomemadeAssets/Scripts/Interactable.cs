@@ -15,7 +15,6 @@ public abstract class Interactable : MonoBehaviour{
     private void Start()
     {
         gameUI = GetComponentInParent<UIController>();
-        Debug.Log(gameUI.name + gameObject.name);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -9,7 +9,7 @@ public class IndicatorController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        transform.position = transform.parent.position + Vector3.up*3;
+        transform.position = transform.parent.position + (transform.parent.localScale.y+1.0f)*Vector3.up;
         transform.LookAt(Camera.main.transform.position);
     }
 }
