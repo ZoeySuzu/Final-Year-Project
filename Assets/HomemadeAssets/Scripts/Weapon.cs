@@ -40,7 +40,7 @@ public class Weapon : Interactable {
         pickUpFrame = false;
     }
 
-    public void Awake()
+    public void Start()
     {
         pickUpFrame = false;
         rb = GetComponent<Rigidbody>();

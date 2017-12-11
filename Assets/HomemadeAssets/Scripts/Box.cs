@@ -14,7 +14,6 @@ public class Box : Interactable {
 
     private void Start()
     {
-        gameUI = GetComponentInParent<UIController>();
         p = GameObject.Find("Object_Player").GetComponent<PlayerController>();
         speed = p.getSpeed();
     }

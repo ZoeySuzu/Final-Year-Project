@@ -19,7 +19,6 @@ public class LightTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collision with: " + other);
         if (other.GetComponentInChildren<Light>() != null)
         {
             isLit = true;

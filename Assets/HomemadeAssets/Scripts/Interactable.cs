@@ -12,7 +12,7 @@ public abstract class Interactable : MonoBehaviour{
 
     public abstract void OnTriggerStay(Collider other);
 
-    private void Start()
+    private void Awake()
     {
         gameUI = GetComponentInParent<UIController>();
     }

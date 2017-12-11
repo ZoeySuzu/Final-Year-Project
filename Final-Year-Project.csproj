@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.5f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -103,12 +101,14 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\SpellReactor.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\SpellType.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Switch.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\TeleportPad.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TestDialogue.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TextController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\UIController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\LowpolyVegetationPackFree\Readme.txt" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
