@@ -34,6 +34,9 @@ public class PlayerController : MonoBehaviour {
     private bool lockRotation;
     private Vector3 spawn;
 
+    //Combat data
+    private ArrayList nearbyEnnemies;
+
     //------------------------------------------------------Initialising Code
     private void Awake()
     {
@@ -48,6 +51,7 @@ public class PlayerController : MonoBehaviour {
         speed = basespeed;
     }
     void Start () {
+        nearbyEnnemies = new ArrayList();
         pad = 0;
         spawn = transform.position;
         spellCasting = false;
@@ -58,6 +62,7 @@ public class PlayerController : MonoBehaviour {
         playerModel = transform.Find("Model_Player");
         element = SpellType.Normal;
         hand = transform.GetChild(0).FindChild("holder").gameObject;
+        GameController.Instance.addEntity(this.gameObject);
     }
 
 
@@ -291,6 +296,30 @@ public class PlayerController : MonoBehaviour {
         return playerModel;
     }
 
+    public GameObject getNearestEnnemy()
+    {
+        float distance;
+        float maxDistance = 100;
+        GameObject nearest = null;
+        if (nearbyEnnemies.Count == 0)
+            return null;
+        else if (nearbyEnnemies.Count == 1)
+            return (GameObject)nearbyEnnemies[0];
+        else
+        {
+            foreach (GameObject ennemy in nearbyEnnemies)
+            {
+                distance = Vector3.Magnitude(ennemy.transform.position - transform.position);
+                if (distance < maxDistance)
+                {
+                    nearest = ennemy;
+                    maxDistance = distance;
+                }
+            }
+            return nearest;
+        }
+    }
+
     //------------------------------------------------------Set Methods
     public void setJumpHeight(float height)
     {
@@ -314,6 +343,23 @@ public class PlayerController : MonoBehaviour {
         RaycastHit hit;
         return Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit,1f);
      }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name == "EnnemyTrigger")
+        {
+            nearbyEnnemies.Add(other.transform.parent.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.name == "EnnemyTrigger")
+        {
+            if(nearbyEnnemies.Contains(other.transform.parent.gameObject))
+                nearbyEnnemies.Remove(other.transform.parent.gameObject);
+        }
+    }
 
     //------------------------------------------------------Movement colision
     private void Movement(Vector3 targetDirection)

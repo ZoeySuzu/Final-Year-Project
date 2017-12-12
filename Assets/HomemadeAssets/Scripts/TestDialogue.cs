@@ -8,12 +8,17 @@ public class TestDialogue : Interactable {
     private int fp;
 
     [SerializeField]
-    private string name = "Default";
+    private string speakerName = "Default";
     [SerializeField]
     private string dialogueID; 
 
     private Queue<string> textQueue;
 
+
+    private void Start()
+    {
+        GameController.Instance.addEntity(this.gameObject);
+    }
 
     public TestDialogue()
     {
@@ -22,7 +27,7 @@ public class TestDialogue : Interactable {
 
     public string getName()
     {
-        return name;
+        return speakerName;
     }
 
     public void setDialogue(string _dialogueID)

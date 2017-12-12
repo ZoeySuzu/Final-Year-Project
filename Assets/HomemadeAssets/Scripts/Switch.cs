@@ -39,7 +39,7 @@ public class Switch : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag != "Spell")
+        if (other.tag != "Spell" && other.tag != "Zone")
         {
             if (!pressed)
             {
@@ -54,7 +54,7 @@ public class Switch : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag != "Spell")
+        if (other.tag != "Spell" && other.tag != "Zone")
         {
             counter--;
             if (!staysDown & counter == 0)

@@ -15,7 +15,7 @@ public class Spell : MonoBehaviour {
     private ParticleSystem activeParticle;
 
     [SerializeField]
-    private ParticleSystem defaultParticle, fireParticle, iceParticle, windParticle, electricParticle;
+    private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null;
 
 
     public void Initialize(SpellType _element, bool _alternative)
@@ -62,6 +62,8 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Normal:
                 {
+                    speed = 10;
+                    activeParticle = defaultParticle;
                     material.color = Color.magenta;
                     break;
                 }
@@ -94,6 +96,7 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Normal:
                 {
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                     break;
                 }
         }
@@ -102,17 +105,16 @@ public class Spell : MonoBehaviour {
     public void stopCast()
     {
         try { Destroy(gameObject); }
-        catch (Exception e) { throw new Exception("SpellAllreadyDestroyed"); }
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if(element != SpellType.Fire && element != SpellType.Wind)
-            stopCast();
+        catch (Exception e) { throw e; }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Zone")
+            return;
+        if (element != SpellType.Fire && element != SpellType.Wind)
+            stopCast();
+
         if (element == SpellType.Wind && other.gameObject.name == "Object_Player")
         {
             Debug.Log("Increase jump");

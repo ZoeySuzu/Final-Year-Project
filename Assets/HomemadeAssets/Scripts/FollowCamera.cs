@@ -8,62 +8,108 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    public GameObject target;
-    public GameObject ennemy;
+    private GameObject player;
+
+    private GameObject targetEnnemy;
+    private bool enemyFocused;
+    private Vector3 center;
 
     public float maxHeight;
     public float maxDistance;
-    private bool enemyFocused;
-    private Vector3 center;
-    private Vector3 init;
 
+    private Vector3 init;
     private Vector3 offset;
+
+    private bool lerping;
+    private float lerpStartTime;
+    private Vector3 lerpStartPos;
 
     void Start()
     {
-        init = target.transform.position - transform.position;
+        player = transform.parent.gameObject;
+        init = player.transform.position - transform.position;
         offset = init;
-        enemyFocused = GetComponentInParent<PlayerController>().fighting;
     }
 
     void LateUpdate()
     {
         if (enemyFocused) {
-            center = (ennemy.transform.position - target.transform.position) /2;
-            transform.position = 1.5f* (target.transform.position - ennemy.transform.position) + Vector3.up*5;
-            transform.LookAt(target.transform.position + center);
+            if (Input.GetButtonDown("CameraLock"))
+            {
+                enemyFocused = false;
+                Debug.Log("Camera Focused");
+                offset = player.transform.position - transform.parent.rotation * init;
+                recenter();
+            }
+            center = player.transform.position+ (targetEnnemy.transform.position - player.transform.position)/2;
+            transform.position = player.transform.position+(player.transform.position - targetEnnemy.transform.position)/2 + Vector3.up*5;
+            transform.LookAt(center);
+            Debug.Log(center);
         }
 
         else
         {
             var cameraX = Input.GetAxis("Joystick_B X") * 6;
             var cameraHeight = new Vector3(0, Input.GetAxis("Joystick_B Y") * 0.3f, 0);
-            var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.1f;
+            //var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.1f;
 
 
-            if ( Input.GetAxis("CameraLock") == 1)
+            if ( Input.GetButtonDown("CameraLock"))
             {
-                Debug.Log("Camera Focused");
-                offset = (transform.parent.rotation * init);
+                GameObject ennemy = PlayerController.Instance.getNearestEnnemy();
+                if (ennemy != null)
+                {
+                    targetEnnemy = ennemy;
+                    enemyFocused = true;
+                }
+                else
+                {
+                    Debug.Log("Camera Focused");
+                    offset = player.transform.position - transform.parent.rotation * init;
+                    recenter();
+                }
             }
 
-            Quaternion rotation = Quaternion.Euler(0, cameraX, 0);
-            transform.position = target.transform.position - (rotation * offset) + cameraHeight;
-
-
-
-            if (transform.position.y > target.transform.position.y + maxHeight)
+            if (lerping)
             {
-                transform.position = new Vector3(transform.position.x, target.transform.position.y + maxHeight, transform.position.z);
+                float lerpTime = Time.time - lerpStartTime;
+                float lerpPercent = lerpTime / 0.1f;
+                transform.position = Vector3.Lerp(lerpStartPos, offset, lerpPercent);
+                if (lerpPercent >= 1.0f)
+                {
+                    Debug.Log("End lerp");
+                    lerping = false;
+                    offset = player.transform.position - transform.position;
+                }
             }
-            if (transform.position.y < target.transform.position.y)
+            else
             {
-                transform.position = new Vector3(transform.position.x, target.transform.position.y, transform.position.z);
+                Quaternion rotation = Quaternion.Euler(0, cameraX, 0);
+                transform.position = player.transform.position - (rotation * offset) + cameraHeight;
+
+
+
+                if (transform.position.y > player.transform.position.y + maxHeight)
+                {
+                    transform.position = new Vector3(transform.position.x, player.transform.position.y + maxHeight, transform.position.z);
+                }
+                if (transform.position.y < player.transform.position.y)
+                {
+                    transform.position = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
+                }
+
+                offset = player.transform.position - transform.position;
             }
-
-            offset = target.transform.position - transform.position;
-            transform.LookAt(target.transform);
-
+            transform.LookAt(player.transform);
         }
+    }
+
+
+    public void recenter()
+    {
+        Debug.Log("start lerp");
+        lerping = true;
+        lerpStartTime = Time.time;
+        lerpStartPos = transform.position;
     }
 }

@@ -13,17 +13,18 @@ public class GameController : MonoBehaviour {
     private PlayerController pc;
 
     private ArrayList teleportPads;
+    private ArrayList entities;
 
     //-----------------------------------Attach game controllers on start:
     void Start () {
         ui = GetComponentInChildren<UIController>();
-        pc = GetComponentInChildren<PlayerController>();
-        
+        pc = GetComponentInChildren<PlayerController>();        
 	}
 
     private void Awake()
     {
         teleportPads = new ArrayList();
+        entities = new ArrayList();
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -75,7 +76,20 @@ public class GameController : MonoBehaviour {
     public void pauseEntities()
     {
         pc.enabled = !pc.enabled;
+        foreach (GameObject go in entities) {
+        }
     }
+
+    public void addEntity(GameObject go)
+    {
+        entities.Add(go);
+    }
+
+    public ArrayList getEntities()
+    {
+        return entities;
+    }
+
 
     public void addTeleportPad(TeleportPad pad)
     {
