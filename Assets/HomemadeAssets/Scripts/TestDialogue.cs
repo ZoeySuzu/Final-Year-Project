@@ -17,6 +17,7 @@ public class TestDialogue : Interactable {
 
     private void Start()
     {
+        gameUI = UIController.Instance;
         GameController.Instance.addEntity(this.gameObject);
     }
 

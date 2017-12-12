@@ -27,6 +27,7 @@ public class TeleportPad : Interactable {
 
     public void Start()
     {
+        gameUI = UIController.Instance;
         transform.GetChild(1).gameObject.SetActive(false);
         active = activeAtStart;
         if (activeAtStart)

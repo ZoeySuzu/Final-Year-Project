@@ -42,6 +42,7 @@ public class Weapon : Interactable {
 
     public void Start()
     {
+        gameUI = UIController.Instance;
         pickUpFrame = false;
         rb = GetComponent<Rigidbody>();
         Physics.IgnoreCollision(rb.GetComponent<Collider>(), PlayerController.Instance.GetComponent<Collider>(), true);

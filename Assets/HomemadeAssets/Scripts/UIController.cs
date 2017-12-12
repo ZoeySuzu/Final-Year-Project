@@ -6,7 +6,7 @@ using UnityEngine.UI;
 //Last clean: 29/11/2017
 
 public class UIController : MonoBehaviour {
-
+    public static UIController Instance { get; set; }
     //HUD text
     public Text action;
     public Text interaction;
@@ -25,8 +25,19 @@ public class UIController : MonoBehaviour {
     [SerializeField]
     private GameObject indicator;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+    // Use this for initialization
+    void Start () {
         action.text = "";
         interaction.text = "";
         pauseScreen.SetActive(false);

@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
     public float basespeed;
     public float jumpHeight;
     public GameObject projectile;
+    public GameObject trap;
     public bool fighting;
     public int pad;
     public bool dPadUpdate;
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour {
     private SpellType element;
     private Spell spell;
     private bool spellCasting;
+    private Trap spellTrap;
 
     //State related variables
     private float speed;
@@ -222,6 +224,21 @@ public class PlayerController : MonoBehaviour {
                 else if(element == SpellType.Electric)
                 {
                     blink();
+                }
+            }
+
+            //Check for trap input
+            if (Input.GetButtonDown("Trap"))
+            {
+                Debug.Log("Set trap");
+                if (spellTrap == null)
+                {
+                    spellTrap = Instantiate(trap, playerModel.transform.position - playerModel.up, playerModel.transform.rotation).GetComponent<Trap>();
+                    spellTrap.Initialize(element);
+                }
+                else
+                {
+                    spellTrap.setOff();
                 }
             }
 

@@ -1,214 +1,154 @@
-Base path: D:/unity/Editor/Data
+Base path: H:/unity/Editor/Data
 Cmd: getPlatforms
 Cmd: preprocess
-  insize=9227 outsize=1691 ok=1
+  insize=9582 outsize=1784 ok=1
 Cmd: preprocess
-  insize=11029 outsize=565 ok=1
+  insize=11374 outsize=604 ok=1
 Cmd: preprocess
-  insize=435 outsize=435 ok=1
+  insize=452 outsize=452 ok=1
 Cmd: preprocess
-  insize=1131 outsize=342 ok=1
+  insize=1206 outsize=370 ok=1
 Cmd: preprocess
-  insize=11318 outsize=638 ok=1
+  insize=11647 outsize=675 ok=1
 Cmd: preprocess
-  insize=1689 outsize=302 ok=1
+  insize=1764 outsize=319 ok=1
 Cmd: preprocess
-  insize=930 outsize=297 ok=1
+  insize=986 outsize=318 ok=1
 Cmd: preprocess
-  insize=993 outsize=257 ok=1
+  insize=1051 outsize=277 ok=1
 Cmd: preprocess
   insize=4407 outsize=1085 ok=1
 Cmd: preprocess
-  insize=2050 outsize=434 ok=1
+  insize=2120 outsize=459 ok=1
 Cmd: preprocess
-  insize=1386 outsize=355 ok=1
+  insize=1456 outsize=374 ok=1
 Cmd: preprocess
-  insize=3925 outsize=544 ok=1
+  insize=4082 outsize=576 ok=1
 Cmd: preprocess
-  insize=1230 outsize=352 ok=1
+  insize=1291 outsize=372 ok=1
 Cmd: preprocess
-  insize=6635 outsize=621 ok=1
+  insize=6918 outsize=666 ok=1
 Cmd: preprocess
-  insize=1301 outsize=257 ok=1
+  insize=1362 outsize=276 ok=1
 Cmd: preprocess
-  insize=12934 outsize=2549 ok=1
+  insize=13384 outsize=2646 ok=1
 Cmd: preprocess
-  insize=1044 outsize=939 ok=1
+  insize=1097 outsize=956 ok=1
 Cmd: preprocess
-  insize=2913 outsize=623 ok=1
+  insize=3029 outsize=662 ok=1
 Cmd: preprocess
-  insize=883 outsize=244 ok=1
+  insize=940 outsize=263 ok=1
 Cmd: preprocess
-  insize=1513 outsize=333 ok=1
+  insize=1579 outsize=354 ok=1
 Cmd: preprocess
-  insize=1460 outsize=294 ok=1
+  insize=1539 outsize=315 ok=1
 Cmd: preprocess
-  insize=1868 outsize=223 ok=1
+  insize=1920 outsize=235 ok=1
 Cmd: preprocess
   insize=2379 outsize=1059 ok=1
 Cmd: preprocess
-  insize=1409 outsize=298 ok=1
+  insize=1473 outsize=316 ok=1
 Cmd: preprocess
-  insize=1323 outsize=271 ok=1
+  insize=1394 outsize=290 ok=1
 Cmd: preprocess
-  insize=2298 outsize=587 ok=1
+  insize=2392 outsize=616 ok=1
 Cmd: preprocess
-  insize=966 outsize=219 ok=1
+  insize=1019 outsize=237 ok=1
 Cmd: preprocess
-  insize=701 outsize=270 ok=1
+  insize=741 outsize=287 ok=1
 Cmd: preprocess
   insize=6615 outsize=842 ok=1
 Cmd: preprocess
-  insize=2237 outsize=943 ok=1
+  insize=2340 outsize=989 ok=1
 Cmd: preprocess
-  insize=32860 outsize=223 ok=1
+  insize=33689 outsize=238 ok=1
 Cmd: preprocess
-  insize=1199 outsize=210 ok=1
+  insize=1264 outsize=228 ok=1
 Cmd: preprocess
-  insize=4489 outsize=409 ok=1
+  insize=4681 outsize=439 ok=1
 Cmd: preprocess
-  insize=992 outsize=217 ok=1
+  insize=1050 outsize=235 ok=1
 Cmd: preprocess
-  insize=5828 outsize=1427 ok=1
+  insize=6050 outsize=1506 ok=1
 Cmd: preprocess
-  insize=13377 outsize=1637 ok=1
+  insize=13909 outsize=1728 ok=1
 Cmd: preprocess
-  insize=1025 outsize=301 ok=1
+  insize=1084 outsize=321 ok=1
 Cmd: preprocess
-  insize=12072 outsize=2431 ok=1
+  insize=12507 outsize=2525 ok=1
 Cmd: preprocess
-  insize=6203 outsize=572 ok=1
+  insize=6440 outsize=615 ok=1
 Cmd: preprocess
-  insize=2834 outsize=601 ok=1
+  insize=2970 outsize=642 ok=1
 Cmd: preprocess
-  insize=11756 outsize=2419 ok=1
+  insize=12171 outsize=2491 ok=1
 Cmd: preprocess
-  insize=13869 outsize=1927 ok=1
+  insize=14348 outsize=2055 ok=1
 Cmd: preprocess
-  insize=1909 outsize=374 ok=1
+  insize=2006 outsize=399 ok=1
 Cmd: preprocess
-  insize=1568 outsize=610 ok=1
+  insize=1638 outsize=638 ok=1
 Cmd: preprocess
-  insize=1878 outsize=565 ok=1
+  insize=1968 outsize=588 ok=1
 Cmd: preprocess
-  insize=1944 outsize=245 ok=1
+  insize=2014 outsize=263 ok=1
 Cmd: preprocess
-  insize=26137 outsize=3373 ok=1
+  insize=27076 outsize=3597 ok=1
 Cmd: preprocess
-  insize=4002 outsize=436 ok=1
+  insize=4160 outsize=466 ok=1
 Cmd: preprocess
-  insize=2141 outsize=248 ok=1
+  insize=2227 outsize=268 ok=1
 Cmd: preprocess
-  insize=1168 outsize=301 ok=1
+  insize=1231 outsize=322 ok=1
 Cmd: preprocess
-  insize=1174 outsize=370 ok=1
+  insize=1251 outsize=398 ok=1
 Cmd: preprocess
-  insize=737 outsize=217 ok=1
+  insize=776 outsize=234 ok=1
 Cmd: preprocess
-  insize=5862 outsize=695 ok=1
+  insize=6104 outsize=733 ok=1
 Cmd: preprocess
-  insize=6090 outsize=576 ok=1
+  insize=6293 outsize=619 ok=1
 Cmd: preprocess
-  insize=584 outsize=309 ok=1
+  insize=620 outsize=331 ok=1
 Cmd: preprocess
-  insize=8525 outsize=839 ok=1
+  insize=8905 outsize=901 ok=1
 Cmd: preprocess
-  insize=32870 outsize=221 ok=1
+  insize=33698 outsize=238 ok=1
 Cmd: preprocess
-  insize=5286 outsize=1689 ok=1
+  insize=5459 outsize=1736 ok=1
 Cmd: preprocess
-  insize=2274 outsize=1004 ok=1
+  insize=2379 outsize=1054 ok=1
 Cmd: preprocess
-  insize=6937 outsize=204 ok=1
+  insize=7126 outsize=219 ok=1
 Cmd: preprocess
-  insize=5499 outsize=355 ok=1
+  insize=5648 outsize=380 ok=1
 Cmd: preprocess
-  insize=5320 outsize=728 ok=1
+  insize=5547 outsize=773 ok=1
 Cmd: preprocess
-  insize=1310 outsize=352 ok=1
+  insize=1373 outsize=372 ok=1
 Cmd: preprocess
-  insize=5895 outsize=1092 ok=1
+  insize=6154 outsize=1157 ok=1
 Cmd: preprocess
-  insize=716 outsize=253 ok=1
+  insize=770 outsize=273 ok=1
 Cmd: preprocess
-  insize=720 outsize=267 ok=1
+  insize=757 outsize=283 ok=1
 Cmd: preprocess
-  insize=4345 outsize=503 ok=1
+  insize=4500 outsize=537 ok=1
 Cmd: preprocess
-  insize=862 outsize=243 ok=1
+  insize=915 outsize=262 ok=1
 Cmd: preprocess
-  insize=1461 outsize=240 ok=1
+  insize=1528 outsize=259 ok=1
 Cmd: preprocess
-  insize=2015 outsize=883 ok=1
+  insize=2135 outsize=937 ok=1
 Cmd: preprocess
-  insize=5161 outsize=604 ok=1
+  insize=5384 outsize=644 ok=1
 Cmd: preprocess
-  insize=1081 outsize=438 ok=1
+  insize=1137 outsize=461 ok=1
 Cmd: preprocess
-  insize=1139 outsize=332 ok=1
+  insize=1210 outsize=354 ok=1
 Cmd: preprocess
-  insize=512 outsize=209 ok=1
+  insize=553 outsize=223 ok=1
 Cmd: preprocess
-  insize=718 outsize=258 ok=1
+  insize=767 outsize=280 ok=1
 Cmd: preprocess
   insize=5652 outsize=761 ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=18516 outsize=1126 kw=SHADOWS_SPLIT_SPHERES pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=18516 outsize=2574 kw=SHADOWS_SPLIT_SPHERES pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=728 outsize=686 kw=SHADOWS_CUBE pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=728 outsize=350 kw=SHADOWS_CUBE pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=949 outsize=1790 kw=POINT SHADOWS_CUBE SHADOWS_SOFT pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=949 outsize=3622 kw=POINT SHADOWS_CUBE SHADOWS_SOFT pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=949 outsize=1790 kw=POINT SHADOWS_CUBE pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=949 outsize=3242 kw=POINT SHADOWS_CUBE pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=724 outsize=686 kw=SHADOWS_CUBE pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=724 outsize=350 kw=SHADOWS_CUBE pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=943 outsize=1790 kw=POINT SHADOWS_CUBE SHADOWS_SOFT pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=943 outsize=3590 kw=POINT SHADOWS_CUBE SHADOWS_SOFT pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=728 outsize=794 kw=SHADOWS_CUBE _ALPHAPREMULTIPLY_ON pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=728 outsize=862 kw=SHADOWS_CUBE _ALPHAPREMULTIPLY_ON pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=949 outsize=1790 kw=POINT SHADOWS_CUBE SHADOWS_SOFT _SPECULARHIGHLIGHTS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=949 outsize=2522 kw=POINT SHADOWS_CUBE SHADOWS_SOFT _SPECULARHIGHLIGHTS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1023 outsize=1874 kw=DIRECTIONAL SHADOWS_SCREEN _EMISSION _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1023 outsize=3662 kw=DIRECTIONAL SHADOWS_SCREEN _EMISSION _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1023 outsize=1698 kw=DIRECTIONAL _EMISSION _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1023 outsize=3506 kw=DIRECTIONAL _EMISSION _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1023 outsize=1874 kw=DIRECTIONAL SHADOWS_SCREEN _EMISSION _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1023 outsize=4630 kw=DIRECTIONAL SHADOWS_SCREEN _EMISSION _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1023 outsize=1698 kw=DIRECTIONAL _EMISSION _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1023 outsize=4478 kw=DIRECTIONAL _EMISSION _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1023 outsize=1874 kw=DIRECTIONAL SHADOWS_SCREEN _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1023 outsize=3558 kw=DIRECTIONAL SHADOWS_SCREEN _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=1023 outsize=1698 kw=DIRECTIONAL _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=1023 outsize=3402 kw=DIRECTIONAL _SPECULARHIGHLIGHTS_OFF _GLOSSYREFLECTIONS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=949 outsize=1554 kw=DIRECTIONAL SHADOWS_SCREEN _SPECULARHIGHLIGHTS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
-Cmd: compileSnippet
-  api=4 type=1 insize=949 outsize=1730 kw=DIRECTIONAL SHADOWS_SCREEN _SPECULARHIGHLIGHTS_OFF pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
