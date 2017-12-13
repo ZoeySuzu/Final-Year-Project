@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
     private SpellType element;
     private Spell spell;
     private bool spellCasting;
-    private Trap spellTrap;
+    private Trap[] spellTrap = new Trap[5];
 
     //State related variables
     private float speed;
@@ -72,13 +72,16 @@ public class PlayerController : MonoBehaviour {
     //------------------------------------------------------Update Code
     void FixedUpdate()
     {
-        if (rb.velocity.y < 0)
+        if (playerState != "Swiming")
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
-        }
-        else if (rb.velocity.y > 0.1f && !Input.GetButton("Jump"))
-        {
-            rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
+            if (rb.velocity.y < 0)
+            {
+                rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
+            }
+            else if (rb.velocity.y > 0.1f && !Input.GetButton("Jump"))
+            {
+                rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
+            }
         }
     }
 	
@@ -104,6 +107,15 @@ public class PlayerController : MonoBehaviour {
             {
                 transform.Translate(Vector3.up * z*0.4f);
             }
+        }
+        else if (playerState.Equals("Swiming"))
+        {
+            rb.velocity = Vector3.up*-6f;
+            if (Input.GetButton("Jump"))
+            {
+                rb.velocity = Vector3.up * 6f;
+            }
+            Movement(targetDirection);
         }
 
 
@@ -228,17 +240,20 @@ public class PlayerController : MonoBehaviour {
             }
 
             //Check for trap input
-            if (Input.GetButtonDown("Trap"))
+            if (IsGrounded() && Input.GetButtonDown("Trap"))
             {
-                Debug.Log("Set trap");
-                if (spellTrap == null)
+                int i = (int)element;
+                if (spellTrap[i] == null)
                 {
-                    spellTrap = Instantiate(trap, playerModel.transform.position - playerModel.up, playerModel.transform.rotation).GetComponent<Trap>();
-                    spellTrap.Initialize(element);
+                    Debug.Log("Set trap " + i);
+                    spellTrap[i] = Instantiate(trap, playerModel.transform.position - playerModel.up, playerModel.transform.rotation).GetComponent<Trap>();
+                    spellTrap[i].transform.SetParent(transform.parent);
+                    spellTrap[i].Initialize(element);
                 }
                 else
                 {
-                    spellTrap.setOff();
+                    Debug.Log("Detonate trap " + i);
+                    spellTrap[i].setOff();
                 }
             }
 
@@ -367,6 +382,10 @@ public class PlayerController : MonoBehaviour {
         {
             nearbyEnnemies.Add(other.transform.parent.gameObject);
         }
+        else if(other.gameObject.tag == "Water")
+        {
+            playerState = "Swiming";
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -375,6 +394,10 @@ public class PlayerController : MonoBehaviour {
         {
             if(nearbyEnnemies.Contains(other.transform.parent.gameObject))
                 nearbyEnnemies.Remove(other.transform.parent.gameObject);
+        }
+        else if (other.gameObject.tag == "Water")
+        {
+            playerState = "idle";
         }
     }
 

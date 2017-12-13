@@ -4,4 +4,4 @@ using UnityEngine;
 
 //Last clean: 29/11/2017
 
-public enum SpellType { Normal, Fire, Ice, Wind, Electric };
+public enum SpellType { Normal = 0, Fire = 1, Ice = 2, Wind = 3, Electric = 4};

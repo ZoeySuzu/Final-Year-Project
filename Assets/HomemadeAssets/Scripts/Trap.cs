@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,11 @@ public class Trap : MonoBehaviour {
     private Material material;
 
     [SerializeField]
-    private GameObject iceCube;
+    private GameObject iceCube, windArea;
 
     public void Initialize(SpellType _element)
     {
         element = _element;
-        transform.SetParent(transform.Find("GameLevel"));
     }
 
     public SpellType getSpellType()
@@ -24,7 +24,7 @@ public class Trap : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        //alternative = false;
+        transform.SetParent(transform.parent.FindChild("Spells"));
         material = transform.GetComponent<Renderer>().material;
         switch (element)
         {
@@ -58,6 +58,7 @@ public class Trap : MonoBehaviour {
 
     public void setOff()
     {
+        GameObject obj = null;
         switch (element)
         {
             case SpellType.Fire:
@@ -67,8 +68,7 @@ public class Trap : MonoBehaviour {
                 }
             case SpellType.Ice:
                 {
-                    GameObject obj = Instantiate(iceCube, transform.position + transform.up, Quaternion.identity) as GameObject;
-                    obj.transform.SetParent(transform.parent);
+                    obj = Instantiate(iceCube, transform.position + transform.up, Quaternion.identity) as GameObject;
                     break;
                 }
             case SpellType.Electric:
@@ -78,7 +78,7 @@ public class Trap : MonoBehaviour {
                 }
             case SpellType.Wind:
                 {
-                    
+                    obj = Instantiate(windArea, transform.position, Quaternion.identity) as GameObject;
                     break;
                 }
             case SpellType.Normal:
@@ -87,6 +87,20 @@ public class Trap : MonoBehaviour {
                     break;
                 }
         }
+        try
+        {
+            Transform t = transform.parent.FindChild(obj.name);
+            if (t != null)
+            {
+                Destroy(t.gameObject);
+            }
+        }
+        catch (Exception e) { }
+        try
+        {
+            obj.transform.SetParent(transform.parent);
+        }
+        catch (Exception e) { }
         Destroy(gameObject);
     }
 
