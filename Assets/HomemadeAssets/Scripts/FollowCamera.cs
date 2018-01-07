@@ -8,6 +8,20 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
+    public static FollowCamera Instance { get; set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     private GameObject player;
 
     private GameObject targetEnnemy;
@@ -31,30 +45,39 @@ public class FollowCamera : MonoBehaviour
         offset = init;
     }
 
+    public GameObject targetedEnnemy()
+    {
+        if (enemyFocused)
+        {
+            return targetEnnemy;
+        }
+        return null;
+    }
+
     void LateUpdate()
     {
         if (enemyFocused) {
-            if (Input.GetButtonDown("CameraLock"))
+            if (Input.GetButtonDown("L1"))
             {
                 enemyFocused = false;
                 Debug.Log("Camera Focused");
                 offset = player.transform.position - transform.parent.rotation * init;
                 recenter();
             }
-            center = player.transform.position+ (targetEnnemy.transform.position - player.transform.position)/2;
-            transform.position = player.transform.position+(player.transform.position - targetEnnemy.transform.position)/2 + Vector3.up*5;
+            center = player.transform.position + (targetEnnemy.transform.position - player.transform.position) / 2;
+            transform.position = player.transform.position + (player.transform.position - targetEnnemy.transform.position) / 2 + Vector3.up * 5;
             transform.LookAt(center);
             Debug.Log(center);
         }
 
         else
         {
-            var cameraX = Input.GetAxis("Joystick_B X") * 6;
-            var cameraHeight = new Vector3(0, Input.GetAxis("Joystick_B Y") * 0.3f, 0);
+            var cameraX = Input.GetAxis("RS-X") * 6;
+            var cameraHeight = new Vector3(0, Input.GetAxis("RS-Y") * 0.3f, 0);
             //var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.1f;
 
 
-            if ( Input.GetButtonDown("CameraLock"))
+            if ( Input.GetButtonDown("L1"))
             {
                 GameObject ennemy = PlayerController.Instance.getNearestEnnemy();
                 if (ennemy != null)
@@ -73,7 +96,7 @@ public class FollowCamera : MonoBehaviour
             if (lerping)
             {
                 float lerpTime = Time.time - lerpStartTime;
-                float lerpPercent = lerpTime / 0.1f;
+                float lerpPercent = lerpTime / 0.3f;
                 transform.position = Vector3.Lerp(lerpStartPos, offset, lerpPercent);
                 if (lerpPercent >= 1.0f)
                 {

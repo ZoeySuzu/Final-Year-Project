@@ -10,7 +10,20 @@ public abstract class Interactable : MonoBehaviour{
 
     private GameObject indicatorLive;
 
-    public abstract void OnTriggerStay(Collider other);
+    public abstract void interact();
+
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.name == "Object_Player")
+        {
+            if (Input.GetButtonDown("A"))
+            {
+                interact();
+                PlayerController.Instance.switchInteracting();
+            }
+        }
+    }
+
 
     private void Start()
     {
@@ -21,10 +34,13 @@ public abstract class Interactable : MonoBehaviour{
     {
         if (other.name == "Object_Player")
         {
-            indicatorLive = Instantiate(gameUI.getInteractIcon());
+            if (indicatorLive == null)
+            {
+                indicatorLive = Instantiate(gameUI.getInteractIcon());
+            }
             indicatorLive.transform.parent = gameObject.transform;
             indicatorLive.transform.position = transform.position;
-            gameUI.setInteractButton(interaction);
+            gameUI.setActionButton(interaction);
         }
     }
 
@@ -39,7 +55,7 @@ public abstract class Interactable : MonoBehaviour{
         {
             collisionExit();
             Destroy(indicatorLive);
-            gameUI.setInteractButton("");
+            gameUI.setActionButton("");
         }
     }
 

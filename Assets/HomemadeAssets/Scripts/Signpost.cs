@@ -17,10 +17,9 @@ public class Signpost : Interactable {
         interaction = "Read";
     }
 
-    public override void OnTriggerStay(Collider other)
+    public override void interact()
     {
-
-        if (Input.GetButtonDown("Interact") && !TextController.Instance.getState() && other.name == "Object_Player")
+        if (!TextController.Instance.getState())
         {
             textQueue = new Queue<string>();
             if (isDark && !GetComponentInChildren<LightTrigger>().getIsLit())

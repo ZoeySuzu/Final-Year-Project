@@ -9,31 +9,28 @@ public class Weapon : Interactable {
     private Transform defaultOwner;
     private Rigidbody rb;
 
-    public override void OnTriggerStay(Collider other)
+    public override void interact()
     {
-        if (Input.GetButtonDown("Interact") && other.name == "Object_Player")
+        if (free)
         {
-            if (free)
-            {
-                rb.isKinematic = true;
-                transform.parent = (PlayerController.Instance.getHand().transform);
-                transform.position = transform.parent.position;
-                transform.rotation = transform.parent.rotation;
-                gameUI.setInteractButton("Drop");
-                toggleIndicator();
-                free = false;
-                pickUpFrame = true;
-            }
+            rb.isKinematic = true;
+            transform.parent = (PlayerController.Instance.getHand().transform);
+            transform.position = transform.parent.position;
+            transform.rotation = transform.parent.rotation;
+            gameUI.setActionButton("Drop");
+            toggleIndicator();
+            free = false;
+            pickUpFrame = true;
         }
     }
 
     public void Update()
     {
-        if (!free && Input.GetButtonDown("Interact")&& !pickUpFrame)
+        if (!free && Input.GetButtonDown("A")&& !pickUpFrame)
         {
             rb.isKinematic = false;
             transform.parent = defaultOwner;
-            gameUI.setInteractButton(interaction);
+            gameUI.setActionButton(interaction);
             toggleIndicator();
             free = true;
         }

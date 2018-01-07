@@ -13,14 +13,11 @@ public class PlayerController : MonoBehaviour {
     public float jumpHeight;
     public GameObject projectile;
     public GameObject trap;
-    public bool fighting;
     public int pad;
-    public bool dPadUpdate;
 
     //Pointers to other classes
     private Rigidbody rb;
     private UIController ui;
-
     private GameObject hand;
 
     //Ability related variables
@@ -35,9 +32,15 @@ public class PlayerController : MonoBehaviour {
     private Transform playerModel;
     private bool lockRotation;
     private Vector3 spawn;
+    private bool interacting;
+    private bool dPadUpdate;
+
+    private int health,mana,maxHealth,maxMana;
 
     //Combat data
     private ArrayList nearbyEnnemies;
+    public GameObject attackCollider;
+    private bool canAttack;
 
     //------------------------------------------------------Initialising Code
     private void Awake()
@@ -65,6 +68,14 @@ public class PlayerController : MonoBehaviour {
         element = SpellType.Normal;
         hand = transform.GetChild(0).FindChild("holder").gameObject;
         GameController.Instance.addEntity(this.gameObject);
+        interacting = false;
+        canAttack = true;
+        maxMana = 100;
+        maxHealth = 100;
+        health = maxHealth;
+        mana = maxMana;
+        ui.updateHealth(health);
+        ui.updateMana(mana);
     }
 
 
@@ -78,7 +89,7 @@ public class PlayerController : MonoBehaviour {
             {
                 rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
             }
-            else if (rb.velocity.y > 0.1f && !Input.GetButton("Jump"))
+            else if (rb.velocity.y > 0.1f && !Input.GetButton("A"))
             {
                 rb.velocity += Vector3.up * Physics.gravity.y * 2f * Time.deltaTime;
             }
@@ -89,12 +100,13 @@ public class PlayerController : MonoBehaviour {
         //check out of bounds
         if(transform.position.y < -20)
         {
+            setHealth(-10);
             transform.position = spawn;
         }
 
         //Check for directional input
-        var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        var x = Input.GetAxis("LS-X") * Time.deltaTime * speed;
+        var z = Input.GetAxis("LS-Y") * Time.deltaTime * speed;
         Vector3 targetDirection = new Vector3(x, 0f, z);
         targetDirection = Camera.main.transform.TransformDirection(targetDirection);
         targetDirection.y = 0.0f;
@@ -111,7 +123,7 @@ public class PlayerController : MonoBehaviour {
         else if (playerState.Equals("Swiming"))
         {
             rb.velocity = Vector3.up*-6f;
-            if (Input.GetButton("Jump"))
+            if (Input.GetButton("A"))
             {
                 rb.velocity = Vector3.up * 6f;
             }
@@ -122,8 +134,7 @@ public class PlayerController : MonoBehaviour {
         //Pushing something
         else if (playerState.Equals("pushing"))
         {
-            ui.setActionButton("");
-            ui.setInteractButton("Let go");
+            ui.setActionButton("Let go");
             Vector3 pushDirection;
             //Get most emphasized direction
             if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
@@ -146,9 +157,9 @@ public class PlayerController : MonoBehaviour {
             playerState = "idle";
 
             //Check movement state
-            if (targetDirection != Vector3.zero)
+            if (targetDirection != Vector3.zero && canAttack == true)
             {
-                if (Input.GetButton("Run"))
+                if (Input.GetButton("B"))
                 {
                     playerState = "running";
                     speed = basespeed + basespeed / 2;
@@ -168,7 +179,8 @@ public class PlayerController : MonoBehaviour {
             //Check if on ground
             if (IsGrounded())
             {
-                ui.setActionButton("Jump");
+                if(ui.getActionButton() == "")
+                    ui.setActionButton("Jump");
             }
             else
             {
@@ -190,28 +202,28 @@ public class PlayerController : MonoBehaviour {
                
 
                 //Check for spellchange input
-            if (Input.GetButtonDown("D-D") || (pad == -1 && dPadUpdate))
+            if (Input.GetButtonDown("D-Y") || (pad == -1 && dPadUpdate))
             {
                 if (element == SpellType.Electric)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Electric;
             }
-            else if (Input.GetButtonDown("D-L") || (pad == -2 && dPadUpdate))
+            else if (Input.GetButtonDown("D-X") || (pad == -2 && dPadUpdate))
             {
                 if (element == SpellType.Fire)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Fire;
             }
-            else if (Input.GetButtonDown("D-U") || (pad == 1 && dPadUpdate))
+            else if (Input.GetButtonDown("D-Y") || (pad == 1 && dPadUpdate))
             {
                 if (element == SpellType.Wind)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Wind;
             }
-            else if(Input.GetButtonDown("D-R") || (pad == 2 && dPadUpdate))
+            else if(Input.GetButtonDown("D-X") || (pad == 2 && dPadUpdate))
             {
                 if (element == SpellType.Ice)
                     element = SpellType.Normal;
@@ -221,15 +233,20 @@ public class PlayerController : MonoBehaviour {
             dPadUpdate = false;
 
             //Check for jump input
-            if (Input.GetButtonDown("Jump") && IsGrounded())
+            if (Input.GetButtonDown("A") && IsGrounded() && !interacting)
             {
                 rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
             }
 
             //check for attack imput
-            if (Input.GetButtonDown("Attack"))
+            if (Input.GetButtonDown("X"))
             {
-                if(!IsGrounded() && element == SpellType.Wind)
+                if(element == SpellType.Normal && canAttack)
+                {
+                    canAttack = false;
+                    Instantiate(attackCollider, playerModel.transform.position + playerModel.forward * 2f + playerModel.up*1+playerModel.right*1f, playerModel.transform.rotation).transform.parent = transform;
+                }
+                else if(!IsGrounded() && element == SpellType.Wind)
                 {
                     airPulse();
                 }
@@ -240,13 +257,13 @@ public class PlayerController : MonoBehaviour {
             }
 
             //Check for trap input
-            if (IsGrounded() && Input.GetButtonDown("Trap"))
+            if (IsGrounded() && Input.GetButtonDown("R1"))
             {
                 int i = (int)element;
                 if (spellTrap[i] == null)
                 {
                     Debug.Log("Set trap " + i);
-                    spellTrap[i] = Instantiate(trap, playerModel.transform.position - playerModel.up, playerModel.transform.rotation).GetComponent<Trap>();
+                    spellTrap[i] = Instantiate(trap, playerModel.transform.position - playerModel.up*0.95f, playerModel.transform.rotation).GetComponent<Trap>();
                     spellTrap[i].transform.SetParent(transform.parent);
                     spellTrap[i].Initialize(element);
                 }
@@ -259,7 +276,7 @@ public class PlayerController : MonoBehaviour {
 
 
             //Check for spell input
-            if (Input.GetButtonDown("Cast") && IsGrounded())
+            if (Input.GetButtonDown("Y") && IsGrounded())
             {
                     
                 spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
@@ -270,7 +287,7 @@ public class PlayerController : MonoBehaviour {
                 }
                 spell.Initialize(element, false);
             }
-            if (spellCasting && (!Input.GetButton("Cast") || !IsGrounded()))
+            if (spellCasting && (!Input.GetButton("Y") || !IsGrounded()))
             {
                 spell.stopCast();
                 spellCasting = false;
@@ -284,6 +301,7 @@ public class PlayerController : MonoBehaviour {
 
         ui.setPlayerState(playerState);
         ui.setSpellState(element.ToString());
+        interacting = false;
     }
 
     //------------------------------------------------------Attack Methods
@@ -321,6 +339,27 @@ public class PlayerController : MonoBehaviour {
     public GameObject getHand()
     {
         return hand;
+    }
+
+    public int getMaxHP()
+    {
+        return maxHealth;
+    }
+
+    public int getMaxMana()
+    {
+        return maxMana;
+    }
+
+    public int getHP()
+    {
+        return health;
+    }
+
+    public void setHealth(int difference)
+    {
+        health += difference;
+        ui.updateHealth(health);
     }
 
     public Transform getModel()
@@ -367,6 +406,16 @@ public class PlayerController : MonoBehaviour {
     public void setSpawn(Vector3 spawnPoint)
     {
         spawn = spawnPoint;
+    }
+
+    public void switchInteracting()
+    {
+        interacting = true;
+    }
+
+    public void refreshAttack()
+    {
+        canAttack = true;
     }
 
     //------------------------------------------------------State Check methods

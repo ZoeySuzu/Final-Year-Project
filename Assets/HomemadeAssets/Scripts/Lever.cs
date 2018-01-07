@@ -15,8 +15,8 @@ public class Lever : Interactable {
         {
             Vector3 pushDirection;
 
-            var x = Input.GetAxis("Horizontal") * Time.deltaTime *  speed;
-            var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+            var x = Input.GetAxis("LS-X") * Time.deltaTime *  speed;
+            var z = Input.GetAxis("LS-Y") * Time.deltaTime * speed;
 
             Vector3 targetDirection = new Vector3(x, 0f, z);
             targetDirection = Camera.main.transform.TransformDirection(targetDirection);
@@ -57,29 +57,26 @@ public class Lever : Interactable {
         }
     }
 
-    public override void OnTriggerStay(Collider other)
+    public override void interact()
     {
-        if (other.name == "Object_Player")
+        if (!inUse)
         {
-            if (Input.GetButtonDown("Interact") && !inUse)
+            toggleIndicator();
+            PlayerController.Instance.setPlayerState("pushing");
+            inUse = true;
+            startPushing = true;
+        }
+        else
+        {
+            if (startPushing)
+            {
+                startPushing = false;
+            }
+            else
             {
                 toggleIndicator();
-                PlayerController.Instance.setPlayerState("pushing");
-                inUse = true;
-                startPushing = true;
-            }
-            if (Input.GetButtonUp("Interact"))
-            {
-                if (startPushing)
-                {
-                    startPushing = false;
-                }
-                else
-                {
-                    toggleIndicator();
-                    PlayerController.Instance.setPlayerState("idle");
-                    inUse = false;
-                }
+                PlayerController.Instance.setPlayerState("idle");
+                inUse = false;
             }
         }
     }

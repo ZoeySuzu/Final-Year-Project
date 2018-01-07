@@ -10,18 +10,15 @@ public class TeleportPad : Interactable {
 
     private bool active;
 
-    public override void OnTriggerStay(Collider other)
+    public override void interact()
     {
-        if (other.name == "Object_Player")
+        if (!active)
         {
-            if (Input.GetButtonDown("Interact") && !active)
-            {
-                active = true;
-                GameController.Instance.addTeleportPad(this);
-                interaction = "Warp";
-                gameUI.setInteractButton(interaction);
-                transform.GetChild(1).gameObject.SetActive(true);
-            }
+            active = true;
+            GameController.Instance.addTeleportPad(this);
+            interaction = "Warp";
+            gameUI.setActionButton(interaction);
+            transform.GetChild(1).gameObject.SetActive(true);
         }
     }
 

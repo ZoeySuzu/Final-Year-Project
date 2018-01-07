@@ -13,6 +13,7 @@ public class Spell : MonoBehaviour {
     //private bool alternative;
     private Material material;
     private ParticleSystem activeParticle;
+    private Vector3 direction;
 
     [SerializeField]
     private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null;
@@ -62,6 +63,16 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Normal:
                 {
+                    var target = FollowCamera.Instance.targetedEnnemy();
+                    if (target != null)
+                    {
+                        direction = Vector3.Normalize(target.transform.position - transform.position);
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+                    else
+                    {
+                        direction = Vector3.forward;
+                    }
                     speed = 10;
                     activeParticle = defaultParticle;
                     material.color = Color.magenta;

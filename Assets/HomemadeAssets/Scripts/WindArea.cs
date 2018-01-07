@@ -24,6 +24,12 @@ public class WindArea : MonoBehaviour {
             {
                 rb.AddForce(Vector3.up * 50);
             }
+
+            if (other.GetComponent<Box>())
+            {
+                Debug.Log("Box in the wind");
+                other.GetComponent<Box>().boostVSpeed();
+            }
         }
     }
 }

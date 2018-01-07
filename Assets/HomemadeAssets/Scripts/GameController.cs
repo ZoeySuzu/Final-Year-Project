@@ -57,6 +57,7 @@ public class GameController : MonoBehaviour {
     //-----------------------------------Pause Game:
     public void pause()
     {
+        pauseEntities();
         if (Time.timeScale == 1)
         {
             Debug.Log("pause");
@@ -76,7 +77,9 @@ public class GameController : MonoBehaviour {
     public void pauseEntities()
     {
         pc.enabled = !pc.enabled;
+        FollowCamera.Instance.enabled = !FollowCamera.Instance.enabled;
         foreach (GameObject go in entities) {
+            
         }
     }
 

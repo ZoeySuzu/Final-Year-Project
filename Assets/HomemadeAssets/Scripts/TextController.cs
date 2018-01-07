@@ -113,7 +113,7 @@ public class TextController : MonoBehaviour {
         {
 
         }
-        else if (Input.GetButtonDown("Interact"))
+        else if (Input.GetButtonDown("A"))
         {
             displayNext();
         }

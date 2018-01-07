@@ -54,9 +54,9 @@ public class TestDialogue : Interactable {
         return false;
     }
 
-    public override void OnTriggerStay(Collider other)
+    public override void interact()
     {
-        if (Input.GetButtonDown("Interact") && !TextController.Instance.gameObject.activeSelf)
+        if (!TextController.Instance.gameObject.activeSelf)
         {
             TextController.Instance.sendDialogueRequest(dialogueID, this);
         }

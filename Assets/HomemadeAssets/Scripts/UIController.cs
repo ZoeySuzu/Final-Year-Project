@@ -9,7 +9,6 @@ public class UIController : MonoBehaviour {
     public static UIController Instance { get; set; }
     //HUD text
     public Text action;
-    public Text interaction;
 
     //Debuging display text
     public Text state;
@@ -24,6 +23,8 @@ public class UIController : MonoBehaviour {
 
     [SerializeField]
     private GameObject indicator;
+    [SerializeField]
+    private Text healthString, manaString;
 
     private void Awake()
     {
@@ -39,7 +40,6 @@ public class UIController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         action.text = "";
-        interaction.text = "";
         pauseScreen.SetActive(false);
         state.text = "";
         spellType.text = "";
@@ -51,11 +51,12 @@ public class UIController : MonoBehaviour {
         return indicator;
     }
 
-    //Set methods:
-    public void setInteractButton(string interactiontxt)
+    public string getActionButton()
     {
-        interaction.text = interactiontxt;
+        return action.text;
     }
+
+    //Set methods:
 
     public void setActionButton(string actiontxt)
     {
@@ -70,6 +71,16 @@ public class UIController : MonoBehaviour {
     public void setSpellState(string statetxt)
     {
         spellType.text = "Spell: " + statetxt;
+    }
+
+    public void updateHealth(int health)
+    {
+        healthString.text = health + "/" + PlayerController.Instance.getMaxHP();
+    }
+
+    public void updateMana(int mana)
+    {
+        manaString.text = mana + "/" + PlayerController.Instance.getMaxMana();
     }
 
 

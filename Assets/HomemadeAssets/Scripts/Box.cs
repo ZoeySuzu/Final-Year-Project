@@ -11,12 +11,14 @@ public class Box : Interactable {
     private bool grounded = false;
     private PlayerController p;
     private float speed;
+    private float vSpeed;
 
     private void Start()
     {
         gameUI = UIController.Instance;
         p = PlayerController.Instance;
         speed = p.getSpeed();
+        vSpeed = 0;
     }
 
     public Box()
@@ -39,7 +41,7 @@ public class Box : Interactable {
             {
                 Ray raydown = new Ray(transform.position, Vector3.down);
                 RaycastHit hit;
-                if (Physics.Raycast(raydown, out hit, scale + 1.00f))
+                if (Physics.Raycast(raydown, out hit, scale - vSpeed))
                 {
                     transform.position += Vector3.down * hit.distance + Vector3.up*scale;
                 }
@@ -54,20 +56,42 @@ public class Box : Interactable {
         }
     }
 
+    public void boostVSpeed()
+    {
+        if (IsGrounded())
+        {
+            transform.position+= Vector3.up*0.1f;
+        }
+        if (vSpeed <= 8f)
+            vSpeed += 2f;
+        else
+            vSpeed = 8f;
+    }
+
     void Update()
     {
-        if(!IsGrounded())
+        if (!IsGrounded())
         {
-            transform.Translate(Vector3.down*14.0f* Time.deltaTime) ;
+            if (vSpeed < -20f) { }
+
+            else
+            {
+                vSpeed -= 1f;
+            }
+        }
+        else
+        {
+            vSpeed = 0;
         }
 
+        transform.position += Vector3.up* vSpeed*Time.deltaTime;
 
         if (inUse)
         {
             Vector3 pushDirection;
 
-            var x = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
-            var z = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+            var x = Input.GetAxis("LS-X") * Time.deltaTime * speed;
+            var z = Input.GetAxis("LS-Y") * Time.deltaTime * speed;
 
             Vector3 targetDirection = new Vector3(x, 0f, z);
             targetDirection = Camera.main.transform.TransformDirection(targetDirection);
@@ -121,34 +145,22 @@ public class Box : Interactable {
         }
     }
 
-
-    public override void OnTriggerStay(Collider other)
+    public override void interact()
     {
-        
-        if (other.name == "Object_Player")
+        if (!inUse)
         {
-            if (Input.GetButtonDown("Interact") && !inUse)
-            {
-                toggleIndicator();
-                p.setPlayerState("pushing");
-                inUse = true;
-                startPushing = true;
-            }
-            if (Input.GetButtonUp("Interact"))
-            {
-                if (startPushing)
-                {
-                    startPushing = false;
-                }
-                else
-                {
-                    toggleIndicator();
-                    p.setPlayerState("idle");
-                    inUse = false;
-                }
-            }
+            toggleIndicator();
+            p.setPlayerState("pushing");
+            inUse = true;
+        }
+        else
+        {
+            toggleIndicator();
+            p.setPlayerState("idle");
+            inUse = false;
         }
     }
+
     public override void collisionExit()
     {
         if (inUse)
