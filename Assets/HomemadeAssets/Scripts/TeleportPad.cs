@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Cleanup: 08/01/2018
+//todo: Add functionality to active teleporters 
+
 public class TeleportPad : Interactable {
 
     [SerializeField]
     private bool activeAtStart;
-
     private bool active;
 
+    //Activate an inactive teleporter
     public override void interact()
     {
         if (!active)
@@ -22,6 +25,7 @@ public class TeleportPad : Interactable {
         }
     }
 
+    //Mark teleporters as active or inactive
     public void Start()
     {
         gameUI = UIController.Instance;
@@ -35,10 +39,9 @@ public class TeleportPad : Interactable {
         }
     }
 
-
+    //UI interaction reference
     public TeleportPad()
     {
         interaction = "Activate";
-        
     }
 }

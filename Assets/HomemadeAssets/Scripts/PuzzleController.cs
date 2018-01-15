@@ -57,7 +57,7 @@ public class PuzzleController : MonoBehaviour {
         answerString.text = "";
         resultString.text = "";
 
-        for (int i = 0; i<5; i++)
+        for (int i = 0; i<6; i++)
         {
             if (i >= buttonList.Length)
             {

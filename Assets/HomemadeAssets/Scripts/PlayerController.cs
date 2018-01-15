@@ -202,28 +202,28 @@ public class PlayerController : MonoBehaviour {
                
 
                 //Check for spellchange input
-            if (Input.GetButtonDown("D-Y") || (pad == -1 && dPadUpdate))
+            if (Input.GetButtonDown("D-U") || (pad == -1 && dPadUpdate))
             {
                 if (element == SpellType.Electric)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Electric;
             }
-            else if (Input.GetButtonDown("D-X") || (pad == -2 && dPadUpdate))
+            else if (Input.GetButtonDown("D-L") || (pad == -2 && dPadUpdate))
             {
                 if (element == SpellType.Fire)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Fire;
             }
-            else if (Input.GetButtonDown("D-Y") || (pad == 1 && dPadUpdate))
+            else if (Input.GetButtonDown("D-D") || (pad == 1 && dPadUpdate))
             {
                 if (element == SpellType.Wind)
                     element = SpellType.Normal;
                 else
                     element = SpellType.Wind;
             }
-            else if(Input.GetButtonDown("D-X") || (pad == 2 && dPadUpdate))
+            else if(Input.GetButtonDown("D-R") || (pad == 2 && dPadUpdate))
             {
                 if (element == SpellType.Ice)
                     element = SpellType.Normal;

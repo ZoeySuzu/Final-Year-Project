@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Cleanup: 08/01/2018
+//Todo: Implement automatic activation; add traps for fire, electricity and normal elements.
+
 public class Trap : MonoBehaviour {
 
     private SpellType element;
     private Material material;
 
     [SerializeField]
-    private GameObject iceCube, windArea;
+    private GameObject fireArea,iceCube, electricityArea, windArea, explosion;
 
+    //Set the type of trap
     public void Initialize(SpellType _element)
     {
         element = _element;
@@ -21,7 +25,7 @@ public class Trap : MonoBehaviour {
         return element;
     }
 
-    // Use this for initialization
+    //Set the display based on the type and add trap to the entity list.
     void Start()
     {
         transform.SetParent(transform.parent.FindChild("Spells"));
@@ -55,6 +59,13 @@ public class Trap : MonoBehaviour {
                 }
         }
     }
+
+    //Detonate the trap and get rid of previous trap of same type.
+    //Fire: Creates a ball of fire
+    //Ice: Creates a block of Ice
+    //Electric: Creates an electricity conductor
+    //Wind: Creates a wind area
+    //Normal: creates an explosion
 
     public void setOff()
     {
@@ -104,6 +115,7 @@ public class Trap : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    //Automatically activate 
     private void OnTriggerEnter(Collider other)
     {
     }

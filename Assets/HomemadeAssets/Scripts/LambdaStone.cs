@@ -8,7 +8,9 @@ public class LambdaStone : Interactable
     [SerializeField]
     private string[] input;
     [SerializeField]
-    private string goal, instructionIN, instructionOUT, result;
+    private string goal, instructionIN, instructionOUT, author;
+
+	private string result;
 
     private string[] answer;
     private int opNumber;

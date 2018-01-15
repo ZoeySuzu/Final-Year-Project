@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Last clean: 29/11/2017
+//Last clean: 08/01/2018
+//Todo: add script calling function, fix disapearing 
 
 public class Switch : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class Switch : MonoBehaviour {
     [SerializeField]
     public GameObject targetObject;
     [SerializeField]
-    private bool targetActive;
+    private bool active,script;
 
     private GameObject button;
     private Material material;
@@ -34,7 +35,7 @@ public class Switch : MonoBehaviour {
         {
             color = Color.green;
         }
-        targetObject.SetActive(targetActive);
+        targetObject.SetActive(active);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -69,6 +70,7 @@ public class Switch : MonoBehaviour {
 
     public void switchActive()
     {
-        targetObject.SetActive(!targetObject.activeSelf);
+        if (!script)
+            targetObject.SetActive(!targetObject.activeSelf);
     }
 }
