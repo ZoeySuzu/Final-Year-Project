@@ -66,5 +66,7 @@ end
 
 Test6
 Hey!
-Try to jump over the lasers.
+@# setCamera hook1
+See those lasers over there...
+Try to jump over them.
 end

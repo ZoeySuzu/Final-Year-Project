@@ -6,13 +6,13 @@ public class LambdaStone : Interactable
 {
 
     [SerializeField]
-    private string[] input;
+    private string[] options;
     [SerializeField]
     private string goal, instructionIN, instructionOUT, author;
 
-	private string result;
+	private string inCurrent, outCurrent, inPrevious;
 
-    private string[] answer;
+    private string[] input;
     private int opNumber;
     private int opsNeeded;
     private string activeChar;
@@ -37,26 +37,18 @@ public class LambdaStone : Interactable
         mat.color = Color.grey;
 
         gameUI = UIController.Instance;
-        Debug.Log("Lambda test");
         opNumber = 0;
         opsNeeded = instructionIN.Length;
-        answer = new string[opsNeeded];
-
+        input = new string[opsNeeded];
+        inCurrent = instructionIN;
+        outCurrent = instructionOUT;
+        inPrevious = "";
     }
 
-    public string getAnswer()
-    {
-        return string.Join(" ",answer);
-    }
-
-    public string getResult()
-    {
-        return result;
-    }
 
     public string[] getButtons()
     {
-        return input;
+        return options;
     }
 
     public string getGoal()
@@ -64,14 +56,19 @@ public class LambdaStone : Interactable
         return goal;
     }
 
+    public string getPreviousIn()
+    {
+        return inPrevious;
+    }
+
     public string getInstrucionIN()
     {
-        return instructionIN;
+        return inCurrent;
     }
 
     public string getInstrucionOUT()
     {
-        return instructionOUT;
+        return outCurrent;
     }
 
     public void removeAnswer()
@@ -79,7 +76,7 @@ public class LambdaStone : Interactable
         if (opNumber > 0)
         {
             opNumber--;
-            answer[opNumber] = null;
+            input[opNumber] = null;
         }
     }
 
@@ -87,8 +84,13 @@ public class LambdaStone : Interactable
     {
         if (opNumber < opsNeeded)
         {
-            answer[opNumber] = s;
+            input[opNumber] = s;
+            activeChar = instructionIN[opNumber].ToString();
+            inCurrent = inCurrent.Substring(1);
+            inPrevious = inPrevious + "("+s+")";
+            outCurrent = outCurrent.Replace(activeChar, s);
             opNumber++;
+            
         }
         else
             Debug.Log("Can't add more input");
@@ -97,7 +99,10 @@ public class LambdaStone : Interactable
     public void clearAnswer()
     {
         opNumber = 0;
-        answer = new string[opsNeeded];
+        inCurrent = instructionIN;
+        outCurrent = instructionOUT;
+        inPrevious = "";
+        input = new string[opsNeeded];
     }
 
     public void testTheory()
@@ -105,21 +110,9 @@ public class LambdaStone : Interactable
         if (opNumber != opsNeeded)
             return;
 
-        result = instructionOUT;
-        for (int i = 0; i < opsNeeded; i++)
+        if(outCurrent != goal)
         {
-            activeChar = instructionIN[i].ToString();
-            result = result.Replace(activeChar, answer[i]);
-        }
-
-        for (int j = 0; j < goal.Length; j++)
-        {
-            Debug.Log(goal[j] + " " + result[j]);
-            if (goal[j] != result[j])
-            {
-                Debug.Log("Fail");
-                return;
-            }
+            return;
         }
         success();
     }

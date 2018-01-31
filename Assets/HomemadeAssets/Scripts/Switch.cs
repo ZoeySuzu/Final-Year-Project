@@ -44,7 +44,7 @@ public class Switch : MonoBehaviour {
         {
             if (!pressed)
             {
-                button.transform.position += Vector3.down * 0.05f;
+                button.transform.position += Vector3.down * 0.1f;
                 material.color = color;
                 pressed = true;
                 switchActive();
@@ -60,7 +60,7 @@ public class Switch : MonoBehaviour {
             counter--;
             if (!staysDown & counter == 0)
             {
-                button.transform.position += Vector3.up * 0.05f;
+                button.transform.position += Vector3.up * 0.1f;
                 material.color = Color.red;
                 pressed = false;
                 switchActive();

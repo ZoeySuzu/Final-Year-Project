@@ -155,6 +155,7 @@ public class Box : Interactable {
         }
         else
         {
+            gameUI.setActionButton(interaction);
             toggleIndicator();
             p.setPlayerState("idle");
             inUse = false;

@@ -7,7 +7,7 @@ public class PuzzleController : MonoBehaviour {
     public static PuzzleController Instance { get; set; }
 
     [SerializeField]
-    private Text goalString, inString, outString,answerString,resultString;
+    private Text goalString, inString, outString;
 
     private Transform buttons;
     private LambdaStone stone;
@@ -31,9 +31,6 @@ public class PuzzleController : MonoBehaviour {
     void Start () {
         active = false;
         enable = false;
-        goalString.text = "";
-        inString.text = "";
-        outString.text = "";
         gameObject.SetActive(false);
         buttons = transform.FindChild("Puzzle_ButtonPanel");
     }
@@ -51,11 +48,9 @@ public class PuzzleController : MonoBehaviour {
         active = true;
         stone = _stone;
         goalString.text = stone.getGoal();
-        inString.text = stone.getInstrucionIN();
-        outString.text = stone.getInstrucionOUT();
+        goalString.color = new Color32(214,38 ,38,255);
+        updateInOut();
         buttonList = stone.getButtons();
-        answerString.text = "";
-        resultString.text = "";
 
         for (int i = 0; i<6; i++)
         {
@@ -66,7 +61,17 @@ public class PuzzleController : MonoBehaviour {
             }
             else
             {
-                buttons.GetChild(i).GetChild(0).GetComponent<Text>().text = buttonList[i];
+                var button = buttons.GetChild(i).GetChild(0).GetComponent<Text>();
+                button.text = buttonList[i];
+                button.fontSize = 28;
+                if (button.text.Length == 1)
+                {
+                    button.color = new Color32(214, 105, 105, 255);
+                }
+                else
+                {
+                    button.color = Color.blue;
+                }
                 buttons.GetChild(i).GetComponent<Button>().interactable = true;
             }
         }
@@ -75,25 +80,22 @@ public class PuzzleController : MonoBehaviour {
         gameObject.SetActive(true);
         buttons.GetChild(1).GetComponent<Button>().Select();
         buttons.GetChild(0).GetComponent<Button>().Select();
-
     }
 
     public void clearAnswer()
     {
-        answerString.text = "";
         stone.clearAnswer();
+        updateInOut();
     }
 
     public void removeAnswer()
     { 
         stone.removeAnswer();
-        answerString.text = stone.getAnswer();
     }
 
     public void testAnswer()
     {
         stone.testTheory();
-        resultString.text = stone.getResult();
     }
 	
     public bool getActive()
@@ -106,8 +108,14 @@ public class PuzzleController : MonoBehaviour {
         if (enable)
         {
             stone.addAnswer(buttonList[i]);
-            answerString.text = stone.getAnswer().ToString();
         }
+        updateInOut();
+    }
+
+    private void updateInOut()
+    {
+        inString.text = stone.getInstrucionIN();
+        outString.text = stone.getInstrucionOUT();
     }
 
 	// Update is called once per frame

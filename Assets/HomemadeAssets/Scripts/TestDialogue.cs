@@ -15,6 +15,22 @@ public class TestDialogue : Interactable {
     private Queue<string> textQueue;
 
 
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.name == "Object_Player")
+        {
+            Vector3 orientation = new Vector3(PlayerController.Instance.transform.position.x, transform.position.y, PlayerController.Instance.transform.position.z);
+            transform.LookAt(orientation);
+            if (Input.GetButtonDown("A"))
+            {
+                orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
+                PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
+                interact();
+                PlayerController.Instance.switchInteracting();
+            }
+        }
+    }
+
     private void Start()
     {
         gameUI = UIController.Instance;
@@ -58,6 +74,9 @@ public class TestDialogue : Interactable {
     {
         if (!TextController.Instance.gameObject.activeSelf)
         {
+           
+            FollowCamera.Instance.setSpecific(gameObject, transform.forward * 5 + transform.up * 2 + transform.right * -3);
+            
             TextController.Instance.sendDialogueRequest(dialogueID, this);
         }
     }

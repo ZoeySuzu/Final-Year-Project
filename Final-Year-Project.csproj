@@ -76,8 +76,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ExternalAssets\FPSdisplay.cs" />
+    <Compile Include="Assets\ExternalAssets\KY_effects\Script\ConGUI.cs" />
+    <Compile Include="Assets\ExternalAssets\KY_effects\Script\Lighting.cs" />
+    <Compile Include="Assets\ExternalAssets\SapphiArt\SapphiArtchan\Scripts\AnimationManagerUI.cs" />
+    <Compile Include="Assets\ExternalAssets\SapphiArt\SapphiArtchan\Scripts\SapphiArtChan_AnimManager.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\AttackScript.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Box.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\CameraID.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\CatchFire.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\GameController.cs" />
@@ -98,6 +103,7 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\SpellReactor.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\SpellType.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Switch.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\TeleportController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TeleportPad.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TestDialogue.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\TextController.cs" />
@@ -105,6 +111,28 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\UIController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Weapon.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\WindArea.cs" />
+    <Compile Include="Assets\Moving.cs" />
+    <Compile Include="Assets\UnityChan\Scripts\CameraController.cs" />
+    <Compile Include="Assets\UnityChan\Scripts\FaceUpdate.cs" />
+    <Compile Include="Assets\UnityChan\Scripts\IdleChanger.cs" />
+    <Compile Include="Assets\UnityChan\Scripts\SceneLoader.cs" />
+    <Compile Include="Assets\UnityChan\Scripts\ThirdPersonCamera.cs" />
+    <Compile Include="Assets\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\ExternalAssets\KY_effects\MagicEffectsPackFree\ReadMe.txt" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair.shader" />
+    <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
+    <None Include="Assets\UnityChan\Stage\Shader\AlphaMask.shader" />
+    <None Include="Assets\UnityChan\license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

@@ -18,6 +18,8 @@ public abstract class Interactable : MonoBehaviour{
         {
             if (Input.GetButtonDown("A"))
             {
+                Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y,transform.position.z);
+                PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
                 interact();
                 PlayerController.Instance.switchInteracting();
             }

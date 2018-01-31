@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour {
 
     private ArrayList teleportPads;
     private ArrayList entities;
+    private ArrayList cameraIds;
 
     //-----------------------------------Attach game controllers on start:
     void Start () {
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour {
 
     private void Awake()
     {
+        cameraIds = new ArrayList();
         teleportPads = new ArrayList();
         entities = new ArrayList();
         if (Instance != null && Instance != this)
@@ -57,6 +59,7 @@ public class GameController : MonoBehaviour {
     //-----------------------------------Pause Game:
     public void pause()
     {
+        FollowCamera.Instance.enabled = FollowCamera.Instance.enabled;
         pauseEntities();
         if (Time.timeScale == 1)
         {
@@ -73,14 +76,30 @@ public class GameController : MonoBehaviour {
             ui.resume();
         }
     }
-
     public void pauseEntities()
     {
         pc.enabled = !pc.enabled;
-        FollowCamera.Instance.enabled = !FollowCamera.Instance.enabled;
+        foreach (GameObject go in entities)
+        {
+
+        }
+    }
+    public void pauseEntities(bool state)
+    {
+        pc.enabled = !state;
         foreach (GameObject go in entities) {
             
         }
+    }
+
+    public void addCameraId(CameraID c)
+    {
+        cameraIds.Add(c);
+    }
+
+    public ArrayList getCameraIds()
+    {
+        return cameraIds;
     }
 
     public void addEntity(GameObject go)
@@ -96,6 +115,7 @@ public class GameController : MonoBehaviour {
 
     public void addTeleportPad(TeleportPad pad)
     {
+        Debug.Log("Added to teleport list " + pad.getName());
         teleportPads.Add(pad);
     }
 
@@ -103,5 +123,13 @@ public class GameController : MonoBehaviour {
     {
         return teleportPads;
     }
+
+    public void loadLevel(string levelName, Transform teleport)
+    {
+        SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync(1);
+        pc.transform.position = teleport.position;
+    }
+
 
 }

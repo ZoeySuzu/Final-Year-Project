@@ -21,6 +21,7 @@ public class Signpost : Interactable {
     {
         if (!TextController.Instance.getState())
         {
+            FollowCamera.Instance.setSpecific(gameObject, transform.forward * 5 + transform.up * 2 + transform.right * -3);
             textQueue = new Queue<string>();
             if (isDark && !GetComponentInChildren<LightTrigger>().getIsLit())
             {

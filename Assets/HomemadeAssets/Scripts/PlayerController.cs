@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody rb;
     private UIController ui;
     private GameObject hand;
+    private Animator anim;
 
     //Ability related variables
     private SpellType element;
@@ -76,6 +77,7 @@ public class PlayerController : MonoBehaviour {
         mana = maxMana;
         ui.updateHealth(health);
         ui.updateMana(mana);
+        anim = GetComponentInChildren<Animator>();
     }
 
 
@@ -97,6 +99,12 @@ public class PlayerController : MonoBehaviour {
     }
 	
 	void Update () {
+        speed = basespeed;
+        if(element == SpellType.Electric)
+        {
+            speed = basespeed * 1.25f;
+        }
+
         //check out of bounds
         if(transform.position.y < -20)
         {
@@ -110,6 +118,8 @@ public class PlayerController : MonoBehaviour {
         Vector3 targetDirection = new Vector3(x, 0f, z);
         targetDirection = Camera.main.transform.TransformDirection(targetDirection);
         targetDirection.y = 0.0f;
+
+        anim.SetFloat("Speed", targetDirection.magnitude);
 
 
         if (playerState.Equals("climbing"))
@@ -156,20 +166,26 @@ public class PlayerController : MonoBehaviour {
         {
             playerState = "idle";
 
+            GameObject focus = FollowCamera.Instance.getFocus();
+            if (focus != null)
+            {
+                playerModel.LookAt(focus.transform);
+            }
+
             //Check movement state
             if (targetDirection != Vector3.zero && canAttack == true)
             {
                 if (Input.GetButton("B"))
                 {
                     playerState = "running";
-                    speed = basespeed + basespeed / 2;
+                    speed += basespeed / 2;
                 }
                 else
                 {
                     playerState = "walking";
                     speed = basespeed;
                 }
-                if (!lockRotation)
+                if (!lockRotation && !FollowCamera.Instance.getLerp() && focus == null)
                 {
                     playerModel.forward = targetDirection;
                 }
@@ -179,7 +195,8 @@ public class PlayerController : MonoBehaviour {
             //Check if on ground
             if (IsGrounded())
             {
-                if(ui.getActionButton() == "")
+                anim.SetBool("Jump", false);
+                if (ui.getActionButton() == "")
                     ui.setActionButton("Jump");
             }
             else
@@ -199,15 +216,16 @@ public class PlayerController : MonoBehaviour {
             {
                 pad = 0;
             }
-               
 
-                //Check for spellchange input
+
+            //Check for spellchange input
             if (Input.GetButtonDown("D-U") || (pad == -1 && dPadUpdate))
             {
                 if (element == SpellType.Electric)
                     element = SpellType.Normal;
-                else
+                else {
                     element = SpellType.Electric;
+                }
             }
             else if (Input.GetButtonDown("D-L") || (pad == -2 && dPadUpdate))
             {
@@ -236,6 +254,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetButtonDown("A") && IsGrounded() && !interacting)
             {
                 rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
+                anim.SetBool("Jump", true);
             }
 
             //check for attack imput
@@ -263,7 +282,7 @@ public class PlayerController : MonoBehaviour {
                 if (spellTrap[i] == null)
                 {
                     Debug.Log("Set trap " + i);
-                    spellTrap[i] = Instantiate(trap, playerModel.transform.position - playerModel.up*0.95f, playerModel.transform.rotation).GetComponent<Trap>();
+                    spellTrap[i] = Instantiate(trap, transform.position-new Vector3(0,transform.localScale.y,0), playerModel.transform.rotation).GetComponent<Trap>();
                     spellTrap[i].transform.SetParent(transform.parent);
                     spellTrap[i].Initialize(element);
                 }
@@ -279,7 +298,7 @@ public class PlayerController : MonoBehaviour {
             if (Input.GetButtonDown("Y") && IsGrounded())
             {
                     
-                spell = Instantiate(projectile, playerModel.transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
+                spell = Instantiate(projectile, transform.position + playerModel.forward*2 + Vector3.up * 0.4f, playerModel.transform.rotation).GetComponent<Spell>();
                 if (element == SpellType.Fire || element == SpellType.Wind)
                 {
                     spellCasting = true;
@@ -422,7 +441,7 @@ public class PlayerController : MonoBehaviour {
 
     private bool IsGrounded(){
         RaycastHit hit;
-        return Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit,1f);
+        return Physics.SphereCast(transform.position,0.3f,Vector3.down, out hit,0.8f);
      }
 
     private void OnTriggerEnter(Collider other)

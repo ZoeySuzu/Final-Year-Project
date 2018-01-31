@@ -97,7 +97,7 @@ public class TextController : MonoBehaviour {
         textList = _textList;
         talkingName = _name;
 
-        GameController.Instance.pauseEntities();
+        GameController.Instance.pauseEntities(true);
         newDialogue = true;
         gameObject.SetActive(true);
         displayNext();
@@ -123,8 +123,9 @@ public class TextController : MonoBehaviour {
     {
         if (textList.Count == 0)
         {
-            GameController.Instance.pauseEntities();
+            GameController.Instance.pauseEntities(false);
             gameObject.SetActive(false);
+            FollowCamera.Instance.setFollow();
         }
         else
         {
@@ -187,10 +188,16 @@ public class TextController : MonoBehaviour {
                 {
                     actor.setDialogue(text.Substring(12));
                 }
-                if (text.StartsWith("setFriendPoints"))
+                else if (text.StartsWith("setFriendPoints"))
                 {
                     actor.setFriendPoints(int.Parse(text.Substring(16)));
                 }
+                else if (text.StartsWith("setCamera"))
+                {
+                    text = text.Substring(10);
+                    setCamera(text);
+                }
+
                 displayNext();
             }
             else if (text.StartsWith("else"))
@@ -214,5 +221,27 @@ public class TextController : MonoBehaviour {
     public bool getState()
     {
         return gameObject.activeSelf;
+    }
+
+    private void setCamera(string text)
+    {
+        var list = GameController.Instance.getCameraIds();
+        GameObject go = null;
+        Vector3 vec = Vector3.zero;
+        foreach(CameraID cam in list)
+        {
+            if (cam.getId() == text)
+            {
+                go = cam.gameObject;
+                vec = cam.getVec();
+                break;
+            }
+        }
+        if (go == null)
+        {
+            Debug.Log(text + " Object not found");
+            return;
+        }
+        FollowCamera.Instance.setSpecific(go, vec);
     }
 }

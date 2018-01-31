@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Last clean: 29/11/2017
-//to do: make a method to set target
-//to do: Make a method to set ennemy
 
 public class FollowCamera : MonoBehaviour
 {
@@ -23,6 +21,7 @@ public class FollowCamera : MonoBehaviour
     }
 
     private GameObject player;
+    private GameObject target;
 
     private GameObject targetEnnemy;
     private bool enemyFocused;
@@ -34,9 +33,11 @@ public class FollowCamera : MonoBehaviour
     private Vector3 init;
     private Vector3 offset;
 
+    private bool locked;
     private bool lerping;
     private float lerpStartTime;
     private Vector3 lerpStartPos;
+    private Vector3 lerpTargetPos;
 
     void Start()
     {
@@ -56,83 +57,139 @@ public class FollowCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        if (enemyFocused) {
-            if (Input.GetButtonDown("L1"))
-            {
-                enemyFocused = false;
-                Debug.Log("Camera Focused");
-                offset = player.transform.position - transform.parent.rotation * init;
-                recenter();
-            }
-            center = player.transform.position + (targetEnnemy.transform.position - player.transform.position) / 2;
-            transform.position = player.transform.position + (player.transform.position - targetEnnemy.transform.position) / 2 + Vector3.up * 5;
-            transform.LookAt(center);
-            Debug.Log(center);
-        }
-
-        else
+        if (lerping)
         {
-            var cameraX = Input.GetAxis("RS-X") * 6;
-            var cameraHeight = new Vector3(0, Input.GetAxis("RS-Y") * 0.3f, 0);
-            //var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.1f;
-
-
-            if ( Input.GetButtonDown("L1"))
+            float lerpTime = Time.time - lerpStartTime;
+            float lerpPercent = lerpTime / 0.3f;
+            if (lerpTargetPos == Vector3.zero)
             {
-                GameObject ennemy = PlayerController.Instance.getNearestEnnemy();
-                if (ennemy != null)
-                {
-                    targetEnnemy = ennemy;
-                    enemyFocused = true;
-                }
-                else
-                {
-                    Debug.Log("Camera Focused");
-                    offset = player.transform.position - transform.parent.rotation * init;
-                    recenter();
-                }
-            }
-
-            if (lerping)
-            {
-                float lerpTime = Time.time - lerpStartTime;
-                float lerpPercent = lerpTime / 0.3f;
-                transform.position = Vector3.Lerp(lerpStartPos, offset, lerpPercent);
-                if (lerpPercent >= 1.0f)
-                {
-                    Debug.Log("End lerp");
-                    lerping = false;
-                    offset = player.transform.position - transform.position;
-                }
+                transform.position = Vector3.Lerp(lerpStartPos, player.transform.position - transform.parent.rotation * init, lerpPercent);
+                transform.LookAt(player.transform);
             }
             else
             {
-                Quaternion rotation = Quaternion.Euler(0, cameraX, 0);
-                transform.position = player.transform.position - (rotation * offset) + cameraHeight;
-
-
-
-                if (transform.position.y > player.transform.position.y + maxHeight)
-                {
-                    transform.position = new Vector3(transform.position.x, player.transform.position.y + maxHeight, transform.position.z);
-                }
-                if (transform.position.y < player.transform.position.y)
-                {
-                    transform.position = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
-                }
-
+                transform.position = Vector3.Lerp(lerpStartPos, lerpTargetPos, lerpPercent);
+                transform.LookAt(target.transform);
+            }
+            
+            if (lerpPercent >= 1.0f)
+            {
+                lerping = false;
                 offset = player.transform.position - transform.position;
             }
-            transform.LookAt(player.transform);
         }
+        else if (locked)
+        {
+            return;
+        }
+        else {
+            if (enemyFocused)
+            {
+                if (Input.GetButtonDown("L1"))
+                {
+                    setFollow();
+                }
+                center = player.transform.position + (targetEnnemy.transform.position - player.transform.position) / 2;
+                transform.position = player.transform.position + (player.transform.position - targetEnnemy.transform.position) / 2 + Vector3.up * 5;
+                transform.LookAt(center);
+            }
+            else
+            {
+                var cameraX = Input.GetAxis("RS-X") * 6;
+                var cameraHeight = new Vector3(0, Input.GetAxis("RS-Y") * 0.3f, 0);
+                //var cameraDistance = -Input.GetAxis("Joystick_B Y") * 0.1f;
+
+                if (Input.GetButtonDown("L1"))
+                {
+                    GameObject ennemy = PlayerController.Instance.getNearestEnnemy();
+                    if(ennemy == null)
+                    {
+                        setFollow();
+                    }
+                    else
+                    {
+                        setFocus(ennemy);
+                    }
+
+                }
+
+                
+                else
+                {
+                    Quaternion rotation = Quaternion.Euler(0, cameraX, 0);
+                    transform.position = player.transform.position - (rotation * offset) + cameraHeight;
+                    if (transform.position.y > player.transform.position.y + maxHeight)
+                    {
+                        transform.position = new Vector3(transform.position.x, player.transform.position.y + maxHeight, transform.position.z);
+                    }
+                    if (transform.position.y < player.transform.position.y)
+                    {
+                        transform.position = new Vector3(transform.position.x, player.transform.position.y, transform.position.z);
+                    }
+
+                    offset = player.transform.position - transform.position;
+                }
+                transform.LookAt(player.transform);
+            }
+        }
+    }
+
+    public void setFollow()
+    {
+        offset = player.transform.position - transform.parent.rotation * init;
+        recenter();
+        locked = false;
+        enemyFocused = false;
+    }
+
+    public void setFocus(GameObject target)
+    {
+        targetEnnemy = target;
+        enemyFocused = true;
+    }
+
+    public GameObject getFocus()
+    {
+        if (enemyFocused)
+            return targetEnnemy;
+        else
+            return null;
+    }
+
+    public void setSpecific(GameObject _target, Vector3 offset)
+    {
+        target = _target;
+        lerpStart(target.transform.position+offset);
+        locked = true;
+    }
+
+    public void setSpecific(GameObject targetA, GameObject targetB, Vector3 offset)
+    {
+        Vector3 middle = (targetB.transform.position - targetA.transform.position) / 2;
+        transform.position = middle + targetA.transform.right * 3;
+        transform.LookAt(middle);
+        locked = true;
     }
 
 
     public void recenter()
     {
-        Debug.Log("start lerp");
         lerping = true;
         lerpStartTime = Time.time;
         lerpStartPos = transform.position;
+        lerpTargetPos = Vector3.zero;
+    }
+
+    public void lerpStart(Vector3 target)
+    {
+        lerping = true;
+        lerpStartTime = Time.time;
+        lerpStartPos = transform.position;
+        lerpTargetPos = target;
+    }
+
+    public bool getLerp()
+    {
+        return lerping;
     }
 }

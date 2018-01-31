@@ -74,6 +74,7 @@ public class Lever : Interactable {
             }
             else
             {
+                gameUI.setActionButton(interaction);
                 toggleIndicator();
                 PlayerController.Instance.setPlayerState("idle");
                 inUse = false;

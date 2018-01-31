@@ -25,7 +25,6 @@ public class AttackScript : MonoBehaviour {
 
     private void secondAttack()
     {
-        Debug.Log("2nd");
         attackN++;
         chainAttack = false;
         lerpStartTime = Time.time;
@@ -36,7 +35,6 @@ public class AttackScript : MonoBehaviour {
 
     private void thirdAttack()
     {
-        Debug.Log("3nd");
         attackN++;
         chainAttack = false;
         lerpStartTime = Time.time;
@@ -49,7 +47,6 @@ public class AttackScript : MonoBehaviour {
         if(attackN<2 && Input.GetButtonDown("X"))
             {
                 chainAttack = true;
-            Debug.Log("yas");
             }
 
         float lerpTime = Time.time - lerpStartTime;

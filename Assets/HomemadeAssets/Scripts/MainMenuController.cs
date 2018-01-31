@@ -13,6 +13,7 @@ public class MainMenuController : MonoBehaviour {
     public void newGame()
     {
         SceneManager.LoadSceneAsync("TestDev", LoadSceneMode.Single);
+        SceneManager.LoadSceneAsync("DebugLevel", LoadSceneMode.Additive);
     }
 
     public void loadLevel()
