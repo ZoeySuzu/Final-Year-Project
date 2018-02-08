@@ -25,7 +25,7 @@ public class FollowCamera : MonoBehaviour
 
     private GameObject player;
     private GameObject target;
-    private GameObject targetEnnemy;
+    private GameObject targetEnemy;
 
     private Vector3 center;
     private Vector3 init;
@@ -57,7 +57,7 @@ public class FollowCamera : MonoBehaviour
     {
         if (enemyFocused)
         {
-            return targetEnnemy;
+            return targetEnemy;
         }
         return null;
     }
@@ -80,7 +80,7 @@ public class FollowCamera : MonoBehaviour
             if (lookCenter)
             {
                 transform.position = Vector3.Lerp(lerpStartPos, player.transform.position + player.transform.forward * -5 + Vector3.up * 3 + player.transform.right * 0f, lerpPercent);
-                center = player.transform.position + (targetEnnemy.transform.position - player.transform.position) / 2;
+                center = player.transform.position + (targetEnemy.transform.position - player.transform.position) / 2;
                 transform.LookAt(Vector3.Lerp(lerpFocus,center,lerpPercent));
             }
 
@@ -117,7 +117,9 @@ public class FollowCamera : MonoBehaviour
                 else if (Input.GetAxis("RS-X") > 0.5f && !rs)
                 {
                     rs = true;
-                    setFocus(PlayerController.Instance.getNextEnnemy(targetEnnemy));
+                    GameObject nextEnnemy = PlayerController.Instance.getNextEnnemy(targetEnemy);
+                    if(nextEnnemy != null)
+                        setFocus(nextEnnemy);
                     return;
                 }
                 else if (Input.GetAxis("L2") > 0.2 && !l2)
@@ -127,7 +129,14 @@ public class FollowCamera : MonoBehaviour
                     return;
                 }
 
-                center = player.transform.position + (targetEnnemy.transform.position - player.transform.position) / 2;
+                var mag = Mathf.Abs(targetEnemy.transform.position.x -transform.position.x) + Mathf.Abs(targetEnemy.transform.position.z - transform.position.z);
+                if (mag > 30f)
+                {
+                    setFollow();
+                    return;
+                }
+
+                center = player.transform.position + (targetEnemy.transform.position - player.transform.position) / 2;
                 transform.position = player.transform.position + player.transform.forward * -5 + Vector3.up * 3 + player.transform.right * 0f;
                 lerpFocus = center;
                 transform.LookAt(center);
@@ -196,7 +205,7 @@ public class FollowCamera : MonoBehaviour
 
     public void setFocus(GameObject _target)
     {
-        targetEnnemy = _target;
+        targetEnemy = _target;
         lerpCenterStart();
         locked = false;
         enemyFocused = true;
@@ -205,7 +214,7 @@ public class FollowCamera : MonoBehaviour
     public GameObject getFocus()
     {
         if (enemyFocused)
-            return targetEnnemy;
+            return targetEnemy;
         else
             return null;
     }

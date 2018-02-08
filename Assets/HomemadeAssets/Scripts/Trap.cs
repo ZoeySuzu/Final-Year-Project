@@ -12,7 +12,7 @@ public class Trap : MonoBehaviour {
     private Material material;
 
     [SerializeField]
-    private GameObject fireArea,iceCube, electricityArea, windArea, explosion;
+    private GameObject fireArea = null, iceCube = null, electricityArea = null, windArea= null, explosion = null;
 
     //Set the type of trap
     public void Initialize(SpellType _element)
@@ -74,7 +74,7 @@ public class Trap : MonoBehaviour {
         {
             case SpellType.Fire:
                 {
-                    
+                    obj = Instantiate(fireArea, transform.position, Quaternion.identity) as GameObject;
                     break;
                 }
             case SpellType.Ice:
@@ -94,7 +94,7 @@ public class Trap : MonoBehaviour {
                 }
             case SpellType.Normal:
                 {
-                    
+                    obj = Instantiate(explosion, transform.position, Quaternion.identity) as GameObject;
                     break;
                 }
         }

@@ -11,11 +11,11 @@ public class Lader : Interactable {
 
     public override void interact()
     {
-        if (PlayerController.Instance.getPlayerState() != "climbing")
+        if (PlayerController.Instance.getPlayerState() != "Climbing")
         {
             PlayerController.Instance.transform.position = transform.position + transform.right * -0.5f;
-            PlayerController.Instance.getModel().rotation = Quaternion.LookRotation(transform.right);
-            PlayerController.Instance.setPlayerState("climbing");
+            PlayerController.Instance.transform.GetChild(0).rotation = Quaternion.LookRotation(transform.right);
+            PlayerController.Instance.setPlayerState("Climbing");
         }
         else
         {

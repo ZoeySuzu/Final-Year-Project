@@ -8,11 +8,11 @@ using UnityEngine;
 public class Switch : MonoBehaviour {
 
     [SerializeField]
-    private bool staysDown;
+    private bool staysDown = false;
     [SerializeField]
     public GameObject targetObject;
     [SerializeField]
-    private bool active,script;
+    private bool active = false, script =false;
 
     private GameObject button;
     private Material material;

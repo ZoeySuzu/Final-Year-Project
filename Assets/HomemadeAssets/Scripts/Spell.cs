@@ -17,7 +17,7 @@ public class Spell : MonoBehaviour {
     private bool morph;
 
     [SerializeField]
-    private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null, contactParticle;
+    private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null, contactParticle = null;
 
 
     public void Initialize(SpellType _element, bool _alternative)
@@ -182,22 +182,24 @@ public class Spell : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.tag == "Enemy")
+        {
+
+            EnemyController ec = other.GetComponent<EnemyController>();
+            if(element == SpellType.Normal)
+            {
+                ec.setHealth(-2);
+                ec.knockback(transform.forward+Vector3.up);
+            }
+        }
+
         if (other.tag == "Zone")
             return;
         if (element != SpellType.Fire && element != SpellType.Wind)
             stopCast();
 
-        if (element == SpellType.Wind && other.gameObject.name == "Object_Player")
-        {
-            Debug.Log("Increase jump");
-            other.gameObject.GetComponent<PlayerController>().setJumpHeight(2.0f);
-        }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (element == SpellType.Wind && other.gameObject.name == "Object_Player")
-        {
-            other.gameObject.GetComponent<PlayerController>().setJumpHeight(1.5f);
-        }
     }
 }

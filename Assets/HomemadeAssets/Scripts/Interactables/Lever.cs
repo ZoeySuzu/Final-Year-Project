@@ -18,7 +18,7 @@ public class Lever : Interactable {
     [SerializeField]
     private float reactionMagnitude;
 
-    private bool inUse, startPushing;
+    private bool inUse, startPushing = false;
     private float speed = 3;
     private Vector3 pOffset;
 
@@ -100,7 +100,7 @@ public class Lever : Interactable {
             Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
             PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
             toggleIndicator();
-            PlayerController.Instance.setPlayerState("pushing");
+            PlayerController.Instance.setPlayerState("Pushing");
             pOffset = PlayerController.Instance.transform.position - transform.position;
             playerRepos(pOffset);
             inUse = true;
@@ -110,7 +110,7 @@ public class Lever : Interactable {
         {
             gameUI.setInteractButton(interaction);
             toggleIndicator();
-            PlayerController.Instance.setPlayerState("idle");
+            PlayerController.Instance.setPlayerState("Idle");
             inUse = false;
         }
     }

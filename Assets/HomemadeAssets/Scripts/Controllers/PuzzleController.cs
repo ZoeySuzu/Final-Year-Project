@@ -7,7 +7,7 @@ public class PuzzleController : MonoBehaviour {
     public static PuzzleController Instance { get; set; }
 
     [SerializeField]
-    private Text goalString, inString, outString;
+    private Text goalString =null, inString = null, outString = null;
 
     private Transform buttons;
     private LambdaStone stone;

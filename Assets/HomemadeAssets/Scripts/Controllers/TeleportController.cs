@@ -8,7 +8,7 @@ public class TeleportController : MonoBehaviour {
 
     //Last clean: 31/01/2018
 
-    bool pressed, init;
+    bool pressed, init = false;
     int pos;
     ArrayList list;
     Text locationString;

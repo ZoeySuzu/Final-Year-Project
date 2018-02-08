@@ -191,7 +191,7 @@ public class Box : Interactable {
             Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
             PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
             toggleIndicator();
-            PlayerController.Instance.setPlayerState("pushing");
+            PlayerController.Instance.setPlayerState("Pushing");
             pOffset = PlayerController.Instance.transform.position - transform.position;
             playerRepos(pOffset);
             inUse = true;
@@ -200,7 +200,7 @@ public class Box : Interactable {
         {
             gameUI.setActionButton(interaction);
             toggleIndicator();
-            PlayerController.Instance.setPlayerState("idle");
+            PlayerController.Instance.setPlayerState("Idle");
             inUse = false;
         }
     }
@@ -222,7 +222,7 @@ public class Box : Interactable {
     {
         if (inUse)
         {
-            PlayerController.Instance.setPlayerState("idle");
+            PlayerController.Instance.setPlayerState("Idle");
             inUse = false;
         }
     }

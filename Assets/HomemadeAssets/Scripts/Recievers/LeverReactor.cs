@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class LeverReactor : MonoBehaviour {
 
-    private Vector3 defaultPos;
+    private Vector3 defaultPos = Vector3.zero;
     public void Awake()
     {
-        defaultPos = transform.position;
+        defaultPos = transform.localPosition;
     }
 
     public void updateReactor(float f, ReactionType r)

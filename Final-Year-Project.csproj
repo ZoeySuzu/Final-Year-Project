@@ -87,6 +87,7 @@
     <Compile Include="Assets\ExternalAssets\SapphiArt\SapphiArtchan\Scripts\AnimationManagerUI.cs" />
     <Compile Include="Assets\ExternalAssets\SapphiArt\SapphiArtchan\Scripts\SapphiArtChan_AnimManager.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\AttackScript.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\Bomb.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\CatchFire.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Controllers\FollowCamera.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Controllers\GameController.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\Controllers\TextController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Controllers\UIController.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\DestroyParticles.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\EnemyController.cs" />
+    <Compile Include="Assets\HomemadeAssets\Scripts\Enums.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Gate.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Interactables\Box.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Interactables\Interactable.cs" />
@@ -116,11 +119,9 @@
     <Compile Include="Assets\HomemadeAssets\Scripts\Recievers\SpellReactor.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Shield.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Spell.cs" />
-    <Compile Include="Assets\HomemadeAssets\Scripts\SpellType.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Switch.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\Trap.cs" />
     <Compile Include="Assets\HomemadeAssets\Scripts\WindArea.cs" />
-    <Compile Include="Assets\Moving.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ExternalAssets\KY_effects\MagicEffectsPackFree\ReadMe.txt" />

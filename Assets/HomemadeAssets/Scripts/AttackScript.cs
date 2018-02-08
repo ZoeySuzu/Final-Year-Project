@@ -5,12 +5,14 @@ using UnityEngine;
 public class AttackScript : MonoBehaviour {
 
     bool chainAttack;
+    bool hit;
     int attackN;
     float lerpStartTime;
     Vector3 lerpStartPos, lerpTargetPos;
 
 	// Use this for initialization
 	void Start () {
+        hit = false;
         attackN = 0;
         firstAttack();
         chainAttack = false;
@@ -25,6 +27,7 @@ public class AttackScript : MonoBehaviour {
 
     private void secondAttack()
     {
+        hit = false;
         attackN++;
         chainAttack = false;
         lerpStartTime = Time.time;
@@ -36,6 +39,7 @@ public class AttackScript : MonoBehaviour {
 
     private void thirdAttack()
     {
+        hit = false;
         attackN++;
         chainAttack = false;
         lerpStartTime = Time.time;
@@ -74,4 +78,26 @@ public class AttackScript : MonoBehaviour {
             Destroy(gameObject);
         }
     }
+
+
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Enemy" && !hit)
+        {
+            hit = true;
+            Vector3 dir = PlayerController.Instance.transform.GetChild(0).forward;
+            EnemyController ec = other.GetComponent<EnemyController>();
+            if (attackN < 2)
+            {
+                ec.knockback(dir*1.5f+Vector3.up*1.2f);
+                ec.setHealth(-3);
+            }
+            else
+            {
+                ec.knockback(dir*3+Vector3.up*1.5f);
+                ec.setHealth(-5);
+            }
+        }
+    }
+
 }
