@@ -66,7 +66,7 @@ public class MovingPlatform : MonoBehaviour {
         }
 	}
 
-    public void OnTriggerStay(Collider other)
+   public void OnTriggerStay(Collider other)
     {
         if (!targets.Contains(other.gameObject))
         {
@@ -104,7 +104,6 @@ public class MovingPlatform : MonoBehaviour {
                 backwards = false;
             }
         }
-
         foreach (GameObject target in targets)
         {
 

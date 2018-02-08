@@ -106,12 +106,12 @@ public class Trap : MonoBehaviour {
                 Destroy(t.gameObject);
             }
         }
-        catch (Exception e) { }
+        catch (Exception) { }
         try
         {
             obj.transform.SetParent(transform.parent);
         }
-        catch (Exception e) { }
+        catch (Exception) { }
         Destroy(gameObject);
     }
 

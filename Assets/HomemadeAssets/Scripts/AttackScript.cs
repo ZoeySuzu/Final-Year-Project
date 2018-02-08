@@ -20,7 +20,7 @@ public class AttackScript : MonoBehaviour {
     {
         lerpStartTime = Time.time;
         lerpStartPos = transform.position;
-        lerpTargetPos = transform.position + transform.up * -1 + transform.right * -2;
+        lerpTargetPos = transform.position+ transform.up * -1 + transform.right * -2;
     }
 
     private void secondAttack()
@@ -28,8 +28,9 @@ public class AttackScript : MonoBehaviour {
         attackN++;
         chainAttack = false;
         lerpStartTime = Time.time;
+        transform.localPosition = new Vector3(-1, 0f, 1.5f);
         lerpStartPos = transform.position;
-        lerpTargetPos = transform.position + transform.up * 2f + transform.right * 1.5f;
+        lerpTargetPos = transform.position + transform.up * 1.5f + transform.right * 1.5f;
     }
 
 
@@ -38,8 +39,9 @@ public class AttackScript : MonoBehaviour {
         attackN++;
         chainAttack = false;
         lerpStartTime = Time.time;
+        transform.localPosition = new Vector3(0.5f, 1.5f, 1.5f);
         lerpStartPos = transform.position;
-        lerpTargetPos = transform.position + transform.up * -2.5f + transform.right *-0.5f;
+        lerpTargetPos = transform.position + transform.up * -2f + transform.right *-0.5f;
     }
 
     // Update is called once per frame
@@ -64,11 +66,6 @@ public class AttackScript : MonoBehaviour {
             else if (chainAttack && attackN == 1)
             {
                 thirdAttack();
-            }
-            else if (attackN == 2)
-            {
-                PlayerController.Instance.refreshAttack();
-                Destroy(gameObject);
             }
         }
         if (lerpPercent >=2f)

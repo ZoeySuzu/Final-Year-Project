@@ -8,31 +8,34 @@ using UnityEngine;
 public class Spell : MonoBehaviour {
 
 
-    private SpellType element;
+    private SpellType element, normalElement;
     private float speed;
-    //private bool alternative;
     private Material material;
     private ParticleSystem activeParticle;
     private Vector3 direction;
+    private ParticleSystem particle;
+    private bool morph;
 
     [SerializeField]
-    private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null;
+    private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null, contactParticle;
 
 
     public void Initialize(SpellType _element, bool _alternative)
     {
-        element = _element;      
+        element = _element;
+        normalElement = element;
     }
 
     public SpellType getSpellType()
     {
-        return element;
+        return normalElement;
     }
 
 	// Use this for initialization
 	void Start () {
         //alternative = false;
         material = transform.GetComponent<Renderer>().material;
+        morph = false;
         switch (element)
         {
             case SpellType.Fire:
@@ -45,12 +48,31 @@ public class Spell : MonoBehaviour {
             case SpellType.Ice:
                 {
                     activeParticle = iceParticle;
-                    speed = 5;
+                    speed = 0;
                     material.color = new Color(0,0,225,100);
                     break;
                 }
             case SpellType.Electric:
                 {
+                    RaycastHit hit;
+                    Vector3 rayDir;
+                    var target = FollowCamera.Instance.targetedEnnemy();
+                    if (target != null)
+                    {
+                        transform.position = target.transform.position + Vector3.up * 5;
+                    }
+                    
+                    else if (Input.GetAxis("L2") > 0.5f)
+                    {
+                        rayDir = transform.position - FollowCamera.Instance.transform.position;
+                        Physics.Raycast(transform.position, rayDir, out hit, 100, -1, QueryTriggerInteraction.Ignore);
+                        transform.position = hit.point + Vector3.up * 5;
+                    }
+                    else
+                    {
+                        transform.position = transform.position + transform.forward * 5 + Vector3.up * 5;
+                    }
+                    
                     material.color = Color.yellow;
                     break;
                 }
@@ -69,17 +91,21 @@ public class Spell : MonoBehaviour {
                         direction = Vector3.Normalize(target.transform.position - transform.position);
                         transform.rotation = Quaternion.LookRotation(direction);
                     }
-                    else
-                    {
+                    else if(Input.GetAxis("L2") > 0.5f){
+                        direction = transform.position - FollowCamera.Instance.transform.position;
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+
+                    else{
                         direction = Vector3.forward;
                     }
-                    speed = 10;
+                    speed = 15;
                     activeParticle = defaultParticle;
                     material.color = Color.magenta;
                     break;
                 }
         }
-        Instantiate(activeParticle,transform);
+         particle = Instantiate(activeParticle,transform);
     }
 	
 	// Update is called once per frame
@@ -88,13 +114,14 @@ public class Spell : MonoBehaviour {
         {
             case SpellType.Fire:
                 {
-                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward*2;
+                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward * 1.1f + Vector3.up * 0.5f ;
                     transform.rotation = transform.parent.GetChild(0).rotation;
                     break;
                 }
             case SpellType.Ice:
                 {
-                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
+                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward * 1.1f + Vector3.up * 0.5f;
+                    transform.rotation = transform.parent.GetChild(0).rotation;
                     break;
                 }
             case SpellType.Electric:
@@ -113,8 +140,42 @@ public class Spell : MonoBehaviour {
         }
 	}
 
+    public void setMorph(SpellType morphElement)
+    {
+        if(element == SpellType.Normal && !morph)
+        {
+            morph = true;
+            Destroy(particle);
+            normalElement = morphElement;
+            switch (morphElement)
+            {
+                case SpellType.Fire:
+                    {
+                        material.color = new Color(225, 0, 0, 100);
+                        break;
+                    }
+                case SpellType.Ice:
+                    {
+                        material.color = new Color(0, 0, 225, 100);
+                        break;
+                    }
+                case SpellType.Electric:
+                    {
+                        material.color = Color.yellow;
+                        break;
+                    }
+                case SpellType.Wind:
+                    {
+                        material.color = Color.green;
+                        break;
+                    }
+            }
+        }
+    }
+
     public void stopCast()
     {
+        Instantiate(contactParticle,transform.position,transform.rotation);
         try { Destroy(gameObject); }
         catch (Exception e) { throw e; }
     }

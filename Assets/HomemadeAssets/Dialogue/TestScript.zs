@@ -14,13 +14,13 @@ end
 Test1A1
 Good that means that this is working.
 @# setFriendPoints 1
-@>Test2
+@goto Test2
 end
 
 Test1A2
 ... Umm okay?!..
 @# setFriendPoints -1
-@>Test3
+@goto Test3
 end
 
 Test2
@@ -42,21 +42,21 @@ No.
 end
 
 Test4A1
-@%> 1
+@fp> 1
 You did indeed!
-@>Test2
+@goto  Test2
 else
 That's not true!
-@>Test3
+@goto Test3
 end
 
 Test4A2
-@%< 0
+@fp< 0
 You did indeed!
-@>Test2
+@goto Test2
 else
 That's not true!
-@>Test3
+@goto Test3
 end
 
 Test5

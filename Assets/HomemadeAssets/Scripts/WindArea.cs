@@ -9,23 +9,26 @@ public class WindArea : MonoBehaviour {
 
     Rigidbody rb;
 
-    //Minimise the falling force of rigidbodys
-    private void OnTriggerEnter(Collider other)
-    {
-        if ((rb = other.GetComponent<Rigidbody>()) != null)
-            rb.AddForce(Vector3.up * 200);
-    }
-
     //Lift rigidbodys up or move boxes manually
     private void OnTriggerStay(Collider other)
     {
         if (!other.isTrigger)
         {
-            if ((rb = other.GetComponent<Rigidbody>())!= null)
-                rb.AddForce(Vector3.up * 50);
+            var a = GetComponent<CapsuleCollider>();
+            var origin = transform.position.y;
+            var target = other.transform.position.y - other.transform.localScale.y / 2;
+            var distance = target - origin;
 
-            if (other.GetComponent<Box>())
-                other.GetComponent<Box>().boostVSpeed();
+            var percentForce = 1-(distance / a.height);
+            if (percentForce < 0)
+                percentForce = 0;
+
+            if ((rb = other.GetComponent<Rigidbody>()) != null)
+            {
+                //rb.velocity = new Vector3(0,rb.velocity.y + 26*percentForce*rb.mass, 0);
+                rb.AddForce(Vector3.up * 18 * percentForce * rb.mass);
+            }
+
         }
     }
 }
