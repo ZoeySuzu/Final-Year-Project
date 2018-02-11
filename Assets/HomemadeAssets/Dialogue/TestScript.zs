@@ -1,72 +1,65 @@
-Dialogue for TestScript
+Advanced Dialogue for DebugLiz
 
-Test1
-@# setDialogue Test4
-Hi, I am a test character.
+&Debug1
+Hi, My name is Liz.
 This is a script reading test.
-Answer this question!
+Answer this question...
+What's your favourite snack?
+@? 4
+Sweets.
+Chocolate.
+Crisps.
+Fruit.
+&end
+
+&Debug1A1
+Hey mine too!
+@goto Debug2
+&end
+
+&Debug1A2
+Not bad.
+@goto Debug2
+&end
+
+&Debug1A3
+Fair enough.
+@goto Debug2
+&end
+
+&Debug1A4
+@goto Debug3
+&end
+
+&Debug2
+Come talk to me again sometime.
+@# setDialogue Debug4
+&end
+
+&Debug3
+Oh really?
 @? 2
-Can you read this?
-Yes.
-No.
-end
+Yeah!
+Nah, not really.
+&end
 
-Test1A1
-Good that means that this is working.
-@# setFriendPoints 1
-@goto Test2
-end
+&Debug3A1
+Sure, whatever.
+@goto Debug2
+&end
 
-Test1A2
-... Umm okay?!..
-@# setFriendPoints -1
-@goto Test3
-end
+&Debug3A2
+I knew it!
+@goto Debug2
+&end
 
-Test2
-Thanks for your help!
-end
+&Debug4
+Hey how's it goin' ?
+&end
 
-Test3
-Thanks for nothing...
-end
-
-Test4
-@# setDialogue Test5
-Hello again!
-I need you to tell me something.
-@? 2
-What did you answer before?
-Yes.
-No.
-end
-
-Test4A1
-@fp> 1
-You did indeed!
-@goto  Test2
-else
-That's not true!
-@goto Test3
-end
-
-Test4A2
-@fp< 0
-You did indeed!
-@goto Test2
-else
-That's not true!
-@goto Test3
-end
-
-Test5
-I have nothing left to ask you.
-Bye.
-end
-
-Test6
+&Debug5
 Hey!
 @# setCamera hook1
 See those lasers over there...
 Try to jump over them.
-end
+&end

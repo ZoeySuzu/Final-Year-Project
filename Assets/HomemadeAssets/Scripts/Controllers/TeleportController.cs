@@ -10,7 +10,7 @@ public class TeleportController : MonoBehaviour {
 
     bool pressed, init = false;
     int pos;
-    ArrayList list;
+    List<TeleportPad> teleportPads;
     Text locationString;
     TeleportPad tp;
     TeleportPad pad;
@@ -40,8 +40,8 @@ public class TeleportController : MonoBehaviour {
         GameController.Instance.pauseEntities(true);
         pressed = false;
         pos = 0;
-        list = GameController.Instance.getTeleportPads();
-        tp = (TeleportPad)list[0];
+        teleportPads = GameController.Instance.teleportPads;
+        tp = (TeleportPad)teleportPads[0];
         locationString.text = tp.getName();
     }
 
@@ -71,19 +71,19 @@ public class TeleportController : MonoBehaviour {
                 pos--;
                 if (pos < 0)
                 {
-                    pos = list.Count - 1;
+                    pos = teleportPads.Count - 1;
                 }
             }
             else if (Input.GetAxis("LS-X") > 0.2f && pressed != true)
             {
                 pos++;
-                if (pos > list.Count - 1)
+                if (pos > teleportPads.Count - 1)
                 {
                     pos = 0;
                 }
             }
             pressed = true;
-            tp = (TeleportPad)list[pos];
+            tp = teleportPads[pos];
             string location = tp.getName();
             updateDisplay(location);
         }

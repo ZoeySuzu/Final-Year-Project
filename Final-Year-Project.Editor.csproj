@@ -136,6 +136,8 @@
     <None Include="Assets\ExternalAssets\Particlecollection_Free samples\Plugins\Effect\Shader\Toon Blended Premmultiply.shader" />
     <None Include="Assets\ExternalAssets\Particlecollection_Free samples\Plugins\Effect\Shader\effect_distortion_mask.shader" />
     <None Include="Assets\ExternalAssets\Particlecollection_Free samples\READ ME.txt" />
+    <None Include="Assets\HomemadeAssets\Dialogue\DebugLiz.txt" />
+    <None Include="Assets\HomemadeAssets\Dialogue\exampleScript.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

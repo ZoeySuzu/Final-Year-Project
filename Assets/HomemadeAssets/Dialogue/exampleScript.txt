@@ -1,0 +1,50 @@
+Dialogue scripts must be started with the following line:
+<Advanced> Dialogue for <charName>
+They must then contain blocks of dialogue like this:
+
+&DialogueID
+This is some text
+@This is a special call
+&end
+
+
+
+structure:
+
+(&<dialogueID>)
+Dialogue pointer
+
+(&<dialogueID>A<n>)
+Answer pointer
+
+(&end)
+End of dialogue tag for parsing.
+
+
+
+
+dialogue contents:
+
+<string> 
+A line of dialogue to be read.
+
+(@? <1-4>)
+Question comand, must be followed by number of answers, each on a new line.
+Answers jump to relevant section.
+
+
+(@goto <dialogueID>)
+Jumps to another Dialogue section.
+
+(@fp< <n>)
+checks if characters friend points are less than n. (Advanced Scripts)
+(@fp> <n>)
+checks if characters friend points are more or equal to n. (Advanced Scripts)
+
+(@# <functions>)
+Calls a predefined function.
+Functions are:
+ setFriendPoints <value>
+	sets a characters friend point value relativly (Advanced Scripts)
+ setCamera <hookID>
+ setDialogue <dialogueID>

@@ -22,6 +22,9 @@ public class UIController : MonoBehaviour {
     [SerializeField]
     private GameObject pauseScreen;
 
+    [SerializeField]
+    public GameObject MenuScreen;
+
     //TextDisplay
     private TextController textDisplay;
     private GameObject textBox;
@@ -83,21 +86,26 @@ public class UIController : MonoBehaviour {
 
     //Update methods
 
-    public void updateHealth(int health)
+    public void updateHealth(Stat health)
     {
-        healthString.text = health + "/" + PlayerController.Instance.getMaxHP();
+        healthString.text = health.statValue + "/" + health.max;
     }
 
-    public void updateMana(int mana)
+    public void updateMana(Stat mana)
     {
-        manaString.text = mana + "/" + PlayerController.Instance.getMaxMana();
+        manaString.text = mana.statValue + "/" + mana.max;
     }
 
     //Various methods
+    public void SaveGame()
+    {
+        GameController.Instance.SaveGame();
+    }
+    
+
     public void pause()
     {
         pauseScreen.SetActive(true);
-        pauseScreen.transform.GetChild(1).GetComponent<Button>().Select();
     }
     public void resume()
     {

@@ -15,11 +15,15 @@ public class TextController : MonoBehaviour {
     private Queue<string> textList;
     private bool newDialogue;
     private bool askingQuestion;
+    private bool complexScript;
     private string[] split;
+    private StreamReader sr;
 
     private string[] pointer;
     private string talkingName;
-    private TestDialogue actor;
+    string line;
+    private NPCController actor;
+    private CharacterController character;
 
     private void Awake()
     {
@@ -42,42 +46,79 @@ public class TextController : MonoBehaviour {
         talkingName = "";
     }
 
-    public void sendDialogueRequest(string _dialogueID, TestDialogue _actor)
+    private void findDialogue(string _dialogueID)
     {
+        sr = openScript(); 
+        
+        Debug.Log("Dialogue ID: " + _dialogueID);
         dialogueID = _dialogueID;
-        actor = _actor;
-        string line;
-        textList = new Queue<string>();
-        talkingName = actor.getName();
-        try
+        while (line != null && !line.Equals("&"+_dialogueID))
         {
-            string path = ".\\Assets\\HomemadeAssets\\Dialogue\\" + talkingName + ".zs";
-            StreamReader sr = new StreamReader(path);
-
             line = sr.ReadLine();
-            Debug.Log("Dialogue ID: "+_dialogueID);
-            while (line != null && !line.Equals(_dialogueID)) {
-                line = sr.ReadLine();
-            }
-            if(line == null)
-            {
-                Debug.Log("Dialogue not found");
-                sr.Close();
-                return;
-            }
-            line = sr.ReadLine();
-            while (line != null && !line.Equals("end"))
+        }
+        if (line == null)
+        {
+            Debug.Log("Dialogue not found");
+            sr.Close();
+            return;
+        }
+        line = sr.ReadLine();
+        while (!line.Equals("&end"))
+        {
+            if (line != null)
             {
                 textList.Enqueue(line);
-                line = sr.ReadLine();
             }
-            sr.Close();
-            displayText(textList,talkingName);
+            line = sr.ReadLine();
         }
-        catch(IOException e)
+        sr.Close();
+        displayText(textList, talkingName);
+    }
+
+    private StreamReader openScript()
+    {
+        try
+        {
+            string path = ".\\Assets\\HomemadeAssets\\Dialogue\\" + talkingName + ".txt";
+            sr = new StreamReader(path);
+            Debug.Log(line = sr.ReadLine());
+            if (complexScript && !line.Contains("Advanced"))
+            {
+                Debug.Log("Expected advanced script");
+            }
+            else if (!complexScript && line.Contains("Advanced"))
+            {
+                Debug.Log("Expected simple script");
+            }
+            return sr;
+        }
+        catch (IOException e)
         {
             Debug.Log("Exception: " + e.Message);
         }
+        return null;
+    }
+
+    public void sendDialogueRequest(string _dialogueID, NPCController _actor, bool _complexScript)
+    {
+        dialogueID = _dialogueID;
+        actor = _actor;
+        textList = new Queue<string>();
+        talkingName = actor.getName();
+        complexScript = _complexScript;
+        findDialogue(_dialogueID);
+    }
+
+    public void sendDialogueRequest(string _dialogueID, CharacterController _actor, bool _complexScript)
+    {
+        dialogueID = _dialogueID;
+        actor = _actor;
+        textList = new Queue<string>();
+        talkingName = actor.getName();
+        complexScript = _complexScript;
+
+        openScript();
+        findDialogue(_dialogueID);
     }
 
     public void displayText(Queue<string> _textList, string _name)
@@ -124,7 +165,6 @@ public class TextController : MonoBehaviour {
             {
                 int n = text[3] - '0';
                 askingQuestion = true;
-                textToDisplay.text = textList.Dequeue();
 
                 Queue<string> answers = new Queue<string>();
                 for (int i = 0; i < n; i++)
@@ -142,7 +182,7 @@ public class TextController : MonoBehaviour {
             //Check for pointer links
             else if (text.StartsWith("@goto"))
             {
-                sendDialogueRequest(text.Substring(6), actor);
+                findDialogue(text.Substring(6));
             }
 
             //check for friend point condition
@@ -156,7 +196,7 @@ public class TextController : MonoBehaviour {
                 {
                     Debug.Log("wrong comparison");
                 }
-                if (!actor.checkFriendPoints(higher, int.Parse(text.Substring(4))))
+                if (!character.friendPoints.checkFriendPoints(higher, int.Parse(text.Substring(4))))
                 {
                     while (text != null && !text.Equals("else"))
                     {
@@ -176,7 +216,7 @@ public class TextController : MonoBehaviour {
                 }
                 else if (split[1] == ("setFriendPoints"))
                 {
-                    actor.setFriendPoints(int.Parse(split[2]));
+                    character.friendPoints.changeStat(int.Parse(split[2]));
                 }
                 else if (split[1] == ("setCamera"))
                 {
@@ -201,7 +241,7 @@ public class TextController : MonoBehaviour {
     {
         askingQuestion = false;
         questionPanel.SetActive(false);
-        sendDialogueRequest(pointer[answer], actor);
+        findDialogue(pointer[answer]);
     }
 
     //get methods
@@ -214,7 +254,7 @@ public class TextController : MonoBehaviour {
     //Get script camera info and make it move
     private void setCamera(string text)
     {
-        var list = GameController.Instance.getCameraIds();
+        var list = GameController.Instance.cameraIds;
         GameObject go = null;
         Vector3 vec = Vector3.zero;
         foreach(CameraID cam in list)
@@ -237,9 +277,19 @@ public class TextController : MonoBehaviour {
     //Display answers (implement more than 2 options)
     public void setAnswers(Queue<string> answers)
     {
-        for (int i = 0; i <= answers.Count; i++)
+        for (int i = 0; i < 4; i++)
         {
-            questionPanel.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = answers.Dequeue();
+            if (answers.Count != 0)
+            {
+                questionPanel.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = answers.Dequeue();
+                questionPanel.transform.GetChild(i).GetComponent<Button>().interactable = true;
+            }
+            else
+            {
+                questionPanel.transform.GetChild(i).GetChild(0).GetComponent<Text>().text = "";
+                questionPanel.transform.GetChild(i).GetComponent<Button>().interactable = false;
+            }
+
         }
         questionPanel.SetActive(true);
         questionPanel.transform.GetChild(1).GetComponent<Button>().Select();

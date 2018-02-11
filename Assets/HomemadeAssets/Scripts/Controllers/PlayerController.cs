@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 //Last clean: 29/11/2017
@@ -16,6 +17,11 @@ public class PlayerController : MonoBehaviour {
         {
             Instance = this;
         }
+        ui = UIController.Instance;
+        stats.Add(mana = new Stat("Mana", 100));
+        stats.Add(health = new Stat("Health", 100));
+        ui.updateHealth(health);
+        ui.updateMana(mana);
     }
 
     //-----------------------------------------------------------------------------------
@@ -34,21 +40,23 @@ public class PlayerController : MonoBehaviour {
 
     //Ability related variables
     [SerializeField]
-    private GameObject projectile = null, trap = null;
+    private GameObject projectile = null, trap = null, shield = null;
 
     private SpellType element;
     private Spell spell;
     private bool spellCasting;
     private Trap[] spellTrap = new Trap[5];
-    private float spellCooldownStart;
+    private Cooldown spellCooldown = new Cooldown(0.5f);
 
     //State related variables
     [SerializeField]
-    private float speed = 0, jumpHeight = 0;
+    private float speed, jumpHeight;
+
 
     private bool lockRotation,interacting,dPadUpdate, grounded;
 
-    private int health,mana,maxHealth,maxMana;
+    public List<Stat> stats = new List<Stat>();
+    private Stat health, mana;
 
     //Combat data
     private ArrayList nearbyEnnemies;
@@ -65,10 +73,10 @@ public class PlayerController : MonoBehaviour {
         scale = GetComponent<BoxCollider>().size;
         scale.y = scale.y * 0.9f;
         element = SpellType.Normal;
-        GameController.Instance.addEntity(this.gameObject);
+        GameController.Instance.entities.Add(this.gameObject);
 
         rb = GetComponent<Rigidbody>();
-        ui = UIController.Instance;
+       
         playerModel = transform.GetChild(0);
 
         spellCasting = false;
@@ -78,10 +86,24 @@ public class PlayerController : MonoBehaviour {
         canAttack = true;
         canStrafe = true;
 
-        maxMana = 100;
-        maxHealth = 100;
-        setHealth(maxHealth);
-        setMana(maxMana);
+    }
+
+    public void updateStats(List<Stat> _stats)
+    {
+        ui = UIController.Instance;
+        foreach (Stat stat in _stats)
+        {
+            if(stat.statName == "Health")
+            {
+                health = stat;
+                ui.updateHealth(health);
+            }
+            else if(stat.statName == "Mana")
+            {
+                mana = stat;
+                ui.updateMana(mana);
+            }
+        }
     }
 
 
@@ -149,6 +171,7 @@ public class PlayerController : MonoBehaviour {
             SpellCast();
             Dash(targetDirection);
             Attack();
+            Shield();
             Jump();
             Move(targetDirection);
         }
@@ -159,20 +182,39 @@ public class PlayerController : MonoBehaviour {
     }
 
     //------------------------------------------------------Action Methods
+
+    private void Shield()
+    {
+        if (Input.GetButtonDown("R1"))
+        {
+            var activeShield = Instantiate(shield, transform.position, playerModel.transform.rotation);
+        }
+    }
+
     private void Aim()
     {
-        if (!FollowCamera.Instance.getLerp() && Input.GetAxis("L2") > 0.5f)
+        if (!FollowCamera.Instance.getLerp() && Input.GetAxis("R2") > 0.5f && !FollowCamera.Instance.getAim() && FollowCamera.Instance.getFocus() == null)
         {
             playerState += "Aiming";
-            playerModel.forward = new Vector3(FollowCamera.Instance.transform.forward.x, 0, FollowCamera.Instance.transform.forward.z);
+            FollowCamera.Instance.setAim(true);    
+        }
+        else if (Input.GetAxis("R2") > 0.5f && FollowCamera.Instance.getAim())
+        {
+            playerState += "Aiming";
+            //if(!FollowCamera.Instance.getLerp())
+                playerModel.forward = new Vector3(FollowCamera.Instance.transform.forward.x, 0, FollowCamera.Instance.transform.forward.z);
+        }
+        else if(FollowCamera.Instance.getAim() && !FollowCamera.Instance.getLerp())
+        {
+            FollowCamera.Instance.setAim(false);
         }
     }
 
     private void SpellCast()
     {
-        if (Input.GetAxis("R2") > 0.3f && !spellCasting && Time.time - spellCooldownStart >= 0.5f)
+        if (((Input.GetAxis("R2")>0.5f) && (FollowCamera.Instance.getFocus()!= null) || (playerState.Contains("Aiming") && Input.GetButtonDown("X"))) && !spellCasting && spellCooldown.ready)
         {
-            spellCooldownStart = Time.time;
+            StartCoroutine(spellCooldown.StartCooldown());
             spell = Instantiate(projectile, transform.position + playerModel.forward * 2 + Vector3.up * 0.5f, playerModel.transform.rotation).GetComponent<Spell>();
             if (element == SpellType.Fire || element == SpellType.Ice)
             {
@@ -282,11 +324,12 @@ public class PlayerController : MonoBehaviour {
 
     private void Attack()
     {
-        if (Input.GetButtonDown("X") && !interacting && canAttack)
+
+        if (!playerState.Contains("Aiming") && Input.GetButtonDown("X") && !interacting && canAttack)
         {
             canAttack = false;
             Instantiate(attackCollider, playerModel.transform.position + playerModel.forward * 1.5f + playerModel.up * 0.5f + playerModel.right * 1f, playerModel.transform.rotation).transform.parent = playerModel.transform;
-        }else if (!canAttack)
+        }else if (playerState.Contains("Aiming") && !canAttack)
         {
             playerState += "Attacking";
         }
@@ -306,22 +349,22 @@ public class PlayerController : MonoBehaviour {
 
     public int getMaxHP()
     {
-        return maxHealth;
+        return health.max;
     }
 
     public int getMaxMana()
     {
-        return maxMana;
+        return mana.max;
     }
 
     public int getHP()
     {
-        return health;
+        return health.statValue;
     }
 
     public GameObject getHand()
     {
-        return transform.FindChild("holder").gameObject;
+        return transform.GetChild(0).GetChild(0).gameObject;
     }
 
     public GameObject getNextEnnemy(GameObject current)
@@ -378,13 +421,13 @@ public class PlayerController : MonoBehaviour {
 
     private void setMana(int _mana)
     {
-        mana = _mana;
+        mana.changeStat(_mana);
         ui.updateMana(mana);
     }
 
     public void setHealth(int _health)
     {
-        health += _health;
+        health.changeStat(_health);
         ui.updateHealth(health);
     }
 
@@ -415,7 +458,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (transform.position.y < -20)
         {
-            setHealth(health - 10);
+            setHealth(-10);
             transform.position = spawn;
         }
     }
@@ -468,12 +511,11 @@ public class PlayerController : MonoBehaviour {
             else
             {
                 Movement(direction, speed * 1f);
-            }
-
-            if (!lockRotation && !FollowCamera.Instance.getLerp() && FollowCamera.Instance.getFocus() == null && Input.GetAxis("L2") <= 0.5f)
-            {
-                playerModel.forward = direction;
-            }
+                if (!lockRotation && !FollowCamera.Instance.getLerp() && FollowCamera.Instance.getFocus() == null && Input.GetAxis("L2") <= 0.5f)
+                {
+                    playerModel.forward = direction;
+                }
+            } 
         }
         else
         {

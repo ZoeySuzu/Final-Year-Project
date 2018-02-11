@@ -24,7 +24,7 @@ public class FollowCamera : MonoBehaviour
     private float maxHeight, maxDistance;
 
     private GameObject player;
-    private GameObject target;
+    private Vector3 target;
     private GameObject targetEnemy;
 
     private Vector3 center;
@@ -33,12 +33,14 @@ public class FollowCamera : MonoBehaviour
     private Vector3 lerpStartPos;
     private Vector3 lerpTargetPos;
     private Vector3 lerpFocus;
+    private Vector3 aimOffset;
 
     private bool locked;
     private bool lerping;
-    private bool lookCenter;
+    private string lookAt;
     private bool enemyFocused;
     private bool l2, rs;
+    private bool aim;
 
     private float lerpStartTime;
 
@@ -50,7 +52,8 @@ public class FollowCamera : MonoBehaviour
         offset = init;
         l2 = false;
         rs = false;
-        lookCenter = false;
+        lookAt = "Default";
+        aim = false;
     }
 
     public GameObject targetedEnnemy()
@@ -64,6 +67,7 @@ public class FollowCamera : MonoBehaviour
 
     void LateUpdate()
     {
+        checkAim();
         if (Input.GetAxis("L2") <= 0.2 && l2)
         {
             l2 = false;
@@ -77,29 +81,43 @@ public class FollowCamera : MonoBehaviour
         {
             float lerpTime = Time.time - lerpStartTime;
             float lerpPercent = lerpTime / 0.3f;
-            if (lookCenter)
+            if (lookAt == "Center")
             {
-                transform.position = Vector3.Lerp(lerpStartPos, player.transform.position + player.transform.forward * -5 + Vector3.up * 3 + player.transform.right * 0f, lerpPercent);
+                transform.position = Vector3.Lerp(lerpStartPos, player.transform.position + player.transform.forward * -5 + Vector3.up * 3, lerpPercent);
                 center = player.transform.position + (targetEnemy.transform.position - player.transform.position) / 2;
                 transform.LookAt(Vector3.Lerp(lerpFocus,center,lerpPercent));
             }
-
-            else if (lerpTargetPos == Vector3.zero)
+            else if (lookAt == "Aim")
             {
-                transform.position = Vector3.Lerp(lerpStartPos, player.transform.position - transform.parent.rotation * init, lerpPercent);
+                var ab = transform.parent.rotation * init/2;
+                var bc = player.transform.right + player.transform.up * 0.5f + player.transform.forward * -1;
+                transform.position = Vector3.Lerp(lerpStartPos, player.transform.position-ab+bc, lerpPercent);
+                transform.LookAt(Vector3.Lerp(lerpFocus, player.transform.position - ab + bc + ab, lerpPercent));
+
+            }
+            else if (lookAt == "Player")
+            {
+                transform.position = Vector3.Lerp(lerpStartPos, player.transform.position - transform.parent.rotation * init, lerpPercent*1.5f);
                 transform.LookAt(Vector3.Lerp(lerpFocus,player.transform.position,lerpPercent));
             }
             
             else
             {
                 transform.position = Vector3.Lerp(lerpStartPos, lerpTargetPos, lerpPercent);
-                transform.LookAt(Vector3.Lerp(lerpFocus, target.transform.position,lerpPercent));
+                transform.LookAt(Vector3.Lerp(lerpFocus, target,lerpPercent));
             }
             
             if (lerpPercent >= 1.0f)
             {
                 lerping = false;
-                offset = player.transform.position - transform.position;
+                if (!aim)
+                {
+                    offset = player.transform.position - transform.position;
+                }
+                else
+                {
+                    offset = transform.parent.rotation * init / 2;
+                }
             }
         }
         else if (locked)
@@ -137,7 +155,7 @@ public class FollowCamera : MonoBehaviour
                 }
 
                 center = player.transform.position + (targetEnemy.transform.position - player.transform.position) / 2;
-                transform.position = player.transform.position + player.transform.forward * -5 + Vector3.up * 3 + player.transform.right * 0f;
+                transform.position = player.transform.position + player.transform.forward * -5 + Vector3.up * 3 + aimOffset;
                 lerpFocus = center;
                 transform.LookAt(center);
             }
@@ -145,6 +163,11 @@ public class FollowCamera : MonoBehaviour
             {
                 var cameraX = Input.GetAxis("RS-X") * 6;
                 var cameraHeight = new Vector3(0, Input.GetAxis("RS-Y") * 0.3f, 0);
+                if (aim)
+                {
+                    cameraHeight /= 2;
+                }
+
                 var cameraDistance = -Input.GetAxis("RS-Y") * 0.3f;
 
                 if (Input.GetAxis("L2") > 0.2 && !l2)
@@ -168,31 +191,73 @@ public class FollowCamera : MonoBehaviour
                     {
                         transform.position = new Vector3(transform.position.x, player.transform.position.y + maxHeight, transform.position.z);
                     }
-                    if (transform.position.y < player.transform.position.y-0.5f)
+                    if (transform.position.y < player.transform.position.y - 0.8f)
                     {
-                        transform.position = new Vector3(transform.position.x, player.transform.position.y-0.5f, transform.position.z);
+                        transform.position = new Vector3(transform.position.x, player.transform.position.y - 0.8f, transform.position.z);
                     }
 
                     
                     transform.LookAt(player.transform);
-                    transform.position += transform.forward * cameraDistance;
-
-                    var mag = Mathf.Abs(transform.localPosition.x) + Mathf.Abs(transform.localPosition.z);
-
-                    if (mag < 4f)
+                    if (!aim)
                     {
-                        transform.localPosition = new Vector3(transform.localPosition.x/mag*4, transform.localPosition.y, transform.localPosition.z/mag*4);
-                    }else if(mag > 15f)
-                    {
-                        transform.localPosition = new Vector3(transform.localPosition.x / mag * 15, transform.localPosition.y, transform.localPosition.z / mag * 15);
+                        transform.position += transform.forward * cameraDistance;
+
+                        var mag = Mathf.Abs(transform.localPosition.x) + Mathf.Abs(transform.localPosition.z);
+
+                        if (mag < 4f)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x / mag * 4, transform.localPosition.y, transform.localPosition.z / mag * 4);
+                        }
+                        else if (mag > 15f)
+                        {
+                            transform.localPosition = new Vector3(transform.localPosition.x / mag * 15, transform.localPosition.y, transform.localPosition.z / mag * 15);
+                        }
                     }
-                    lerpFocus = player.transform.position;
-                    transform.LookAt(player.transform);
-
                     offset = player.transform.position - transform.position;
-                    
+                    if (aim)
+                    {
+                        var ab = transform.parent.position - transform.position;
+                        transform.position += player.transform.right + player.transform.up * 0.5f+ player.transform.forward *-1;
+                        lerpFocus = transform.position + ab;
+                        transform.LookAt(lerpFocus);
+                    }
+                    else
+                    { 
+                        lerpFocus = player.transform.position;
+                        transform.LookAt(player.transform.position);
+                    }
+                   
+
                 }    
             }
+        }
+    }
+
+    public void setAim(bool value)
+    {
+        aim = value;
+        if (aim) {
+            lerpStart(Vector3.zero, "Aim");
+        }
+        else
+        {
+            recenter();
+        }
+    }
+
+    public bool getAim()
+    {
+        return aim;
+    }
+
+    private void checkAim() {
+        if (aim)
+        {
+            aimOffset = transform.up + transform.right;
+        }
+        else
+        {
+            aimOffset = Vector3.zero;
         }
     }
 
@@ -206,7 +271,7 @@ public class FollowCamera : MonoBehaviour
     public void setFocus(GameObject _target)
     {
         targetEnemy = _target;
-        lerpCenterStart();
+        lerpStart(Vector3.zero, "Center");
         locked = false;
         enemyFocused = true;
     }
@@ -221,8 +286,8 @@ public class FollowCamera : MonoBehaviour
 
     public void setSpecific(GameObject _target, Vector3 offset)
     {
-        target = _target;
-        lerpStart(target.transform.position+offset);
+        target = _target.transform.position;
+        lerpStart(target+offset,"Default");
         locked = true;
     }
 
@@ -236,26 +301,18 @@ public class FollowCamera : MonoBehaviour
     }*/
 
 
-    public void recenter()
+    private void recenter()
     {
-        lerpStart(Vector3.zero);
+        lerpStart(Vector3.zero,"Player");
     }
 
-    public void lerpStart(Vector3 target)
+    public void lerpStart(Vector3 _target, string _lookAt)
     {
+        lookAt = _lookAt;
         lerping = true;
         lerpStartTime = Time.time;
         lerpStartPos = transform.position;
-        lerpTargetPos = target;
-        lookCenter = false;
-    }
-
-    public void lerpCenterStart()
-    {
-        lerping = true;
-        lerpStartTime = Time.time;
-        lerpStartPos = transform.position;
-        lookCenter = true;
+        lerpTargetPos = _target;
     }
 
     public bool getLerp()

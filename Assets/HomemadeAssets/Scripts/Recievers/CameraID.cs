@@ -11,7 +11,7 @@ public class CameraID : MonoBehaviour {
 
     void Start()
     {
-        GameController.Instance.addCameraId(this);
+        GameController.Instance.cameraIds.Add(this);
     }
 
     public string getId()
