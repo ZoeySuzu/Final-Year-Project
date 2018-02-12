@@ -25,11 +25,22 @@ public class Trap : MonoBehaviour {
         return element;
     }
 
+
     //Set the display based on the type and add trap to the entity list.
     void Start()
     {
         transform.position = new Vector3(Mathf.Round(transform.position.x), transform.position.y, Mathf.Round(transform.position.z));
-        transform.SetParent(transform.parent.FindChild("Spells"));
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1f, -1, QueryTriggerInteraction.Ignore))
+        {
+            var scale = transform.localScale;
+            transform.SetParent(hit.collider.transform);
+            //transform.localScale = Vector3.Scale(transform.localScale, scale);
+        }
+        else
+        {
+            transform.SetParent(transform.parent.FindChild("Spells"));
+        }
         material = transform.GetComponent<Renderer>().material;
         switch (element)
         {
@@ -99,8 +110,10 @@ public class Trap : MonoBehaviour {
                     break;
                 }
         }
+        obj.transform.rotation = transform.parent.rotation;
         try
         {
+            transform.SetParent(GameController.Instance.transform.FindChildByRecursive("Spells"));
             Transform t = transform.parent.FindChild(obj.name);
             if (t != null)
             {
@@ -111,6 +124,7 @@ public class Trap : MonoBehaviour {
         try
         {
             obj.transform.SetParent(transform.parent);
+            
         }
         catch (Exception) { }
         Destroy(gameObject);

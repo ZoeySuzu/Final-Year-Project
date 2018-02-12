@@ -17,11 +17,6 @@ public class PlayerController : MonoBehaviour {
         {
             Instance = this;
         }
-        ui = UIController.Instance;
-        stats.Add(mana = new Stat("Mana", 100));
-        stats.Add(health = new Stat("Health", 100));
-        ui.updateHealth(health);
-        ui.updateMana(mana);
     }
 
     //-----------------------------------------------------------------------------------
@@ -66,6 +61,11 @@ public class PlayerController : MonoBehaviour {
     //------------------------------------------------------Initialising Code
    
     void Start () {
+        ui = UIController.Instance;
+        stats.Add(mana = new Stat("Mana", 100));
+        stats.Add(health = new Stat("Health", 100));
+        ui.updateHealth(health);
+        ui.updateMana(mana);
         playerState = "";
         nearbyEnnemies = new ArrayList();
         pad = 0;
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour {
             rb.velocity = Vector3.zero;
             if (z != 0)
             {
-                transform.Translate(Vector3.up * z*0.4f);
+                transform.Translate(Vector3.up * z*3f*Time.deltaTime);
             }
         }
         //Pushing

@@ -57,7 +57,7 @@ public class Box : Interactable {
         {
             if (move.ready)
             {
-                transform.position = new Vector3(Mathf.Round(transform.position.x), transform.position.y, Mathf.Round(transform.position.z));
+                transform.localPosition = new Vector3(Mathf.Round(transform.localPosition.x), transform.localPosition.y, Mathf.Round(transform.localPosition.z));
                 PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
                 var z = Input.GetAxis("LS-Y");
                 if (z > 0.3)
@@ -71,7 +71,7 @@ public class Box : Interactable {
             }
             else
             {
-                transform.Translate(direction * 4 * Time.deltaTime);
+                transform.position += direction * 4 * Time.deltaTime;
                 PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
             }
 
@@ -107,9 +107,10 @@ public class Box : Interactable {
             
             toggleIndicator();
             PlayerController.Instance.setPlayerState("Pushing");
-            pOffset = PlayerController.Instance.transform.position - transform.position;
+            pOffset = transform.rotation*(PlayerController.Instance.transform.position - transform.position);
             playerRepos(pOffset);
             Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
+            PlayerController.Instance.transform.rotation = transform.rotation;
             PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
             
             inUse = true;
@@ -119,6 +120,7 @@ public class Box : Interactable {
         {
             gameUI.setActionButton(interaction);
             toggleIndicator();
+            PlayerController.Instance.transform.forward = Vector3.forward;
             PlayerController.Instance.setPlayerState("Idle");
             inUse = false;
         }
@@ -128,11 +130,11 @@ public class Box : Interactable {
     {
         var scale = transform.localScale.x;
         if(Mathf.Abs(offset.x) > Mathf.Abs(offset.z)){
-            pOffset = new Vector3((scale+0.5f) * Mathf.Sign(offset.x), 0, 0);
+            pOffset = Quaternion.Inverse(transform.rotation) * new Vector3((scale+0.5f) * Mathf.Sign(offset.x), 0, 0);
         }
         else
         {
-            pOffset = new Vector3(0, 0, (scale + 0.5f) * Mathf.Sign(offset.z));
+            pOffset = Quaternion.Inverse(transform.rotation)*new Vector3(0, 0, (scale + 0.5f) * Mathf.Sign(offset.z));
         }
         PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
     }
@@ -141,6 +143,7 @@ public class Box : Interactable {
     {
         if (inUse)
         {
+            PlayerController.Instance.transform.forward = Vector3.forward;
             PlayerController.Instance.setPlayerState("Idle");
             inUse = false;
         }
