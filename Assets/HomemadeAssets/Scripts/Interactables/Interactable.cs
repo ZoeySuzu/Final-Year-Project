@@ -27,7 +27,7 @@ public abstract class Interactable : MonoBehaviour{
     }
 
 
-    private void Start()
+    private void Awake()
     {
         gameUI = UIController.Instance;
     }
@@ -46,7 +46,7 @@ public abstract class Interactable : MonoBehaviour{
         }
     }
 
-    public void toggleIndicator()
+    protected void toggleIndicator()
     {
         indicatorLive.SetActive(!indicatorLive.activeSelf);
     }

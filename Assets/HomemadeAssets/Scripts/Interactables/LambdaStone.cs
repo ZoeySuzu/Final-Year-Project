@@ -6,21 +6,28 @@ public class LambdaStone : Interactable
 {
 
     [SerializeField]
-    private string[] options;
-    [SerializeField]
-    private string goal="", instructionIN ="", instructionOUT ="", author="";
+    private string[] buttons;
 
-	private string inCurrent, outCurrent, inPrevious;
+    [SerializeField]
+    private string goal, instructionIN, instructionOUT, author;
+
+	public string inCurrent { get; private set; }
+    public string outCurrent { get; private set; }
+    public string inPrevious { get; private set; }
+
 
     private string[] input;
     private int opNumber;
     private int opsNeeded;
-    private string activeChar;
 
     private bool finished;
 
     private ParticleSystem particle;
     private Material mat;
+
+    public string[] getButtons() { return buttons;}
+    public string getGoal() { return goal; }
+
 
     public LambdaStone()
     {
@@ -45,32 +52,6 @@ public class LambdaStone : Interactable
         inPrevious = "";
     }
 
-
-    public string[] getButtons()
-    {
-        return options;
-    }
-
-    public string getGoal()
-    {
-        return goal;
-    }
-
-    public string getPreviousIn()
-    {
-        return inPrevious;
-    }
-
-    public string getInstrucionIN()
-    {
-        return inCurrent;
-    }
-
-    public string getInstrucionOUT()
-    {
-        return outCurrent;
-    }
-
     public void removeAnswer()
     {
         if (opNumber > 0)
@@ -85,7 +66,7 @@ public class LambdaStone : Interactable
         if (opNumber < opsNeeded)
         {
             input[opNumber] = s;
-            activeChar = instructionIN[opNumber].ToString();
+            string activeChar = instructionIN[opNumber].ToString();
             inCurrent = inCurrent.Substring(1);
             inPrevious = inPrevious + "("+s+")";
             outCurrent = outCurrent.Replace(activeChar, s);

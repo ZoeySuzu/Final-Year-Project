@@ -120,6 +120,7 @@ public class Box : Interactable {
         {
             gameUI.setActionButton(interaction);
             toggleIndicator();
+            PlayerController.Instance.transform.position += PlayerController.Instance.transform.GetChild(0).forward * -0.3f;
             PlayerController.Instance.transform.forward = Vector3.forward;
             PlayerController.Instance.setPlayerState("Idle");
             inUse = false;

@@ -20,6 +20,13 @@ public class LeverReactor : MonoBehaviour {
         {
             transform.localPosition = new Vector3(transform.localPosition.x, f, transform.localPosition.z);
         }
+        else if (r == ReactionType.Rotate)
+        {
+            f += 1;
+            f *= 180;
+            f = Mathf.Round(f);
+            transform.rotation = Quaternion.Euler(0, f, 0);
+        }
 
     }
 	

@@ -14,9 +14,10 @@ public class SaveHandler {
         List<CharacterController> characters = GameController.Instance.characters;
         foreach(CharacterController cc in characters)
         {
-            save.relationshipValues.Add(cc.friendPoints);
+            save.relationshipValues.Add(cc.getFP());
         }
         save.PlayerStats = PlayerController.Instance.stats;
+        save.inventory = GameController.Instance.inventory;
 
         return save;
     }
@@ -25,6 +26,7 @@ public class SaveHandler {
     private void UnpackSaveFile(Save save)
     {
         PlayerController.Instance.updateStats(save.PlayerStats);
+        GameController.Instance.inventory = save.inventory;
     }
 
     public void SaveGame()

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +20,7 @@ public class TextController : MonoBehaviour {
 
     private string[] pointer;
     private string talkingName;
-    string line;
+    private string line;
     private NPCController actor;
     private CharacterController character;
 
@@ -196,7 +195,7 @@ public class TextController : MonoBehaviour {
                 {
                     Debug.Log("wrong comparison");
                 }
-                if (!character.friendPoints.checkFriendPoints(higher, int.Parse(text.Substring(4))))
+                if (!character.getFP().checkFriendPoints(higher, int.Parse(text.Substring(4))))
                 {
                     while (text != null && !text.Equals("else"))
                     {
@@ -216,7 +215,7 @@ public class TextController : MonoBehaviour {
                 }
                 else if (split[1] == ("setFriendPoints"))
                 {
-                    character.friendPoints.changeStat(int.Parse(split[2]));
+                    character.updateFP(int.Parse(split[2]));
                 }
                 else if (split[1] == ("setCamera"))
                 {
@@ -275,7 +274,7 @@ public class TextController : MonoBehaviour {
     }
 
     //Display answers (implement more than 2 options)
-    public void setAnswers(Queue<string> answers)
+    private void setAnswers(Queue<string> answers)
     {
         for (int i = 0; i < 4; i++)
         {

@@ -9,9 +9,11 @@ public class GameController : MonoBehaviour {
     public static GameController Instance { get; set; }
 
     //-----------------------------------Main game controllers:
-    private UIController ui;
+    public UIController ui;
     private PlayerController pc;
     private SaveHandler saveSystem;
+
+    public Inventory inventory;
 
     public List<GameObject> entities;
     public List<CharacterController> characters;
@@ -21,10 +23,18 @@ public class GameController : MonoBehaviour {
     [SerializeField]
     GameObject camera;
 
+    [SerializeField]
+    bool bypassMenu;
+
     //-----------------------------------Attach game controllers on start:
 
     private void Awake()
     {
+        inventory = new Inventory();
+        inventory.addItem(new Collectible("Apple", 1));
+        inventory.addItem(new QuestItem("Academy Badge"));
+        ui = UIController.Instance;
+        pc = PlayerController.Instance;
         saveSystem = new SaveHandler();
         characters = new List<CharacterController>();
         cameraIds = new List<CameraID>();
@@ -42,9 +52,15 @@ public class GameController : MonoBehaviour {
 
     public void Start()
     {
-        ui = UIController.Instance;
-        pc = PlayerController.Instance;
-        pc.gameObject.SetActive(false);
+        if (!bypassMenu)
+        {
+            pc.gameObject.SetActive(false);
+        }
+        else
+        {
+            camera.SetActive(false);
+            ui.MenuScreen.SetActive(false);
+        }
     }
 
     //-----------------------------------Listen for pause:
@@ -68,7 +84,7 @@ public class GameController : MonoBehaviour {
     //-----------------------------------Pause Game:
     public void pause()
     {
-        FollowCamera.Instance.enabled = FollowCamera.Instance.enabled;
+        FollowCamera.Instance.activated = !FollowCamera.Instance.activated;
         pauseEntities();
         if (Time.timeScale == 1)
         {
@@ -142,7 +158,7 @@ public class GameController : MonoBehaviour {
     {
         camera.SetActive(false);
         ui.MenuScreen.SetActive(false);
-        SceneManager.LoadScene("DebugLevel", LoadSceneMode.Additive);
+        SceneManager.LoadScene("windArea", LoadSceneMode.Additive);
         pc.gameObject.SetActive(true);
         LoadGame();
         

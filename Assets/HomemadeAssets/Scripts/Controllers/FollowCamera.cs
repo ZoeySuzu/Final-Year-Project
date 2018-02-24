@@ -35,18 +35,20 @@ public class FollowCamera : MonoBehaviour
     private Vector3 lerpFocus;
     private Vector3 aimOffset;
 
-    private bool locked;
-    private bool lerping;
     private string lookAt;
+    private bool locked;
     private bool enemyFocused;
     private bool l2, rs;
-    private bool aim;
-
     private float lerpStartTime;
+
+    public bool activated;
+    public bool lerping { get; private set; }
+    public bool aim { get; private set; }
 
 
     void Start()
     {
+        activated = true;
         player = transform.parent.gameObject;
         init = player.transform.position - transform.position;
         offset = init;
@@ -54,15 +56,6 @@ public class FollowCamera : MonoBehaviour
         rs = false;
         lookAt = "Default";
         aim = false;
-    }
-
-    public GameObject targetedEnnemy()
-    {
-        if (enemyFocused)
-        {
-            return targetEnemy;
-        }
-        return null;
     }
 
     void LateUpdate()
@@ -90,7 +83,7 @@ public class FollowCamera : MonoBehaviour
             else if (lookAt == "Aim")
             {
                 var ab = transform.parent.rotation * init/2;
-                var bc = player.transform.right + player.transform.up * 0.5f + player.transform.forward * -1;
+                var bc = player.transform.right + player.transform.up * 0.5f + player.transform.forward * -0.5f;
                 transform.position = Vector3.Lerp(lerpStartPos, player.transform.position-ab+bc, lerpPercent);
                 transform.LookAt(Vector3.Lerp(lerpFocus, player.transform.position - ab + bc + ab, lerpPercent));
 
@@ -124,7 +117,7 @@ public class FollowCamera : MonoBehaviour
         {
             return;
         }
-        else {
+        else if (activated) {
             if (enemyFocused)
             {
                 if (Input.GetAxis("RS-X") < -0.5f && !rs)
@@ -187,13 +180,20 @@ public class FollowCamera : MonoBehaviour
                 {
                     Quaternion rotation = Quaternion.Euler(0, cameraX, 0);
                     transform.position = player.transform.position - (rotation * offset) + cameraHeight;
-                    if (transform.position.y > player.transform.position.y + maxHeight)
+                    if (transform.position.y > player.transform.position.y + maxHeight && !aim)
                     {
                         transform.position = new Vector3(transform.position.x, player.transform.position.y + maxHeight, transform.position.z);
+                    }else if (transform.position.y > player.transform.position.y + 2 && aim)
+                    {
+                        transform.position = new Vector3(transform.position.x, player.transform.position.y + 2, transform.position.z);
                     }
-                    if (transform.position.y < player.transform.position.y - 0.8f)
+
+                    if (transform.position.y < player.transform.position.y - 0.8f && !aim)
                     {
                         transform.position = new Vector3(transform.position.x, player.transform.position.y - 0.8f, transform.position.z);
+                    }else if(transform.position.y < player.transform.position.y - 1.5f && aim)
+                    {
+                        transform.position = new Vector3(transform.position.x, player.transform.position.y - 1.5f, transform.position.z);
                     }
 
                     
@@ -217,7 +217,7 @@ public class FollowCamera : MonoBehaviour
                     if (aim)
                     {
                         var ab = transform.parent.position - transform.position;
-                        transform.position += player.transform.right + player.transform.up * 0.5f+ player.transform.forward *-1;
+                        transform.position += player.transform.right + player.transform.up * 0.5f+ player.transform.forward *-0.5f;
                         lerpFocus = transform.position + ab;
                         transform.LookAt(lerpFocus);
                     }
@@ -243,11 +243,6 @@ public class FollowCamera : MonoBehaviour
         {
             recenter();
         }
-    }
-
-    public bool getAim()
-    {
-        return aim;
     }
 
     private void checkAim() {
@@ -313,10 +308,5 @@ public class FollowCamera : MonoBehaviour
         lerpStartTime = Time.time;
         lerpStartPos = transform.position;
         lerpTargetPos = _target;
-    }
-
-    public bool getLerp()
-    {
-        return lerping;
     }
 }

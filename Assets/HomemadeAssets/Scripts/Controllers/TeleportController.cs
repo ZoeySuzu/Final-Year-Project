@@ -8,12 +8,14 @@ public class TeleportController : MonoBehaviour {
 
     //Last clean: 31/01/2018
 
-    bool pressed, init = false;
-    int pos;
-    List<TeleportPad> teleportPads;
-    Text locationString;
-    TeleportPad tp;
-    TeleportPad pad;
+    [SerializeField]
+    private bool init = false;
+    private bool pressed;
+    private int pos;
+    private List<TeleportPad> teleportPads;
+    private Text locationString;
+    private TeleportPad tp;
+    private TeleportPad pad;
 
     private void Awake()
     {

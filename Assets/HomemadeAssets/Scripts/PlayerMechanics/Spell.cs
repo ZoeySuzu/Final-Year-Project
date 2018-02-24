@@ -55,7 +55,7 @@ public class Spell : MonoBehaviour {
             case SpellType.Electric:
                 {
                     RaycastHit hit;
-                    var target = FollowCamera.Instance.targetedEnnemy();
+                    var target = FollowCamera.Instance.getFocus();
                     if (target != null)
                     {
                         transform.position = target.transform.position + Vector3.up * 5;
@@ -76,14 +76,28 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Wind:
                 {
+                    if (Input.GetAxis("R2") > 0.5f)
+                    {
+                        RaycastHit hit;
+                        if (Physics.Raycast(FollowCamera.Instance.transform.position, FollowCamera.Instance.transform.forward, out hit, 50, -1, QueryTriggerInteraction.Ignore))
+                        {
+                            direction = hit.point - transform.position;
+                        }
+                        else
+                        {
+                            direction = FollowCamera.Instance.transform.position + FollowCamera.Instance.transform.forward * 50 - transform.position;
+                        }
+
+                        transform.forward = direction;
+                    }
                     activeParticle = windParticle;
-                    speed = 0;
+                    speed = 15;
                     material.color = Color.green;
                     break;
                 }
             case SpellType.Normal:
                 {
-                    var target = FollowCamera.Instance.targetedEnnemy();
+                    var target = FollowCamera.Instance.getFocus();
                     if (target != null)
                     {
                         direction = Vector3.Normalize(target.transform.position - transform.position);
@@ -141,6 +155,7 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Wind:
                 {
+                    transform.Translate(Vector3.forward * speed * Time.deltaTime);
                     break;
                 }
             case SpellType.Normal:
@@ -206,7 +221,7 @@ public class Spell : MonoBehaviour {
 
         if (other.tag == "Zone")
             return;
-        if (element != SpellType.Fire && element != SpellType.Wind)
+        if (element != SpellType.Fire && element != SpellType.Ice)
             stopCast();
 
     }

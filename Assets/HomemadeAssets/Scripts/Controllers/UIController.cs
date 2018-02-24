@@ -22,6 +22,9 @@ public class UIController : MonoBehaviour {
     [SerializeField]
     private GameObject pauseScreen;
 
+    private GameObject inventoryScreen;
+    private GameObject relationshipScreen;
+
     [SerializeField]
     public GameObject MenuScreen;
 
@@ -48,9 +51,20 @@ public class UIController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        inventoryScreen = UI_Inventory.Instance.gameObject;
+        inventoryScreen.SetActive(false);
+        relationshipScreen = UI_Relationship.Instance.gameObject;
+        relationshipScreen.SetActive(false);
         pauseScreen.SetActive(false);
     }
-	
+    void Update()
+    {
+        if (Input.GetButtonDown("B"))
+        {
+            //UIController.Instance.closeSubscreen();
+        }
+    }
+
     //get methods:
     public GameObject getInteractIcon()
     {
@@ -88,12 +102,12 @@ public class UIController : MonoBehaviour {
 
     public void updateHealth(Stat health)
     {
-        healthString.text = health.statValue + "/" + health.max;
+        healthString.text = health.statValue + "/" + health.statMax;
     }
 
     public void updateMana(Stat mana)
     {
-        manaString.text = mana.statValue + "/" + mana.max;
+        manaString.text = mana.statValue + "/" + mana.statMax;
     }
 
     //Various methods
@@ -109,6 +123,27 @@ public class UIController : MonoBehaviour {
     }
     public void resume()
     {
+        inventoryScreen.SetActive(false);
         pauseScreen.SetActive(false);
     }
+
+    public void openInventory()
+    {
+        pauseScreen.SetActive(false);
+        inventoryScreen.SetActive(true);
+    }
+
+    public void openRelationships()
+    {
+        pauseScreen.SetActive(false);
+        relationshipScreen.SetActive(true);
+    }
+
+    public void closeSubscreen()
+    {
+        pauseScreen.SetActive(true);
+        inventoryScreen.SetActive(false);
+        relationshipScreen.SetActive(false);
+    }
+
 }

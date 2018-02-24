@@ -5,34 +5,34 @@ using UnityEngine;
 [System.Serializable]
 public class Stat {
     public string statName { get; set; }
-    public int max { get; set; }
-    private int _statValue;
+    public int statMax { get; set; }
+    private int value;
 
     public int statValue {
-        get { return _statValue; }
-        set { if (0 < value && value < max) _statValue = value; }
+        get { return value; }
+        set { if (0 < value && value < statMax) this.value = value; }
     }
 
     public Stat(string _name, int _max)
     {
-        statName = _name; _statValue = max = _max;
+        statName = _name; value = statMax = _max;
 
     }
 
     public void changeStat(int difference)
     {
-        int tempValue = _statValue + difference;
+        int tempValue = value + difference;
         if(tempValue < 0)
         {
-            _statValue = 0;
+            value = 0;
         }
-        else if( tempValue > max)
+        else if( tempValue > statMax)
         {
-            _statValue = max;
+            value = statMax;
         }
         else
         {
-            _statValue = tempValue;
+            value = tempValue;
         }
     }
 

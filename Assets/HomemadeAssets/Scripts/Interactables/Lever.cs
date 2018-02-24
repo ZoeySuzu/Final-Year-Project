@@ -21,6 +21,8 @@ public class Lever : Interactable {
     private bool inUse, startPushing = false;
     private float speed = 3;
     private Vector3 pOffset;
+    private Cooldown move;
+    private Vector3 pushDirection;
 
     public void Start()
     {
@@ -28,39 +30,53 @@ public class Lever : Interactable {
         transform.localPosition = new Vector3(defaultPos,1,0);
         lr = go.GetComponent<LeverReactor>();
         lr.updateReactor(transform.localPosition.x*reactionMagnitude, reactionType);
+        move = new Cooldown(0.5f);
     }
 
     public void Update()
     {
-        if (inUse)
+
+        if (move.ready)
         {
-            Vector3 pushDirection;
+            transform.localPosition = new Vector3(Mathf.Round(transform.localPosition.x * 4) / 4, transform.localPosition.y, transform.localPosition.z);
+            pushDirection = Vector3.zero;
+            if (inUse)
+            {
+                var x = Input.GetAxis("LS-X") * Time.deltaTime * speed;
+                var z = Input.GetAxis("LS-Y") * Time.deltaTime * speed;
 
-            var x = Input.GetAxis("LS-X") * Time.deltaTime *  speed;
-            var z = Input.GetAxis("LS-Y") * Time.deltaTime * speed;
-
-            Vector3 targetDirection = new Vector3(x, 0f, z);
-            targetDirection = Camera.main.transform.TransformDirection(targetDirection);
-            targetDirection.y = 0.0f;
-
-            if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
-            {
-                pushDirection = Vector3.right * Mathf.Sign(targetDirection.x);
-            }
-            else
-            {
-                pushDirection = Vector3.forward * Mathf.Sign(targetDirection.z);
-            }
-            if (pushDirection == Vector3.right && transform.localPosition.x < 1.0f)
-            {
-                transform.Translate(Vector3.right * speed* Time.deltaTime);
-            }
-            else if(pushDirection == Vector3.left && transform.localPosition.x > -1.0f)
-            {
-                transform.Translate(Vector3.left * speed * Time.deltaTime);
-            }
-            lr.updateReactor(transform.localPosition.x*reactionMagnitude, reactionType);
+                Vector3 targetDirection = new Vector3(x, 0f, z);
+                targetDirection = Camera.main.transform.TransformDirection(targetDirection);
+                targetDirection.y = 0.0f;
+                
+                if (Mathf.Abs(targetDirection.x) > Mathf.Abs(targetDirection.z))
+                {
+                    Push(Vector3.right * Mathf.Sign(targetDirection.x));
+                }
+                else if (Mathf.Abs(targetDirection.x) < Mathf.Abs(targetDirection.z))
+                {
+                    Push(Vector3.right * Mathf.Sign(targetDirection.z));
+                }
+            } 
+        }
+        else if (inUse)
+        {
             PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
+        }
+
+        transform.localPosition += (pushDirection * Time.deltaTime * 0.5f);
+        lr.updateReactor(transform.localPosition.x * reactionMagnitude, reactionType);
+    }
+
+    public void Push(Vector3 dir)
+    {
+        if (move.ready)
+        {
+            if ((dir.x > 0 && transform.localPosition.x < 1) || (dir.x < 0 && transform.localPosition.x > -1))
+            {
+                pushDirection = dir;
+                StartCoroutine(move.StartCooldown());
+            }
         }
     }
 

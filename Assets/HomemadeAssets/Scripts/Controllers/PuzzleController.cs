@@ -109,8 +109,8 @@ public class PuzzleController : MonoBehaviour {
 
     private void updateInOut()
     {
-        inString.text = stone.getInstrucionIN();
-        outString.text = stone.getInstrucionOUT();
+        inString.text = stone.inCurrent;
+        outString.text = stone.outCurrent;
     }
 
 	// Update is called once per frame

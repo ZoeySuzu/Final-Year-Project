@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour {
     //State related variables
     [SerializeField]
     private float speed, jumpHeight;
+    private bool inAir;
 
 
     private bool lockRotation,interacting,dPadUpdate, grounded;
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour {
     //------------------------------------------------------Initialising Code
    
     void Start () {
+        inAir = false;
         ui = UIController.Instance;
         stats.Add(mana = new Stat("Mana", 100));
         stats.Add(health = new Stat("Health", 100));
@@ -116,10 +118,12 @@ public class PlayerController : MonoBehaviour {
         {
             rb.velocity = new Vector3(rb.velocity.x / mag * speed, rb.velocity.y, rb.velocity.z / mag * speed);
         }*/
-
-        if(rb.velocity.y<0 && grounded)
+        if (rb.velocity.y < 0 && grounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        }else if(rb.velocity.y< 0 && !inAir)
+        {
+            rb.velocity += Physics.gravity*1.5f * Time.deltaTime;
         }
     }
 	
@@ -193,18 +197,18 @@ public class PlayerController : MonoBehaviour {
 
     private void Aim()
     {
-        if (!FollowCamera.Instance.getLerp() && Input.GetAxis("R2") > 0.5f && !FollowCamera.Instance.getAim() && FollowCamera.Instance.getFocus() == null)
+        if (!FollowCamera.Instance.lerping && Input.GetAxis("R2") > 0.5f && !FollowCamera.Instance.aim && FollowCamera.Instance.getFocus() == null)
         {
             playerState += "Aiming";
             FollowCamera.Instance.setAim(true);    
         }
-        else if (Input.GetAxis("R2") > 0.5f && FollowCamera.Instance.getAim())
+        else if (Input.GetAxis("R2") > 0.5f && FollowCamera.Instance.aim)
         {
             playerState += "Aiming";
             //if(!FollowCamera.Instance.getLerp())
                 playerModel.forward = new Vector3(FollowCamera.Instance.transform.forward.x, 0, FollowCamera.Instance.transform.forward.z);
         }
-        else if(FollowCamera.Instance.getAim() && !FollowCamera.Instance.getLerp())
+        else if(FollowCamera.Instance.aim && !FollowCamera.Instance.lerping)
         {
             FollowCamera.Instance.setAim(false);
         }
@@ -349,12 +353,12 @@ public class PlayerController : MonoBehaviour {
 
     public int getMaxHP()
     {
-        return health.max;
+        return health.statMax;
     }
 
     public int getMaxMana()
     {
-        return mana.max;
+        return mana.statMax;
     }
 
     public int getHP()
@@ -464,7 +468,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private bool IsGrounded() {
-        if(Physics.BoxCast(transform.position, scale/2, Vector3.down, transform.rotation, 0.2f, -1, QueryTriggerInteraction.Ignore))
+        if(Physics.BoxCast(transform.position, scale/2, Vector3.down, transform.rotation, 0.15f, -1, QueryTriggerInteraction.Ignore))
         {
             ui.setActionButton("Jump");
             playerState += "Grounded";
@@ -486,6 +490,10 @@ public class PlayerController : MonoBehaviour {
         {
             nearbyEnnemies.Add(other.transform.parent.gameObject);
         }
+        if (other.GetComponent<WindArea>() != null)
+        {
+            inAir = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -494,6 +502,10 @@ public class PlayerController : MonoBehaviour {
         {
             if(nearbyEnnemies.Contains(other.transform.parent.gameObject))
                 nearbyEnnemies.Remove(other.transform.parent.gameObject);
+        }
+        if (other.GetComponent<WindArea>() != null)
+        {
+            inAir = false;
         }
     }
 
@@ -511,7 +523,7 @@ public class PlayerController : MonoBehaviour {
             else
             {
                 Movement(direction, speed * 1f);
-                if (!lockRotation && !FollowCamera.Instance.getLerp() && FollowCamera.Instance.getFocus() == null && Input.GetAxis("L2") <= 0.5f)
+                if (!lockRotation && !FollowCamera.Instance.lerping && FollowCamera.Instance.getFocus() == null && Input.GetAxis("L2") <= 0.5f)
                 {
                     playerModel.forward = direction;
                 }
@@ -526,17 +538,20 @@ public class PlayerController : MonoBehaviour {
 
     IEnumerator Strafe(Vector3 direction)
     {
-        float x = Mathf.Sign(Input.GetAxis("LS-X"));
+        
 
         for (int i = 1; i <= 30; i++)
         {
             if (!lockRotation)
             {
-                Movement(direction, speed * 2f);
+                if (Movement(direction, speed * 2f) == true)
+                    break;
             }
             else
             {
-                Movement(playerModel.right * x, speed* 2.5f);
+                float x = Mathf.Sign(Input.GetAxis("LS-X"));
+                if (Movement(playerModel.right * x, speed * 2.5f) == true)
+                    break;
             }
             yield return new WaitForSeconds(0.01f);
         }
@@ -601,31 +616,37 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void Movement(Vector3 targetDirection,float _speed)
+    private bool Movement(Vector3 targetDirection,float _speed)
     {
+        bool collision = false;
+        float dashCheck = 0.2f;
+        if (_speed >= speed * 2f) { dashCheck = 0.4f; }
         RaycastHit hit;
         if (targetDirection.x != 0)
         {
-            if (Physics.BoxCast(transform.position, scale/2, Vector3.right*Mathf.Sign(targetDirection.x), out hit,transform.rotation, 0.2f))
+            if (Physics.BoxCast(transform.position + Vector3.up * (dashCheck - 0.2f), scale/2, Vector3.right*Mathf.Sign(targetDirection.x), out hit,transform.rotation, dashCheck))
             {
                 transform.position += Vector3.right * hit.distance * 0.99f * Mathf.Sign(targetDirection.x) * _speed * Time.deltaTime;// - Vector3.right * transform.localScale.x / 2 * Mathf.Sign(targetDirection.x);
+                collision = true;
             }
             else
             {
-                transform.Translate(Vector3.right * targetDirection.x * _speed * Time.deltaTime);
+                transform.position += (Vector3.right * targetDirection.x * _speed * Time.deltaTime);
             }
         }
         if (targetDirection.z != 0)
         {
-            if (Physics.BoxCast(transform.position, scale/2, Vector3.forward * Mathf.Sign(targetDirection.z), out hit, transform.rotation, 0.2f))
+            if (Physics.BoxCast(transform.position+Vector3.up*(dashCheck-0.2f), scale/2, Vector3.forward * Mathf.Sign(targetDirection.z), out hit, transform.rotation, dashCheck))
             {
-                transform.position += Vector3.forward * hit.distance * Mathf.Sign(targetDirection.z)*_speed * Time.deltaTime;// - Vector3.forward * transform.localScale.z/2 * Mathf.Sign(targetDirection.z);
+                transform.position += Vector3.forward * hit.distance * 0.99f* Mathf.Sign(targetDirection.z)*_speed * Time.deltaTime;// - Vector3.forward * transform.localScale.z/2 * Mathf.Sign(targetDirection.z);
+                collision = true;
             }
             else
             {
-                transform.Translate(Vector3.forward * targetDirection.z * _speed * Time.deltaTime);
+                transform.position += (Vector3.forward * targetDirection.z * _speed * Time.deltaTime);
             }
         }
+        return collision;
     }
     
     /*

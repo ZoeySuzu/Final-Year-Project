@@ -5,13 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class FriendPoints{
 
-    public string statName { get; set; }
-
+    public string name { get; private set; }
     public int value { get { return value; } set { if (-999 < value && value < 999) this.value = value; } }
 
     public FriendPoints(string _name, int _value)
     {
-        statName = _name; value = _value;
+        name = _name;
+        value = _value;
     }
 
     public bool checkFriendPoints(bool _higher, int _value)

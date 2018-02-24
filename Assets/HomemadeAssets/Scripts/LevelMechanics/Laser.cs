@@ -13,7 +13,6 @@ public class Laser : MonoBehaviour {
 
     //Private variables
     private LineRenderer line;
-    private Vector3 vector;
 
 
     //Set up targeting
@@ -21,27 +20,46 @@ public class Laser : MonoBehaviour {
         line = GetComponent<LineRenderer>();
         if (target != null)
         {
-            vector = Vector3.Normalize(target.transform.position - transform.position);
+            transform.parent.LookAt(target.transform.position);
         }
-        else
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.parent.forward, out hit))
         {
-            vector = Vector3.forward;
-        }
-	}
-	
-
-    //Check for laser interuption;
-	void Update () {
-        RaycastHit hit ;
-        if(Physics.Raycast(transform.position,vector, out hit)){
-            if (hit.collider != transform.parent)
+            LaserReactor lr = hit.collider.gameObject.GetComponent<LaserReactor>();
+            if (lr != null)
             {
-                line.SetPosition(1, vector * hit.distance);
+                lr.Trigger();
+            }
+            if (hit.collider != transform.parent && hit.collider.GetComponent<Laser>() == null)
+            {
+                line.SetPosition(1, Vector3.forward * hit.distance);
             }
         }
         else
         {
-            line.SetPosition(1, vector * 5000);
+            line.SetPosition(1, Vector3.forward * 1000);
+        }
+    }
+
+	
+
+    //Check for laser interuption;
+	void LateUpdate () {
+        RaycastHit hit ;
+        if(Physics.Raycast(transform.position,transform.parent.forward, out hit)){
+            LaserReactor lr = hit.collider.gameObject.GetComponent<LaserReactor>();
+            if (lr != null)
+            {
+                lr.Trigger();
+            }
+            if (hit.collider != transform.parent && hit.collider.GetComponent<Laser>() == null)
+            {
+                line.SetPosition(1, Vector3.forward * hit.distance);
+            }
+        }
+        else
+        {
+            line.SetPosition(1, Vector3.forward * 1000);
         }
 	}
 }

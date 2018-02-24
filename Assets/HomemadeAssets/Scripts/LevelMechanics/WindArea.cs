@@ -9,6 +9,9 @@ public class WindArea : MonoBehaviour {
 
     Rigidbody rb;
 
+    [SerializeField]
+    private bool sideways;
+
     //Lift rigidbodys up or move boxes manually
     private void OnTriggerStay(Collider other)
     {
@@ -25,8 +28,13 @@ public class WindArea : MonoBehaviour {
 
             if ((rb = other.GetComponent<Rigidbody>()) != null)
             {
-                //rb.velocity = new Vector3(0,rb.velocity.y + 26*percentForce*rb.mass, 0);
-                rb.AddForce(Vector3.up * 18 * percentForce * rb.mass);
+                if(!sideways)
+                    rb.AddForce(Vector3.up * 18 * percentForce * rb.mass);
+                else
+                {
+                    percentForce = 1 - (Vector3.Magnitude(other.transform.position - transform.position) / a.height);
+                    other.transform.position += transform.up *percentForce* Time.deltaTime*14;
+                }
             }
 
         }

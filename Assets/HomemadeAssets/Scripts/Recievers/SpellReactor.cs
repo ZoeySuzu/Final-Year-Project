@@ -9,7 +9,6 @@ public class SpellReactor : MonoBehaviour
     [SerializeField]
     private SpellType triggerSpell;
 
-    private enum Reaction {destroy};
     [SerializeField]
     private Reaction reaction;
 
@@ -22,6 +21,21 @@ public class SpellReactor : MonoBehaviour
                 if (reaction == Reaction.destroy)
                 {
                     Destroy(gameObject);
+                }
+                if(reaction == Reaction.push)
+                {
+                    Lever l = GetComponent<Lever>();
+                    Debug.Log("push");
+                    if( (transform.parent.localPosition + other.transform.forward).x >= 0)
+                    {
+                        Debug.Log("right");
+                        l.Push(transform.right);
+                    }
+                    else
+                    {
+                        Debug.Log("left");
+                        l.Push(-transform.right);
+                    }
                 }
             }
             else

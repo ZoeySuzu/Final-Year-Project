@@ -110,7 +110,7 @@ public class Trap : MonoBehaviour {
                     break;
                 }
         }
-        obj.transform.rotation = transform.parent.rotation;
+        obj.transform.rotation = Quaternion.Euler(0, transform.parent.rotation.eulerAngles.y, 0);
         try
         {
             transform.SetParent(GameController.Instance.transform.FindChildByRecursive("Spells"));

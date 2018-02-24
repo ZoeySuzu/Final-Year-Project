@@ -29,32 +29,22 @@ public class MovingPlatform : MonoBehaviour {
         switch(dir){
             case directions.up:
                 {
-                    vector = Vector3.up;
+                    vector = transform.up;
                     break;
                 }
             case directions.down:
                 {
-                    vector = Vector3.down;
-                    break;
-                }
-            case directions.left:
-                {
-                    vector = Vector3.left;
-                    break;
-                }
-            case directions.right:
-                {
-                    vector = Vector3.right;
+                    vector = -transform.up;
                     break;
                 }
             case directions.forward:
                 {
-                    vector = Vector3.forward;
+                    vector = transform.forward;
                     break;
                 }
             case directions.back:
                 {
-                    vector = Vector3.back;
+                    vector = -transform.forward;
                     break;
                 }
             
@@ -84,7 +74,7 @@ public class MovingPlatform : MonoBehaviour {
             StartCoroutine(cd.StartCooldown());
             speed *= -1;
         }
-        transform.Translate(vector * speed * Time.deltaTime);
+        transform.position += (vector * speed * Time.deltaTime);
 
         foreach (GameObject target in targets)
         {
@@ -92,7 +82,7 @@ public class MovingPlatform : MonoBehaviour {
             {
                 break;
             }
-            target.transform.Translate(vector * speed * Time.deltaTime);
+            target.transform.position += (vector * speed * Time.deltaTime);
         }
     }
 
