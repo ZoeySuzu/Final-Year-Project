@@ -5,38 +5,155 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour {
 
     [SerializeField]
-    int maxHp; 
-    int hp;
+    private int maxHp;
+    private int hp;
 
-    Rigidbody rb;
-    Material mat;
-    Color defaultColor;
-    EnemyAIType aiType = EnemyAIType.basic;
+    private Rigidbody rb;
+    private Material mat;
+    private Color defaultColor;
+    [SerializeField]
+    private EnemyAIType aiType;
+
+    private Animator anim;
+    private Vector3 attackDir= Vector3.zero;
+
+    public Transform projectile;
+
+    private bool aggro = false;
+
+    private Cooldown attack = new Cooldown(3.0f);
 
 	// Use this for initialization
 	void Start () {
-        mat = GetComponent<Renderer>().material;
+        mat = GetComponentInChildren<Renderer>().material;
         defaultColor = mat.color;
         hp = maxHp ;
         rb = GetComponent<Rigidbody>();
-	}
+        anim = transform.GetChild(0).GetComponent<Animator>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        if (aiType == EnemyAIType.ground)
+        {
+            if (aggro && hp >0)
+            {
+                Vector3 playerHPos = new Vector3(PlayerController.Instance.transform.position.x, 0, PlayerController.Instance.transform.position.z);
+                transform.LookAt(playerHPos + Vector3.up * transform.position.y);
+
+                Vector3 dir = PlayerController.Instance.transform.position - transform.position;
+                dir = new Vector3(dir.x, 0, dir.z);
+                if (dir.magnitude >= 2)
+                {
+                    if(anim.GetBool("Moving") != true)
+                        anim.SetBool("Moving", true);
+                    dir = dir.normalized;
+                    transform.position += dir * 2 * Time.fixedDeltaTime;
+                }
+                else if (attack.ready)
+                {
+                    anim.SetBool("Moving", false);
+                    StartCoroutine(attack.StartCooldown());
+                    Debug.Log("Attack");
+                    anim.SetTrigger("Attack");
+                    dir = dir.normalized;
+                    attackDir = dir;
+                    StartCoroutine(Attack());
+                }
+                else
+                {
+                    transform.position += attackDir * Time.fixedDeltaTime;
+                }
+            }
+            else
+            {
+                anim.SetBool("Moving", false);
+            }
+
+        }
+        if (aiType == EnemyAIType.flying)
+        {
+            if (aggro && hp > 0)
+            {
+                transform.LookAt(PlayerController.Instance.transform.position);
+
+                Vector3 dir = PlayerController.Instance.transform.position+ Vector3.up - transform.position;
+                if (dir.magnitude >= 5)
+                {
+                    if (anim.GetBool("Moving") != true)
+                        anim.SetBool("Moving", true);
+                    dir = dir.normalized;
+                    transform.position += dir * 2 * Time.fixedDeltaTime;
+                }
+                else if (attack.ready)
+                {
+                    StartCoroutine(attack.StartCooldown());
+                    anim.SetBool("Moving", false);
+                    Debug.Log("Attack");
+                    anim.SetTrigger("Attack");
+                    StartCoroutine(Shoot());
+                }
+            }
+            else
+            {
+                anim.SetBool("Moving", false);
+            }
+        }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject == PlayerController.Instance.gameObject)
+        {
+            Debug.Log("Should Damage");
+            PlayerController.Instance.setHealth(-5);
+            StartCoroutine(PlayerController.Instance.PushBack((PlayerController.Instance.transform.position - transform.position)*5));
+        }
+    }
+
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject == PlayerController.Instance.gameObject)
+        {
+            Debug.Log("EnemmyTriggered");
+        }
+    }
+
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.Instance.gameObject)
+        {
+            aggro = true;
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == PlayerController.Instance.gameObject)
+        {
+            aggro = false;
+        }
+    }
+
+
 
     public void knockback(Vector3 force)
     {
-        rb.AddForce(Vector3.up*force.y*100);
-        StartCoroutine(pushBack(new Vector3(force.x, 0, force.z)));
+        if(aiType == EnemyAIType.ground)
+            rb.AddForce(Vector3.up*force.y*100);
+        StartCoroutine(PushBack(new Vector3(force.x, 0, force.z)));
     }
 
     public void setHealth(int value)
     {
         hp = hp + value;
-        StartCoroutine(takeDamage());
-        if (hp < 0)
+        StartCoroutine(TakeDamage());
+        if(aiType == EnemyAIType.flying)
+        {
+            anim.SetTrigger("Damage");
+        }
+        if (hp <= 0)
         {
             onDeath();
         }
@@ -44,10 +161,10 @@ public class EnemyController : MonoBehaviour {
 
     public void onDeath()
     {
-        StartCoroutine(die());
+        StartCoroutine(Die());
     }
 
-    IEnumerator pushBack(Vector3 force)
+    IEnumerator PushBack(Vector3 force)
     {
         for (int i = 0; i <= 30; i++)
         {
@@ -56,7 +173,20 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    IEnumerator takeDamage()
+    IEnumerator Shoot()
+    {
+        yield return new WaitForSeconds(1f);
+        var spell = Instantiate(projectile, transform.position + transform.forward + transform.up, transform.rotation).GetComponent<Spell>();
+        spell.Initialize(SpellType.Normal, true);
+    }
+
+    IEnumerator Attack()
+    {
+        yield return new WaitForSeconds(0.8f);
+        attackDir = Vector3.zero;
+    }
+
+    IEnumerator TakeDamage()
     {
         for (int i = 0; i <= 4; i++)
         {
@@ -66,10 +196,11 @@ public class EnemyController : MonoBehaviour {
             yield return new WaitForSeconds(0.1f);
         }
     }
-    IEnumerator die()
+    IEnumerator Die()
     {
         defaultColor = Color.black;
-        yield return new WaitForSeconds(1f);
+        anim.SetTrigger("Die");
+        yield return new WaitForSeconds(1.8f);
         if (FollowCamera.Instance.getFocus() == gameObject)
         {
             FollowCamera.Instance.setFollow();

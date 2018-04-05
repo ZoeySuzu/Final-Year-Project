@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
+[System.Serializable]
 public class QuestItem : Item {
 
     public QuestItem(string _name)

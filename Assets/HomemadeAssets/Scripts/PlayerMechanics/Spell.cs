@@ -15,15 +15,17 @@ public class Spell : MonoBehaviour {
     private Vector3 direction;
     private ParticleSystem particle;
     private bool morph;
+    private bool ennemySpell;
 
     [SerializeField]
     private ParticleSystem defaultParticle = null, fireParticle = null, iceParticle = null, windParticle = null, electricParticle = null, contactParticle = null;
 
 
-    public void Initialize(SpellType _element, bool _alternative)
+    public void Initialize(SpellType _element, bool _ennemySpell)
     {
         element = _element;
         normalElement = element;
+        ennemySpell = _ennemySpell;
     }
 
     public SpellType getSpellType()
@@ -61,7 +63,7 @@ public class Spell : MonoBehaviour {
                         transform.position = target.transform.position + Vector3.up * 5;
                     }
                     
-                    else if (Input.GetAxis("R2") > 0.5f)
+                    else if (PlayerController.Instance.getPlayerState().Contains("Aiming"))
                     {
                         Physics.Raycast(FollowCamera.Instance.transform.position, FollowCamera.Instance.transform.forward, out hit, 100, -1, QueryTriggerInteraction.Ignore);
                         transform.position = hit.point + Vector3.up * 5;
@@ -76,7 +78,13 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Wind:
                 {
-                    if (Input.GetAxis("R2") > 0.5f)
+                    var target = FollowCamera.Instance.getFocus();
+                    if (target != null)
+                    {
+                        direction = Vector3.Normalize(target.GetComponentInChildren<Collider>().transform.position - transform.position);
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+                    else if (PlayerController.Instance.getPlayerState().Contains("Aiming"))
                     {
                         RaycastHit hit;
                         if (Physics.Raycast(FollowCamera.Instance.transform.position, FollowCamera.Instance.transform.forward, out hit, 50, -1, QueryTriggerInteraction.Ignore))
@@ -98,12 +106,18 @@ public class Spell : MonoBehaviour {
             case SpellType.Normal:
                 {
                     var target = FollowCamera.Instance.getFocus();
-                    if (target != null)
+                    if (ennemySpell)
                     {
-                        direction = Vector3.Normalize(target.transform.position - transform.position);
+                        direction = Vector3.Normalize(PlayerController.Instance.transform.position - transform.position);
                         transform.rotation = Quaternion.LookRotation(direction);
                     }
-                    else if(Input.GetAxis("R2") > 0.5f){
+                    else if (target != null)
+                    {
+                        direction = Vector3.Normalize(target.GetComponentInChildren<Collider>().transform.position - transform.position);
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+                    else if(PlayerController.Instance.getPlayerState().Contains("Aiming"))
+                    {
                         RaycastHit hit;
                         if (Physics.Raycast(FollowCamera.Instance.transform.position, FollowCamera.Instance.transform.forward, out hit, 50, -1, QueryTriggerInteraction.Ignore))
                         {
@@ -135,8 +149,14 @@ public class Spell : MonoBehaviour {
         {
             case SpellType.Fire:
                 {
-                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward * 1.1f + Vector3.up * 0.5f;
-                    if (Input.GetAxis("R2") > 0.5f)
+                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward * 0.6f + transform.parent.GetChild(0).right*0.5f;
+                    var target = FollowCamera.Instance.getFocus();
+                    if (target != null)
+                    {
+                        direction = Vector3.Normalize(target.GetComponentInChildren<Collider>().transform.position - transform.position);
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+                    else if (PlayerController.Instance.getPlayerState().Contains("Aiming"))
                     {
                         direction = FollowCamera.Instance.transform.position + FollowCamera.Instance.transform.forward * 50 - transform.position;
                         transform.forward = direction;
@@ -145,8 +165,18 @@ public class Spell : MonoBehaviour {
                 }
             case SpellType.Ice:
                 {
-                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward * 1.1f + Vector3.up * 0.5f;
-                    transform.rotation = transform.parent.GetChild(0).rotation;
+                    transform.position = transform.parent.position + transform.parent.GetChild(0).forward * 0.6f + Vector3.up * 0.5f + transform.parent.GetChild(0).right * 0.5f;
+                    var target = FollowCamera.Instance.getFocus();
+                    if (target != null)
+                    {
+                        direction = Vector3.Normalize(target.GetComponentInChildren<Collider>().transform.position - transform.position);
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+                    else if (PlayerController.Instance.getPlayerState().Contains("Aiming"))
+                    {
+                        direction = FollowCamera.Instance.transform.position + FollowCamera.Instance.transform.forward * 50 - transform.position;
+                        transform.forward = direction;
+                    }
                     break;
                 }
             case SpellType.Electric:
@@ -210,16 +240,27 @@ public class Spell : MonoBehaviour {
     {
         if(other.tag == "Enemy")
         {
-
-            EnemyController ec = other.GetComponent<EnemyController>();
+            EnemyController ec = other.GetComponentInParent<EnemyController>();
             if(element == SpellType.Normal)
             {
-                ec.setHealth(-2);
+                ec.setHealth(-3);
                 ec.knockback(transform.forward+Vector3.up);
             }
+            if (element == SpellType.Wind)
+            {
+                ec.setHealth(-2);
+                ec.knockback(transform.forward*15f);
+            }
+        }
+        if(other.tag == "Player" && ennemySpell == true)
+        {
+            stopCast();
+            Debug.Log("Should Damage");
+            PlayerController.Instance.setHealth(-3);
+            StartCoroutine(PlayerController.Instance.PushBack((PlayerController.Instance.transform.position - transform.position) * 2));
         }
 
-        if (other.tag == "Zone")
+        if (other.tag == "Zone" || other.tag == "Player")
             return;
         if (element != SpellType.Fire && element != SpellType.Ice)
             stopCast();

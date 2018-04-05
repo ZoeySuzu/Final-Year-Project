@@ -1,0 +1,527 @@
+fileFormatVersion: 2
+guid: 85f7d037b0f5de04fb08c599b8c7002b
+timeCreated: 1520292246
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Head
+    100004: Head_end
+    100006: Hips
+    100008: LeftFoot
+    100010: LeftFoot_end
+    100012: LeftHand
+    100014: LeftHand_end
+    100016: LeftLowerArm
+    100018: LeftLowerLeg
+    100020: LeftUpperArm
+    100022: LeftUpperLeg
+    100024: Mesh
+    100026: RightFoot
+    100028: RightFoot_end
+    100030: RightHand
+    100032: RightHand_end
+    100034: RightLowerArm
+    100036: RightLowerLeg
+    100038: RightUpperArm
+    100040: RightUpperLeg
+    100042: Spine
+    100044: //RootNode
+    100046: VoxelKaduki
+    400000: Armature
+    400002: Head
+    400004: Head_end
+    400006: Hips
+    400008: LeftFoot
+    400010: LeftFoot_end
+    400012: LeftHand
+    400014: LeftHand_end
+    400016: LeftLowerArm
+    400018: LeftLowerLeg
+    400020: LeftUpperArm
+    400022: LeftUpperLeg
+    400024: Mesh
+    400026: RightFoot
+    400028: RightFoot_end
+    400030: RightHand
+    400032: RightHand_end
+    400034: RightLowerArm
+    400036: RightLowerLeg
+    400038: RightUpperArm
+    400040: RightUpperLeg
+    400042: Spine
+    400044: //RootNode
+    400046: VoxelKaduki
+    4300000: Mesh
+    7400000: Armature|Armature.001|Armature|idle|Armature|idle
+    7400002: Armature|ArmatureAction.001
+    7400004: Armature|ArmatureAction.0010
+    9500000: //RootNode
+    13700000: Mesh
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: <Root Transform>
+    animationImportErrors: 
+    animationImportWarnings: "\nClip 'Armature|ArmatureAction.001' has import animation
+      warnings that might lower retargeting quality:\nNote: Activate translation DOF
+      on avatar to improve retargeting quality.\n\t'Head' has translation animation
+      that will be discarded.\n\t'LeftUpperLeg' has translation animation that will
+      be discarded.\n\t'LeftLowerLeg' has translation animation that will be discarded.\n\t'RightUpperLeg'
+      has translation animation that will be discarded.\n\t'RightLowerLeg' has translation
+      animation that will be discarded.\n"
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|ArmatureAction.0010
+      takeName: Armature|ArmatureAction.001
+      firstFrame: 0
+      lastFrame: 49
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/VoxelKaduki
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg/LeftLowerLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftFoot_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg/RightLowerLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg/RightLowerLeg/RightFoot
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightFoot_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/Spine
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/Head
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/Head/Head_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm/LeftLowerArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm/LeftLowerArm/LeftHand
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm/LeftLowerArm/LeftHand/LeftHand_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm/RightLowerArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm/RightLowerArm/RightHand
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm/RightLowerArm/RightHand/RightHand_end
+        weight: 0
+      - path: Mesh
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|ArmatureAction.001
+      takeName: Armature|ArmatureAction.001
+      firstFrame: 0
+      lastFrame: 49
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/VoxelKaduki
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg/LeftLowerLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/LeftUpperLeg/LeftLowerLeg/LeftFoot/LeftFoot_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg/RightLowerLeg
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg/RightLowerLeg/RightFoot
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/RightUpperLeg/RightLowerLeg/RightFoot/RightFoot_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/Spine
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/Head
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/Head/Head_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm/LeftLowerArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm/LeftLowerArm/LeftHand
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/LeftUpperArm/LeftLowerArm/LeftHand/LeftHand_end
+        weight: 0
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm/RightLowerArm
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm/RightLowerArm/RightHand
+        weight: 1
+      - path: Armature/VoxelKaduki/Hips/Spine/RightUpperArm/RightLowerArm/RightHand/RightHand_end
+        weight: 0
+      - path: Mesh
+        weight: 0
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human:
+    - boneName: Hips
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftUpperLeg
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightUpperLeg
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLowerLeg
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLowerLeg
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftFoot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightFoot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Spine
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftUpperArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightUpperArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftLowerArm
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightLowerArm
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: LeftHand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: RightHand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: voxelgirlATK2(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Armature
+      parentName: voxelgirlATK2(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.00000006657903, y: -0.00000013315805, z: 7.75432e-15, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    - name: VoxelKaduki
+      parentName: Armature
+      position: {x: -0, y: 0.0001, z: 0}
+      rotation: {x: 0.000000014881316, y: 0.000000057660152, z: -8.5359745e-15, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Hips
+      parentName: VoxelKaduki
+      position: {x: -0, y: 0.003, z: 0}
+      rotation: {x: -0, y: -0, z: -1.5881868e-22, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Spine
+      parentName: Hips
+      position: {x: -0, y: 0.0008999997, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head
+      parentName: Spine
+      position: {x: -0, y: 0.0018000001, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head_end
+      parentName: Head
+      position: {x: -0, y: 0.0008999997, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftUpperArm
+      parentName: Spine
+      position: {x: -0.0008999999, y: 0.0006, z: 0}
+      rotation: {x: -0.00000005760115, y: 0.000000057601156, z: 0.7071068, w: 0.7071067}
+      scale: {x: 0.9999994, y: 0.9999994, z: 1}
+    - name: LeftLowerArm
+      parentName: LeftUpperArm
+      position: {x: 7.450581e-11, y: 0.00090000045, z: 3.5527136e-17}
+      rotation: {x: -0, y: -0, z: 3.3178926e-15, w: 1}
+      scale: {x: 0.9999997, y: 0.9999997, z: 1}
+    - name: LeftHand
+      parentName: LeftLowerArm
+      position: {x: 7.450583e-11, y: 0.0015, z: 1.7763568e-17}
+      rotation: {x: -7.1054274e-15, y: 7.1054274e-15, z: -0, w: 1}
+      scale: {x: 0.99999964, y: 0.99999964, z: 1}
+    - name: LeftHand_end
+      parentName: LeftHand
+      position: {x: -2.980232e-10, y: 0.00074999966, z: 3.5527136e-17}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 0.9999998, y: 0.9999998, z: 1}
+    - name: RightUpperArm
+      parentName: Spine
+      position: {x: 0.0008999999, y: 0.0006, z: 0}
+      rotation: {x: -0.000000057601156, y: -0.000000057601167, z: -0.7071068, w: 0.7071067}
+      scale: {x: 0.9999994, y: 0.9999994, z: 1}
+    - name: RightLowerArm
+      parentName: RightUpperArm
+      position: {x: -7.450581e-11, y: 0.00090000045, z: 2.6645352e-17}
+      rotation: {x: -0, y: -0, z: -3.3178937e-15, w: 1}
+      scale: {x: 0.9999997, y: 0.9999997, z: 1}
+    - name: RightHand
+      parentName: RightLowerArm
+      position: {x: -7.450583e-11, y: 0.0015, z: -1.7763568e-17}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 0.99999964, y: 0.99999964, z: 1}
+    - name: RightHand_end
+      parentName: RightHand
+      position: {x: 2.980232e-10, y: 0.00074999966, z: 8.8817837e-17}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 0.9999998, y: 0.9999998, z: 1}
+    - name: LeftUpperLeg
+      parentName: Hips
+      position: {x: -0.00059999997, y: -0.00060000014, z: 0}
+      rotation: {x: -7.1054274e-15, y: -1.0996537e-22, z: 1, w: -6.628845e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftLowerLeg
+      parentName: LeftUpperLeg
+      position: {x: 1.2916965e-11, y: 0.0014999999, z: 0}
+      rotation: {x: -0, y: -0, z: -7.813509e-37, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftFoot
+      parentName: LeftLowerLeg
+      position: {x: 8.742276e-12, y: 0.0008999999, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftFoot_end
+      parentName: LeftFoot
+      position: {x: 6.6549275e-12, y: 0.00045000002, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightUpperLeg
+      parentName: Hips
+      position: {x: 0.00059999997, y: -0.00060000014, z: 0}
+      rotation: {x: -7.1054274e-15, y: -1.0996537e-22, z: 1, w: -6.628845e-15}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightLowerLeg
+      parentName: RightUpperLeg
+      position: {x: 1.2916965e-11, y: 0.0014999999, z: 0}
+      rotation: {x: -0, y: -0, z: -7.813509e-37, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightFoot
+      parentName: RightLowerLeg
+      position: {x: 8.742276e-12, y: 0.0008999999, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightFoot_end
+      parentName: RightFoot
+      position: {x: 6.6549275e-12, y: 0.00045000002, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Mesh
+      parentName: voxelgirlATK2(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.00000008146034, y: -0.0000000754979, z: 5.0388703e-15, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

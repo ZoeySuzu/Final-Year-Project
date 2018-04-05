@@ -16,13 +16,14 @@ public class AttackScript : MonoBehaviour {
         attackN = 0;
         firstAttack();
         chainAttack = false;
+        transform.parent = PlayerController.Instance.getWand().transform;
+        transform.position = transform.parent.position + transform.parent.up*1f;
+        transform.rotation = transform.parent.rotation;
 	}
 
     private void firstAttack()
     {
-        lerpStartTime = Time.time;
-        lerpStartPos = transform.position;
-        lerpTargetPos = transform.position+ transform.up * -1 + transform.right * -2;
+        PlayerController.Instance.anim.SetTrigger("Attack1");
     }
 
     private void secondAttack()
@@ -30,10 +31,7 @@ public class AttackScript : MonoBehaviour {
         hit = false;
         attackN++;
         chainAttack = false;
-        lerpStartTime = Time.time;
-        transform.localPosition = new Vector3(-1, 0f, 1.5f);
-        lerpStartPos = transform.position;
-        lerpTargetPos = transform.position + transform.up * 1.5f + transform.right * 1.5f;
+        PlayerController.Instance.anim.SetTrigger("Attack2");
     }
 
 
@@ -42,37 +40,20 @@ public class AttackScript : MonoBehaviour {
         hit = false;
         attackN++;
         chainAttack = false;
-        lerpStartTime = Time.time;
-        transform.localPosition = new Vector3(0.5f, 1.5f, 1.5f);
-        lerpStartPos = transform.position;
-        lerpTargetPos = transform.position + transform.up * -2f + transform.right *-0.5f;
     }
 
     // Update is called once per frame
     void Update () {
-        if(attackN<2 && Input.GetButtonDown("X"))
-            {
-                chainAttack = true;
-            }
+        if (attackN < 2 && Input.GetButtonDown("X"))
+        {
+            chainAttack = true;
+        }
 
-        float lerpTime = Time.time - lerpStartTime;
-        float lerpPercent = lerpTime / 0.2f;
-        if (lerpPercent < 1f)
+        if (attackN == 0 && PlayerController.Instance.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.6f && chainAttack)
         {
-            transform.position = Vector3.Lerp(lerpStartPos, lerpTargetPos, lerpPercent);
+            secondAttack();
         }
-        else if (lerpPercent >= 1f)
-        {
-            if (chainAttack && attackN == 0)
-            {
-                secondAttack();
-            }
-            else if (chainAttack && attackN == 1)
-            {
-                thirdAttack();
-            }
-        }
-        if (lerpPercent >=2f)
+        else if (PlayerController.Instance.anim.GetCurrentAnimatorStateInfo(0).normalizedTime >=0.7f)
         {
             PlayerController.Instance.refreshAttack();
             Destroy(gameObject);
@@ -86,7 +67,7 @@ public class AttackScript : MonoBehaviour {
         {
             hit = true;
             Vector3 dir = PlayerController.Instance.transform.GetChild(0).forward;
-            EnemyController ec = other.GetComponent<EnemyController>();
+            EnemyController ec = other.GetComponentInParent<EnemyController>();
             if (attackN < 2)
             {
                 ec.knockback(dir*1.5f+Vector3.up*1.2f);

@@ -1,0 +1,18 @@
+Dialogue for Stella
+
+&Debug1
+Hey I'm Stella.
+@goto Debug2
+&end
+
+&Debug2
+Did you know you can check your abilities by looking at your spellbook?
+To do this just press start and select your spell book from the menu.
+@# setDialogue Debug3
+&end
+
+&Debug3
+You can also view your inventory and relationships with other characters from the pause menu.
+You should of been able to see a map and options too.
+@# setDialogue Debug2
+&end

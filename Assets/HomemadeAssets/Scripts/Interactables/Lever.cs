@@ -113,6 +113,7 @@ public class Lever : Interactable {
     {
         if (!inUse)
         {
+            PlayerController.Instance.anim.SetTrigger("Push");
             Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
             PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
             toggleIndicator();
@@ -124,6 +125,7 @@ public class Lever : Interactable {
         }
         else
         {
+            PlayerController.Instance.anim.SetTrigger("StopPush");
             gameUI.setInteractButton(interaction);
             toggleIndicator();
             PlayerController.Instance.setPlayerState("Idle");

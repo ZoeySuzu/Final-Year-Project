@@ -5,14 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class Inventory{
 
-    public Collectible money { get; private set; }
+    public Collectible money;
     public List<Collectible> collectibleItems { get; private set; }
     public List<QuestItem> questItems { get; private set; }
     public List<EquipableItem> equipableItems { get; private set; }
 
     public Inventory()
-    {
-        money = new Collectible("money", 100);
+    { 
         collectibleItems = new List<Collectible>();
         questItems = new List<QuestItem>();
         equipableItems = new List<EquipableItem>();
@@ -56,6 +55,15 @@ public class Inventory{
         {
             if (item.iType == ItemType.Collectible)
             {
+                Collectible citem = (Collectible)item;
+                foreach (Collectible ci in collectibleItems)
+                {
+                    if (ci.name == citem.name)
+                    {
+                        ci.changeAmount(citem.amount);
+                        return;
+                    }
+                }
                 collectibleItems.Add((Collectible)item);
             }
             else if (item.iType == ItemType.Equipable)

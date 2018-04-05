@@ -10,7 +10,6 @@ public class Box : Interactable {
     private bool inUse = false;
     private bool grounded = false;
     private Vector3 direction;
-    private Cooldown move;
     private Vector3 pOffset;
 
     Rigidbody rb;
@@ -19,7 +18,6 @@ public class Box : Interactable {
     {
         rb = GetComponent<Rigidbody>();
         gameUI = UIController.Instance;
-        move = new Cooldown(0.25f);
     }
 
     public Box()
@@ -49,42 +47,27 @@ public class Box : Interactable {
     private void FixedUpdate()
     {
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
-    }
-
-    void Update()
-    {
         if (inUse)
         {
-            if (move.ready)
+            PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
+            var z = Input.GetAxis("LS-Y");
+            if (z > 0.3)
             {
-                transform.localPosition = new Vector3(Mathf.Round(transform.localPosition.x), transform.localPosition.y, Mathf.Round(transform.localPosition.z));
-                PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
-                var z = Input.GetAxis("LS-Y");
-                if (z > 0.3)
-                {
-                    Push(PlayerController.Instance.transform.GetChild(0).forward);
-                }
-                else if (z < -0.3)
-                {
-                    Pull(PlayerController.Instance.transform.GetChild(0).forward*-1);
-                }
+                Push(Vector3.Normalize((PlayerController.Instance.transform.position - transform.position) * -1f));
             }
-            else
+            else if (z < -0.3)
             {
-                transform.position += direction * 4 * Time.deltaTime;
-                PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
+                Pull(Vector3.Normalize((PlayerController.Instance.transform.position - transform.position)));
             }
-
-            
         }
     }
-
     private void Push(Vector3 dir)
     {
         if (!Physics.BoxCast(transform.position, transform.localScale/2, dir, transform.rotation, 1f, -1, QueryTriggerInteraction.Ignore))
         {
             direction = dir;
-            StartCoroutine(move.StartCooldown());
+            transform.position += direction * 4 * Time.deltaTime;
+            PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
         }
     }
 
@@ -94,7 +77,8 @@ public class Box : Interactable {
         if (!Physics.BoxCast(transform.position, transform.localScale/2, dir, transform.rotation, 1f + PlayerController.Instance.transform.localScale.z,~lm, QueryTriggerInteraction.Ignore))
         {
             direction = dir;
-            StartCoroutine(move.StartCooldown());
+            transform.position += direction * 4 * Time.deltaTime;
+            PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
         }
     }
 
@@ -104,7 +88,7 @@ public class Box : Interactable {
     {
         if (!inUse)
         {
-            
+            PlayerController.Instance.anim.SetTrigger("Push");
             toggleIndicator();
             PlayerController.Instance.setPlayerState("Pushing");
             pOffset = transform.rotation*(PlayerController.Instance.transform.position - transform.position);
@@ -112,15 +96,15 @@ public class Box : Interactable {
             Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
             PlayerController.Instance.transform.rotation = transform.rotation;
             PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
-            
+            gameUI.setActionButton(interaction);
             inUse = true;
             FollowCamera.Instance.setFollow();
         }
-        else if(move.ready)
+        else
         {
-            gameUI.setActionButton(interaction);
+            PlayerController.Instance.anim.SetTrigger("StopPush");
+            gameUI.setInteractButton(interaction);
             toggleIndicator();
-            PlayerController.Instance.transform.position += PlayerController.Instance.transform.GetChild(0).forward * -0.3f;
             PlayerController.Instance.transform.forward = Vector3.forward;
             PlayerController.Instance.setPlayerState("Idle");
             inUse = false;
@@ -131,11 +115,11 @@ public class Box : Interactable {
     {
         var scale = transform.localScale.x;
         if(Mathf.Abs(offset.x) > Mathf.Abs(offset.z)){
-            pOffset = Quaternion.Inverse(transform.rotation) * new Vector3((scale+0.5f) * Mathf.Sign(offset.x), 0, 0);
+            pOffset = Quaternion.Inverse(transform.rotation) * new Vector3((scale+0.75f) * Mathf.Sign(offset.x), 0, 0);
         }
         else
         {
-            pOffset = Quaternion.Inverse(transform.rotation)*new Vector3(0, 0, (scale + 0.5f) * Mathf.Sign(offset.z));
+            pOffset = Quaternion.Inverse(transform.rotation)*new Vector3(0, 0, (scale + 0.75f) * Mathf.Sign(offset.z));
         }
         PlayerController.Instance.transform.position = new Vector3(transform.position.x + pOffset.x, PlayerController.Instance.transform.position.y, transform.position.z + pOffset.z);
     }
@@ -144,6 +128,8 @@ public class Box : Interactable {
     {
         if (inUse)
         {
+            gameUI.setInteractButton(interaction);
+            PlayerController.Instance.anim.SetTrigger("StopPush");
             PlayerController.Instance.transform.forward = Vector3.forward;
             PlayerController.Instance.setPlayerState("Idle");
             inUse = false;

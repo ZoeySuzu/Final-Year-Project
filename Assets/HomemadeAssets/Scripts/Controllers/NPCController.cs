@@ -10,6 +10,8 @@ public class NPCController : Interactable {
     [SerializeField]
     private string dialogueID;
 
+    private Transform head;
+    private Vector3 ppos = Vector3.zero;
     private Queue<string> textQueue;
 
     public void Initialize(string _charName)
@@ -41,15 +43,19 @@ public class NPCController : Interactable {
     {
         if (other.name == "Object_Player")
         {
-            Vector3 orientation = new Vector3(PlayerController.Instance.transform.position.x, transform.position.y, PlayerController.Instance.transform.position.z);
-            transform.LookAt(orientation);
+
+            ppos = PlayerController.Instance.transform.position;
             if (Input.GetButtonDown("X"))
             {
-                orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
-                PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
+                ppos = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y, transform.position.z);
+                PlayerController.Instance.transform.GetChild(0).LookAt(ppos);
                 interact();
                 PlayerController.Instance.switchInteracting();
             }
+        }
+        else
+        {
+            ppos = Vector3.zero;
         }
     }
 

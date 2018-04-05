@@ -9,7 +9,8 @@ public class Bomb : MonoBehaviour {
 
     public void Start()
     {
-        dir = transform.up*10;
+        GetComponent<SphereCollider>().enabled = false;
+        dir = transform.up*25;
         scaleRatio = 0;
         StartCoroutine(Explode());
     }
@@ -27,13 +28,26 @@ public class Bomb : MonoBehaviour {
         {
             Destroy(other.gameObject);
         }
+        else if (other.tag == "Enemy")
+        {
+            EnemyController ec = other.GetComponentInParent<EnemyController>();
+            ec.knockback((ec.transform.position - transform.position).normalized * 10f);
+            ec.setHealth(-10);
+        }
+        else if (other.tag == "Player")
+        {
+            StartCoroutine(PlayerController.Instance.PushBack((PlayerController.Instance.transform.position - transform.position).normalized * 10f));
+            PlayerController.Instance.setHealth(-10);
+        }
     }
 
     IEnumerator Explode()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.10f);
         dir = Vector3.zero;
         yield return new WaitForSeconds(0.10f);
+        GetComponent<SphereCollider>().enabled = true;
+        transform.GetChild(0).gameObject.SetActive(true);
         scaleRatio = 15f;
         yield return new WaitForSeconds(0.25f);
         Destroy(gameObject);

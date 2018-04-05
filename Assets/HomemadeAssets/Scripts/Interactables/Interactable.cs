@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Last clean: 29/11/2017
-
 public abstract class Interactable : MonoBehaviour{
     protected UIController gameUI;
     protected string interaction = "";
@@ -16,11 +15,11 @@ public abstract class Interactable : MonoBehaviour{
     {
         if (other.name == "Object_Player")
         {
-            if (Input.GetButtonDown("X"))
+            if (Input.GetButtonDown("X") && !PlayerController.Instance.interacting)
             {
+                interact();
                 Vector3 orientation = new Vector3(transform.position.x, PlayerController.Instance.transform.GetChild(0).position.y,transform.position.z);
                 PlayerController.Instance.transform.GetChild(0).LookAt(orientation);
-                interact();
                 PlayerController.Instance.switchInteracting();
             }
         }

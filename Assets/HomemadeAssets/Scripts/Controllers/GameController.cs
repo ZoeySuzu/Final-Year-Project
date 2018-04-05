@@ -8,38 +8,30 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
     public static GameController Instance { get; set; }
 
+    [SerializeField]
+    private Transform player;
+    [SerializeField]
+    private Transform ui;
+    public LevelHandler levelSystem { get; private set; }
+
     //-----------------------------------Main game controllers:
-    public UIController ui;
-    private PlayerController pc;
-    private SaveHandler saveSystem;
+    public UIController uic { get; private set; }
+    public PlayerController pc { get; private set; }
+    public SaveHandler saveSystem { get; private set; }
 
     public Inventory inventory;
 
     public List<GameObject> entities;
     public List<CharacterController> characters;
-    public List<TeleportPad> teleportPads;
     public List<CameraID> cameraIds;
 
     [SerializeField]
-    GameObject camera;
-
-    [SerializeField]
-    bool bypassMenu;
+    bool bypassMenu = false,disableUiControls = false;
 
     //-----------------------------------Attach game controllers on start:
 
     private void Awake()
     {
-        inventory = new Inventory();
-        inventory.addItem(new Collectible("Apple", 1));
-        inventory.addItem(new QuestItem("Academy Badge"));
-        ui = UIController.Instance;
-        pc = PlayerController.Instance;
-        saveSystem = new SaveHandler();
-        characters = new List<CharacterController>();
-        cameraIds = new List<CameraID>();
-        teleportPads = new List<TeleportPad>();
-        entities = new List<GameObject>();
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -48,57 +40,67 @@ public class GameController : MonoBehaviour {
         {
             Instance = this;
         }
+
+        Transform curUI = Instantiate(ui);
+        curUI.SetParent(transform);
+        curUI.name = "UI";
+        uic = curUI.GetComponent<UIController>();
+        
+        inventory = new Inventory();
+        inventory.money = new Collectible("Money", 100);
+        inventory.addItem(new QuestItem("Academy Badge"));
+
+        saveSystem = new SaveHandler();
+        characters = new List<CharacterController>();
+        cameraIds = new List<CameraID>();
+        levelSystem = new LevelHandler();
+        entities = new List<GameObject>();
+    }
+
+    private void debugStart()
+    {
+        if (bypassMenu)
+        {
+            spawnPlayer();
+            uic.MenuScreen.SetActive(false);
+        }
+        if (disableUiControls)
+        {
+            uic.transform.FindChild("Debug").gameObject.SetActive(false);
+        }
     }
 
     public void Start()
     {
-        if (!bypassMenu)
-        {
-            pc.gameObject.SetActive(false);
-        }
-        else
-        {
-            camera.SetActive(false);
-            ui.MenuScreen.SetActive(false);
-        }
+        debugStart();
     }
-
-    //-----------------------------------Listen for pause:
-    void Update () {
-        if (Input.GetButtonDown("Start"))
-        {
-            pause(); 
-        }
-	}
-
-
     //-----------------------------------Quit to main menu:
     public void quit()
     {
         Debug.Log("Quit to main menu");
-        SceneManager.LoadSceneAsync("MainMenu",LoadSceneMode.Single);
-        pause();
+        FollowCamera.Instance.turnOff();
+        Destroy(pc.gameObject);
+        levelSystem.unloadAll();
+        uic.MenuScreen.SetActive(true);
+        Time.timeScale = 1;
     }
 
 
     //-----------------------------------Pause Game:
     public void pause()
     {
-        FollowCamera.Instance.activated = !FollowCamera.Instance.activated;
         pauseEntities();
         if (Time.timeScale == 1)
         {
             Debug.Log("pause");
             pc.enabled = false;
             Time.timeScale = 0;
-            ui.pause();
         }
         else
         {
             Debug.Log("unpause");
             pc.enabled = true;
             Time.timeScale = 1;
-            ui.resume();
         }
     }
     public void pauseEntities()
@@ -117,25 +119,6 @@ public class GameController : MonoBehaviour {
         }
     }
 
-
-    public void addTeleportPad(TeleportPad pad)
-    {
-        Debug.Log("Added to teleport list " + pad.getName());
-        teleportPads.Add(pad);
-    }
-
-    public List<TeleportPad> getTeleportPads()
-    {
-        return teleportPads;
-    }
-
-    public void loadLevel(string levelName, Transform teleport)
-    {
-        SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
-        SceneManager.UnloadSceneAsync(1);
-        pc.transform.position = teleport.position;
-    }
-
     public void SaveGame()
     {
         saveSystem.SaveGame();
@@ -148,20 +131,21 @@ public class GameController : MonoBehaviour {
 
     public void newGame()
     {
-        camera.SetActive(false);
-        ui.MenuScreen.SetActive(false);
-        SceneManager.LoadScene("DebugLevel", LoadSceneMode.Additive);
-        pc.gameObject.SetActive(true);
+        uic.MenuScreen.SetActive(false);
+        levelSystem.initLevelList();
+        levelSystem.loadLevel(levelSystem.levels[0]);
+        spawnPlayer();
     }
+
 
     public void loadLevel()
     {
-        camera.SetActive(false);
-        ui.MenuScreen.SetActive(false);
-        SceneManager.LoadScene("windArea", LoadSceneMode.Additive);
-        pc.gameObject.SetActive(true);
+        uic.MenuScreen.SetActive(false);
+        spawnPlayer();
         LoadGame();
-        
+        levelSystem.loadLevel(levelSystem.levels[0]);
+        FollowCamera.Instance.turnOn();
+       
     }
 
     public void quitGame()
@@ -171,4 +155,13 @@ public class GameController : MonoBehaviour {
         Debug.Break();
     }
 
+
+    private void spawnPlayer()
+    {
+        Transform curplayer = Instantiate(player);
+        curplayer.SetParent(transform.FindChildByRecursive("Entities"));
+        curplayer.name = "Object_Player";
+        pc = curplayer.GetComponent<PlayerController>();
+        FollowCamera.Instance.turnOn();
+    }
 }

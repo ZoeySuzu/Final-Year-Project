@@ -6,7 +6,6 @@ public abstract class Item {
 
     public string name { get; protected set; }
     public string description { get; protected set; }
-    public Sprite image { get; protected set; }
 
     public ItemType iType;
 
@@ -25,7 +24,7 @@ public abstract class Item {
         }
     }
 
-    protected void loadImage()
+    public Sprite loadImage()
     {
         try
         {
@@ -33,11 +32,12 @@ public abstract class Item {
             byte[] fileData = File.ReadAllBytes(path);
             var tex = new Texture2D(110, 110);
             tex.LoadImage(fileData);
-            image = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
+            return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), Vector2.zero);
         }
         catch (IOException e)
         {
             Debug.Log("Exception: " + e.Message);
         }
+        return null;
     }
 }

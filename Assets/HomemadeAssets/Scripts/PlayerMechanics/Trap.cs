@@ -133,5 +133,9 @@ public class Trap : MonoBehaviour {
     //Automatically activate 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Enemy")
+        {
+            setOff();
+        }
     }
 }

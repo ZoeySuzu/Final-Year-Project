@@ -20,10 +20,10 @@ public class Laser : MonoBehaviour {
         line = GetComponent<LineRenderer>();
         if (target != null)
         {
-            transform.parent.LookAt(target.transform.position);
+            transform.LookAt(target.transform.position);
         }
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.parent.forward, out hit))
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
             LaserReactor lr = hit.collider.gameObject.GetComponent<LaserReactor>();
             if (lr != null)
@@ -46,7 +46,7 @@ public class Laser : MonoBehaviour {
     //Check for laser interuption;
 	void LateUpdate () {
         RaycastHit hit ;
-        if(Physics.Raycast(transform.position,transform.parent.forward, out hit)){
+        if(Physics.Raycast(transform.position,transform.forward, out hit)){
             LaserReactor lr = hit.collider.gameObject.GetComponent<LaserReactor>();
             if (lr != null)
             {

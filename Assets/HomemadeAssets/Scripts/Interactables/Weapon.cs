@@ -20,7 +20,7 @@ public class Weapon : Interactable {
             rb.isKinematic = true;
             transform.parent = (PlayerController.Instance.getHand().transform);
             transform.position = transform.parent.position;
-            transform.rotation = transform.parent.rotation;
+            transform.rotation = Quaternion.Euler(20, PlayerController.Instance.transform.rotation.eulerAngles.y, 20);
             toggleIndicator();
             free = false;
         }

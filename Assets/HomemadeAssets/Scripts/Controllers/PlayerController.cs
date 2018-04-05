@@ -9,14 +9,16 @@ public class PlayerController : MonoBehaviour {
     public static PlayerController Instance { get; set; }
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (Instance == null)
         {
             Instance = this;
         }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        stats.Add(mana = new Stat("Mana", 100));
+        stats.Add(health = new Stat("Health", 100));
     }
 
     //-----------------------------------------------------------------------------------
@@ -26,12 +28,18 @@ public class PlayerController : MonoBehaviour {
     private Vector3 scale;
     private string playerState;
     private Vector3 spawn;
+    [SerializeField]
+    private bool unlockAbilities= false;
 
     //Pointers to other classes
     private Rigidbody rb;
     private UIController ui;
     private Transform playerModel;
+    private Material mat;
+    private Color defaultColor;
     public GameObject attackCollider;
+    public Animator anim;
+    public Unlocks unlocked;
 
     //Ability related variables
     [SerializeField]
@@ -48,9 +56,9 @@ public class PlayerController : MonoBehaviour {
     private float speed, jumpHeight;
     private bool inAir;
 
+    private bool lockRotation,dPadUpdate, grounded;
 
-    private bool lockRotation,interacting,dPadUpdate, grounded;
-
+    public bool interacting;
     public List<Stat> stats = new List<Stat>();
     private Stat health, mana;
 
@@ -60,30 +68,38 @@ public class PlayerController : MonoBehaviour {
     
 
     //------------------------------------------------------Initialising Code
-   
+
+
     void Start () {
-        inAir = false;
+        unlocked = new Unlocks();
+        if (unlockAbilities)
+        {
+            unlocked.abilities[1] = true;
+            unlocked.abilities[2] = true;
+            unlocked.abilities[3] = true;
+            unlocked.abilities[4] = true;
+        }
+
+        nearbyEnnemies = new ArrayList();
+        mat = GetComponentInChildren<Renderer>().material;
+        defaultColor = mat.color;
+        anim = transform.GetChild(0).GetComponent<Animator>();
         ui = UIController.Instance;
-        stats.Add(mana = new Stat("Mana", 100));
-        stats.Add(health = new Stat("Health", 100));
+        rb = GetComponent<Rigidbody>();
+        scale = GetComponent<BoxCollider>().size;
+        playerModel = transform.GetChild(0);
+
         ui.updateHealth(health);
         ui.updateMana(mana);
         playerState = "";
-        nearbyEnnemies = new ArrayList();
         pad = 0;
         spawn = transform.position;
-        scale = GetComponent<BoxCollider>().size;
         scale.y = scale.y * 0.9f;
         element = SpellType.Normal;
-        GameController.Instance.entities.Add(this.gameObject);
 
-        rb = GetComponent<Rigidbody>();
-       
-        playerModel = transform.GetChild(0);
-
+        inAir = false;
         spellCasting = false;
         lockRotation = false;
-        interacting = false;
         grounded = false;
         canAttack = true;
         canStrafe = true;
@@ -95,8 +111,11 @@ public class PlayerController : MonoBehaviour {
         ui = UIController.Instance;
         foreach (Stat stat in _stats)
         {
-            if(stat.statName == "Health")
+            Debug.Log("updating stat");
+
+            if (stat.statName == "Health")
             {
+                Debug.Log("health " + stat.statValue);
                 health = stat;
                 ui.updateHealth(health);
             }
@@ -112,6 +131,7 @@ public class PlayerController : MonoBehaviour {
     //------------------------------------------------------Update Code
     void FixedUpdate()
     {
+        CheckBounds();
         rb.velocity = new Vector3(0, rb.velocity.y, 0);
         /*var mag = Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z);
         if ( mag > speed)
@@ -120,18 +140,20 @@ public class PlayerController : MonoBehaviour {
         }*/
         if (rb.velocity.y < 0 && grounded)
         {
-            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        }else if(rb.velocity.y< 0 && !inAir)
+            rb.velocity = Vector3.zero;
+        }
+        else {
+            anim.ResetTrigger("Grounded");
+            anim.SetTrigger("Falling");
+        }
+        
+        if (rb.velocity.y< 0 && !inAir)
         {
-            rb.velocity += Physics.gravity*1.5f * Time.deltaTime;
+            rb.velocity += Physics.gravity*1.5f * Time.fixedDeltaTime;
         }
     }
 	
 	void Update () {
-
-
-        CheckBounds();
-
         //Climbing
         if (playerState.Contains("Climbing"))
         {
@@ -147,7 +169,6 @@ public class PlayerController : MonoBehaviour {
         {
             ui.setInteractButton("Let go");
         }
-
         //Not Doing other action
         else
         {
@@ -197,38 +218,42 @@ public class PlayerController : MonoBehaviour {
 
     private void Aim()
     {
-        if (!FollowCamera.Instance.lerping && Input.GetAxis("R2") > 0.5f && !FollowCamera.Instance.aim && FollowCamera.Instance.getFocus() == null)
+        if (!FollowCamera.Instance.lerping && (Input.GetAxis("R2") > 0.5f || Input.GetButton("R2")) && !FollowCamera.Instance.aim && FollowCamera.Instance.getFocus() == null)
         {
             playerState += "Aiming";
             FollowCamera.Instance.setAim(true);    
         }
-        else if (Input.GetAxis("R2") > 0.5f && FollowCamera.Instance.aim)
+        else if ((Input.GetAxis("R2") > 0.5f || Input.GetButton("R2")) && FollowCamera.Instance.aim)
         {
+            ui.toggleCrosshair(true);
             playerState += "Aiming";
-            //if(!FollowCamera.Instance.getLerp())
-                playerModel.forward = new Vector3(FollowCamera.Instance.transform.forward.x, 0, FollowCamera.Instance.transform.forward.z);
+            playerModel.forward = new Vector3(FollowCamera.Instance.transform.forward.x, 0, FollowCamera.Instance.transform.forward.z);
         }
-        else if(FollowCamera.Instance.aim && !FollowCamera.Instance.lerping)
+        else if(FollowCamera.Instance.aim)
         {
+            ui.toggleCrosshair(false);
             FollowCamera.Instance.setAim(false);
         }
     }
 
     private void SpellCast()
     {
-        if (((Input.GetAxis("R2")>0.5f) && (FollowCamera.Instance.getFocus()!= null) || (playerState.Contains("Aiming") && Input.GetButtonDown("X"))) && !spellCasting && spellCooldown.ready)
+        if (((Input.GetAxis("R2")>0.5f || Input.GetButton("R2")) && (FollowCamera.Instance.getFocus()!= null) || (playerState.Contains("Aiming") && Input.GetButtonDown("X"))) && !spellCasting && spellCooldown.ready)
         {
             StartCoroutine(spellCooldown.StartCooldown());
-            spell = Instantiate(projectile, transform.position + playerModel.forward * 2 + Vector3.up * 0.5f, playerModel.transform.rotation).GetComponent<Spell>();
+            spell = Instantiate(projectile, transform.position + playerModel.forward * 0.5f+playerModel.right*0.5f, playerModel.transform.rotation).GetComponent<Spell>();
             if (element == SpellType.Fire || element == SpellType.Ice)
             {
                 spellCasting = true;
                 spell.transform.parent = transform;
+                anim.SetBool("Casting", true);
             }
             spell.Initialize(element, false);
+            PlayerController.Instance.anim.SetTrigger("Attack1");
         }
-        if (spellCasting && (Input.GetAxis("R2") <= 0.3f || !grounded))
+        if (spellCasting && ((Input.GetAxis("R2") <= 0.3f || Input.GetButtonUp("R2")) || !grounded || Input.GetButtonUp("X")))
         {
+            anim.SetBool("Casting", false);
             spell.stopCast();
             spellCasting = false;
         }
@@ -274,9 +299,13 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetButtonDown("D-U") || (pad == -1 && dPadUpdate))
         {
             if (element == SpellType.Electric)
-                element = SpellType.Normal;
-            else
             {
+                ui.setActiveElement(SpellType.Normal);
+                element = SpellType.Normal;
+            }
+            else if (unlocked.abilities[4])
+            {
+                ui.setActiveElement(SpellType.Electric);
                 element = SpellType.Electric;
                 if (spell)
                 {
@@ -287,9 +316,13 @@ public class PlayerController : MonoBehaviour {
         else if (Input.GetButtonDown("D-L") || (pad == -2 && dPadUpdate))
         {
             if (element == SpellType.Fire)
-                element = SpellType.Normal;
-            else
             {
+                ui.setActiveElement(SpellType.Normal);
+                element = SpellType.Normal;
+            }
+            else if (unlocked.abilities[1])
+            {
+                ui.setActiveElement(SpellType.Fire);
                 element = SpellType.Fire;
                 if (spell)
                 {
@@ -300,9 +333,13 @@ public class PlayerController : MonoBehaviour {
         else if (Input.GetButtonDown("D-D") || (pad == 1 && dPadUpdate))
         {
             if (element == SpellType.Wind)
-                element = SpellType.Normal;
-            else
             {
+                ui.setActiveElement(SpellType.Normal);
+                element = SpellType.Normal;
+            }
+            else if (unlocked.abilities[3])
+            {
+                ui.setActiveElement(SpellType.Wind);
                 element = SpellType.Wind;
                 if (spell)
                 {
@@ -313,9 +350,13 @@ public class PlayerController : MonoBehaviour {
         else if (Input.GetButtonDown("D-R") || (pad == 2 && dPadUpdate))
         {
             if (element == SpellType.Ice)
-                element = SpellType.Normal;
-            else
             {
+                ui.setActiveElement(SpellType.Normal);
+                element = SpellType.Normal;
+            }
+            else if (unlocked.abilities[2])
+            {
+                ui.setActiveElement(SpellType.Ice);
                 element = SpellType.Ice;
                 if (spell)
                 {
@@ -341,34 +382,20 @@ public class PlayerController : MonoBehaviour {
 
 
     //------------------------------------------------------Get Methods
-    public float getSpeed()
-    {
-        return speed;
-    }
-
-    public string getPlayerState()
-    {
-        return playerState;
-    }
-
-    public int getMaxHP()
-    {
-        return health.statMax;
-    }
-
-    public int getMaxMana()
-    {
-        return mana.statMax;
-    }
-
-    public int getHP()
-    {
-        return health.statValue;
-    }
+    public float getSpeed(){return speed;}
+    public string getPlayerState() {return playerState;}
+    public int getMaxHP() {return health.statMax;}
+    public int getMaxMana(){return mana.statMax;}
+    public int getHP() {return health.statValue;}
 
     public GameObject getHand()
     {
-        return transform.GetChild(0).GetChild(0).gameObject;
+        return transform.FindChildByRecursive("LeftHand_end").gameObject;
+    }
+
+    public GameObject getWand()
+    {
+        return transform.FindChildByRecursive("Wand").gameObject;
     }
 
     public GameObject getNextEnnemy(GameObject current)
@@ -431,6 +458,12 @@ public class PlayerController : MonoBehaviour {
 
     public void setHealth(int _health)
     {
+        if(_health < 0)
+        {
+            anim.SetTrigger("Damage");
+            Debug.Log("Took Damage");
+            StartCoroutine(TakeDamage());
+        }
         health.changeStat(_health);
         ui.updateHealth(health);
     }
@@ -467,9 +500,32 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private bool IsGrounded() {
-        if(Physics.BoxCast(transform.position, scale/2, Vector3.down, transform.rotation, 0.15f, -1, QueryTriggerInteraction.Ignore))
+    IEnumerator TakeDamage()
+    {
+        for (int i = 0; i <= 4; i++)
         {
+            mat.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            mat.color = defaultColor;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public IEnumerator PushBack(Vector3 force)
+    {
+        for (int i = 0; i <= 30; i++)
+        {
+            transform.position = transform.position + force * Time.deltaTime;
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    private bool IsGrounded() {
+        RaycastHit hit;
+        if(Physics.BoxCast(transform.position, scale/2, Vector3.down, out hit, transform.rotation, 0.1f, -1, QueryTriggerInteraction.Ignore))
+        {
+            anim.SetTrigger("Grounded");
+            anim.ResetTrigger("Falling");
             ui.setActionButton("Jump");
             playerState += "Grounded";
             return true;
@@ -519,27 +575,29 @@ public class PlayerController : MonoBehaviour {
             if (playerState.Contains("Aiming") || playerState.Contains("Attacking"))
             {
                 Movement(direction, speed * 0.30f);
+                anim.SetFloat("Movement", direction.magnitude*0.30f);
             }
             else
             {
                 Movement(direction, speed * 1f);
-                if (!lockRotation && !FollowCamera.Instance.lerping && FollowCamera.Instance.getFocus() == null && Input.GetAxis("L2") <= 0.5f)
+                if (!lockRotation && !FollowCamera.Instance.lerping && FollowCamera.Instance.getFocus() == null && Input.GetAxis("L2") <= 0.2f)
                 {
                     playerModel.forward = direction;
                 }
+                anim.SetFloat("Movement", direction.magnitude);
             } 
         }
         else
         {
             playerState += "Idle";
+            anim.SetFloat("Movement", direction.magnitude);
         }
+        
     }
 
 
     IEnumerator Strafe(Vector3 direction)
     {
-        
-
         for (int i = 1; i <= 30; i++)
         {
             if (!lockRotation)
@@ -589,7 +647,8 @@ public class PlayerController : MonoBehaviour {
     {
         if (Input.GetButtonDown("A") && grounded && !interacting)
         {
-            rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.deltaTime);
+            anim.SetTrigger("Jump");
+            rb.AddForce(Vector3.up * jumpHeight * 15000 * Time.fixedDeltaTime);
             playerState += "Jumping";
             ui.setActionButton("");
         }
@@ -618,6 +677,7 @@ public class PlayerController : MonoBehaviour {
 
     private bool Movement(Vector3 targetDirection,float _speed)
     {
+        
         bool collision = false;
         float dashCheck = 0.2f;
         if (_speed >= speed * 2f) { dashCheck = 0.4f; }
@@ -648,24 +708,4 @@ public class PlayerController : MonoBehaviour {
         }
         return collision;
     }
-    
-    /*
-    private void Movement(Vector3 targetDirection)
-    {
-        playerModel.forward = targetDirection;
-        RaycastHit hit;
-        if (targetDirection.magnitude != 0)
-        {
-            if (Physics.BoxCast(transform.position, scale / 2, Vector3.right * Mathf.Sign(targetDirection.x), out hit, transform.rotation, 0.2f))
-            {
-                rb.velocity = new Vector3 (0, rb.velocity.y, 0);
-                transform.position += Vector3.right * hit.distance * 0.99f * Mathf.Sign(targetDirection.x) * speed * Time.deltaTime;// - Vector3.right * transform.localScale.x / 2 * Mathf.Sign(targetDirection.x);
-            }
-            else
-            {
-                rb.AddForce(playerModel.forward *targetDirection.magnitude*30);
-            }
-        }
-    }
-    */
 }

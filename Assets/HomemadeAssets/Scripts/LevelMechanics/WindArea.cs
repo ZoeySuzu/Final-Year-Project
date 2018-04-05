@@ -26,7 +26,7 @@ public class WindArea : MonoBehaviour {
             if (percentForce < 0)
                 percentForce = 0;
 
-            if ((rb = other.GetComponent<Rigidbody>()) != null)
+            if ((rb = other.GetComponentInParent<Rigidbody>()) != null)
             {
                 if(!sideways)
                     rb.AddForce(Vector3.up * 18 * percentForce * rb.mass);

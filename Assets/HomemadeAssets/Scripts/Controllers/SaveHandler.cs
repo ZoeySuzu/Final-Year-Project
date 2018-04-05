@@ -16,8 +16,10 @@ public class SaveHandler {
         {
             save.relationshipValues.Add(cc.getFP());
         }
+        save.LevelList = GameController.Instance.levelSystem.levels;
         save.PlayerStats = PlayerController.Instance.stats;
         save.inventory = GameController.Instance.inventory;
+        save.unlocks = PlayerController.Instance.unlocked;
 
         return save;
     }
@@ -25,8 +27,11 @@ public class SaveHandler {
 
     private void UnpackSaveFile(Save save)
     {
+        Debug.Log("Unpacking");
         PlayerController.Instance.updateStats(save.PlayerStats);
+        PlayerController.Instance.unlocked = save.unlocks;
         GameController.Instance.inventory = save.inventory;
+        GameController.Instance.levelSystem.loadLevelList(save.LevelList);
     }
 
     public void SaveGame()
